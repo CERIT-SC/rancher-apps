@@ -7,7 +7,7 @@ questions:
 - variable: rstudiopassword
   default: ""
   required: true
-  description: "You must enter a password that will be used log in into rstudio. User is 'rstudio'."
+  description: "You must enter a password that will be used log into rstudio. Username will be 'rstudio'."
   type: password
   label: Rstudio Password
   group: "Auth Settings"
