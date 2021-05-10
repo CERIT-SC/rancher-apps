@@ -11,7 +11,7 @@ questions:
   required: true
   label: Hostname
   group: Name
-  valid_chars: "a-zA-Z0-9\.-"
+  valid_chars: "a-zA-Z0-9.-"
 - variable: rstudiopassword
   default: ""
   required: true
