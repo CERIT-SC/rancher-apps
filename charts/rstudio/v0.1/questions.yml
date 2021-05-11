@@ -6,7 +6,7 @@ rancher_min_version: 2.3.0
 questions:
 - variable: hostname
   default: ""
-  description: "Hostname of your rstudio installation. Must end with '.dyn.cerit-sc.cz' and must not already exist"
+  description: "Hostname of your rstudio installation. Must end with '.dyn.cerit-sc.cz' and must not already exist, e.g. rstudio-username.dyn.cerit-sc.cz"
   type: string
   required: true
   label: Application Hostname
@@ -15,7 +15,7 @@ questions:
 - variable: rstudiopassword
   default: ""
   required: true
-  description: "You must enter a password that will be used log into rstudio. Username will be 'rstudio'."
+  description: "You must enter a password that will be used log into rstudio. You need to remember this password! Username will be 'rstudio'."
   type: password
   label: RStudio Password
   group: "Password Settings"
