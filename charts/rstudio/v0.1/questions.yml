@@ -9,15 +9,16 @@ questions:
   description: "Hostname of your rstudio installation. Must end with '.dyn.cerit-sc.cz' and must not already exist"
   type: string
   required: true
-  label: Hostname
+  label: Application Hostname
+  group: Hostname
   valid_chars: "a-zA-Z0-9.-"
 - variable: rstudiopassword
   default: ""
   required: true
   description: "You must enter a password that will be used log into rstudio. Username will be 'rstudio'."
   type: password
-  label: Rstudio Password
-  group: "Auth Settings"
+  label: RStudio Password
+  group: "Password Settings"
 - variable: mincpu
   default: 1
   description: "Minimum guaranteed CPUs"
