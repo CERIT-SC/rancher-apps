@@ -10,7 +10,6 @@ questions:
   type: string
   required: true
   label: Hostname
-  group: Name
   valid_chars: "a-zA-Z0-9.-"
 - variable: rstudiopassword
   default: ""
