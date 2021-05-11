@@ -1,7 +1,7 @@
 rstudiopassword: ""
-mincpu: ""
-maxcpu: ""
-minram: ""
-maxram: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
 hostname: ""
-dnstarget: "k8s-public-u.cerit-sc.cz"
+dnstarget: k8s-public-u.cerit-sc.cz
