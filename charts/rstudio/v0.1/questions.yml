@@ -28,7 +28,7 @@ questions:
    - "storage-brno1-cerit.metacentrum.cz"
    - "storage-brno12-cerit.metacentrum.cz"
   group: "Storage"
-  type: string
+  type: enum
 - variable: storageusername
   description: "Storage connect username"
   label: Storage username
