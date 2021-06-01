@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rstudio-server
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8787
+    targetPort: 8787
+  selector:
+    app: rstudio-server

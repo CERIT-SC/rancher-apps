@@ -19,6 +19,28 @@ questions:
   type: password
   label: RStudio Password
   group: "Password Settings"
+- variable: storage
+  description: "Connect Cerit-SC Storage as /home/rstudio"
+  label: Storage hostname
+  default: ""
+  options:
+   - "storage-brno3-cerit.metacentrum.cz/home"
+   - "storage-brno1-cerit.metacentrum.cz/home"
+   - "storage-brno12-cerit.metacentrum.cz/share"
+  group: "Storage"
+  type: enum
+- variable: storageusername
+  description: "Storage connect username"
+  label: Storage username
+  default: ""
+  type: string
+  group: "Storage"
+- variable: storagepassword
+  label: Storage password
+  description: "Storage connect password"
+  default: ""
+  type: password
+  group: "Storage"
 - variable: mincpu
   default: 1
   description: "Minimum guaranteed CPUs"

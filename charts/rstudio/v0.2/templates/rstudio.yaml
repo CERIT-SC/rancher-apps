@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rstudio-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rstudio-server
+  template:
+    metadata:
+      labels:
+        app: rstudio-server
+    spec:
+      containers:
+      - name: rstudio-server
+        image: cerit.io/rstudio:v0.1
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: rstudiopassword
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        ports:
+        - containerPort: 8787
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: home
+          mountPath: /home/rstudio
+{{- if ne .Values.storage "" }}
+        - name: data
+          mountPath: /home/data {{ end }}
+      volumes:
+      - name: home
+        persistentVolumeClaim:
+          claimName: rstudio-home
+{{- if ne .Values.storage "" }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-rstudio-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
+{{ end }}
