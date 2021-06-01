@@ -33,17 +33,11 @@ spec:
           requests:
             cpu: {{ .Values.mincpu }}
             memory: {{ .Values.minram }}
+{{- if ne .Values.storage "" }}
         volumeMounts:
-        - name: home
-          mountPath: /home/rstudio
-{{- if ne .Values.storage "" }}
         - name: data
-          mountPath: /home/data {{ end }}
+          mountPath: /home/rstudio 
       volumes:
-      - name: home
-        persistentVolumeClaim:
-          claimName: rstudio-home
-{{- if ne .Values.storage "" }}
       - name: data
         persistentVolumeClaim:
           claimName: pvc-rstudio-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
