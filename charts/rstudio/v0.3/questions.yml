@@ -7,7 +7,7 @@ questions:
 - variable: hostname
   default: ""
   description: "Hostname of your rstudio installation. Must end with '.dyn.cerit-sc.cz' and must not already exist, e.g. rstudio-username.dyn.cerit-sc.cz"
-  type: hostname
+  type: string
   required: true
   label: Application Hostname
   group: Hostname
