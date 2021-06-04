@@ -21,12 +21,10 @@ questions:
   group: "Password Settings"
   invalid_chars: "{}"
 - variable: storage
-  description: "Connect Cerit-SC Storage as /home/rstudio"
+  description: "Connect Cerit-SC Storage as /home/rstudio/data"
   label: Storage hostname
   default: ""
   options:
-   - "storage-brno3-cerit.metacentrum.cz/home"
-   - "storage-brno1-cerit.metacentrum.cz/home"
    - "storage-brno12-cerit.metacentrum.cz/share"
   group: "Storage"
   type: enum
