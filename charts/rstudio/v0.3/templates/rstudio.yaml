@@ -40,6 +40,10 @@ spec:
 {{- if ne .Values.storage "" }}
         - name: data
           mountPath: /home/rstudio/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-rstudio-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
 {{ end }}       
   volumeClaimTemplates:
   - metadata:
@@ -50,9 +54,3 @@ spec:
       resources:
         requests:
           storage: 1Gi
-{{- if ne .Values.storage "" }}
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: pvc-rstudio-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
-{{ end }}
