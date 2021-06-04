@@ -16,7 +16,7 @@ questions:
   default: ""
   required: true
   description: "You must enter a password that will be used log into rstudio. You need to remember this password! Username will be 'rstudio'."
-  type: password
+  type: secret
   label: RStudio Password
   group: "Password Settings"
   valid_char: "a-zA-Z0-9.-"
