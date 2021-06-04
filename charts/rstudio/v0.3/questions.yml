@@ -20,6 +20,7 @@ questions:
   label: RStudio Password
   group: "Password Settings"
   valid_char: "a-zA-Z0-9.-"
+  invalid_chars: "{}"
 - variable: storage
   description: "Connect Cerit-SC Storage as /home/rstudio"
   label: Storage hostname
