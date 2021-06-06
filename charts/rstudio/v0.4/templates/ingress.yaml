@@ -9,11 +9,19 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
-    - hosts:
-        - {{ .Values.hostname }}
-      secretName: {{ printf "%s-tls" .Values.hostname }}
+{{- if eq .Values.defhostname true }}
+    - hosts: 
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
+      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: {{ .Values.hostname }}
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+{{- else }}
+    - hosts:
+        - {{ .Values.customhostname }}
+      secretName: {{ printf "%s-tls" .Values.customhostname | replace "." "-"  }}
+  rules:
+  - host: {{ .Values.customhostname }}
+{{- end }}
     http:
       paths:
       - backend:
