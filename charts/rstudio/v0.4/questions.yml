@@ -24,7 +24,7 @@ questions:
   required: true
   description: "You must enter a password that will be used log into rstudio. You need to remember this password! Username will be 'rstudio'."
   type: password
-  label: RStudio Password
+  label: RStudio Password (please avoid chars "{" and "}")
   group: "Password Settings"
   invalid_chars: "{}"
 - variable: storage

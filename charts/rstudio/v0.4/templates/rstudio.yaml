@@ -34,19 +34,6 @@ spec:
           requests:
             cpu: {{ .Values.mincpu }}
             memory: {{ .Values.minram }}
-        readinessProbe:
-          exec:
-            command:
-            - wget 
-{{- if eq .Values.defhostname true }}
-            - https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-{{- else }}
-            - https://{{ .Values.customhostname }}
-{{- end }}
-            - -O 
-            - /dev/null 
-            - -o 
-            - /dev/null
         volumeMounts:
         - name: home
           mountPath: /home/rstudio
