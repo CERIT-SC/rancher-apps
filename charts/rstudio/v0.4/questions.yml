@@ -6,7 +6,7 @@ rancher_min_version: 2.3.0
 questions:
 - variable: defhostname
   default: true
-  description: "Use default hostname. It will be rstudio-server-{namespace}.dyn.cerit-sc.cz. You can specify arbitraty name in dyn.cerit-sc.cz domain below."
+  description: "Set hostname to: <b>rstudio-server-{namespace}.dyn.cerit-sc.cz</b>. You can specify arbitraty name in dyn.cerit-sc.cz domain setting false."
   type: boolean
   label: Use predefined hostname
   group: Hostname
