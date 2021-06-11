@@ -289,7 +289,7 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-{{ if .Values.presistenthome }}
+{{- if .Values.persistenthome }}
   volumeClaimTemplates:
   - metadata:
       name: home

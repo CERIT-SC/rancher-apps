@@ -7,5 +7,5 @@ defhostname: true
 customhostname: ""
 dnstarget: k8s-public-u.cerit-sc.cz
 password: ""
-persistenthome: false
-resolution: ""
+persistenthome: true
+resolution: "1920x1080"
