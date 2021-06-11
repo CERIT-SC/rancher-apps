@@ -152,6 +152,8 @@ spec:
               value: all
             - name: PULSE_SERVER
               value: "127.0.0.1:4713"
+            - name: RESOLUTION
+              value: {{ .Values.resolution }}
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix

@@ -8,3 +8,4 @@ customhostname: ""
 dnstarget: k8s-public-u.cerit-sc.cz
 password: ""
 persistenthome: false
+resolution: ""
