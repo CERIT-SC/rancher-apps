@@ -1,7 +1,7 @@
 apiVersion: v1
 name: ansys
-version: 2019R3
-appVersion: 2019R3
+version: 2019r3
+appVersion: 2019r3
 description: ANSYS 
 icon: file://logo.jpg
 keywords:
