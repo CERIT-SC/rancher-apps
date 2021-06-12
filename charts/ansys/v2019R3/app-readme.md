@@ -1,3 +1,3 @@
-# ANSYS 2019R3
+# ANSYS 
 
-GPU-accelerated streaming app ANSYS 2019R3 using WebRTC
+GPU-accelerated streaming app ANSYS using WebRTC
