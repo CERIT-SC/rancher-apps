@@ -1,0 +1,11 @@
+desktop: "cerit.io/ansys-desktop:2019R3"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+customhostname: ""
+dnstarget: k8s-public-u.cerit-sc.cz
+password: ""
+persistenthome: true
+resolution: "1920x1080"
