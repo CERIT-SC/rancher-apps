@@ -1,4 +1,4 @@
-desktop: "cerit.io/ansys-desktop:2019R3"
+desktop: "cerit.io/matlab-desktop:9.10"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
@@ -7,5 +7,6 @@ defhostname: true
 customhostname: ""
 dnstarget: k8s-public-u.cerit-sc.cz
 password: ""
+username: "user"
 persistenthome: true
 resolution: "1920x1080"

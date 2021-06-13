@@ -1,3 +1,3 @@
-# ANSYS 
+# Matlab
 
-GPU-accelerated streaming app ANSYS using WebRTC
+GPU-accelerated streaming app Matlab using WebRTC
