@@ -4,7 +4,7 @@ metadata:
   name: desktoppassword
 type: Opaque
 data:
-   auth: {{ htpasswd "desktop" .Values.password | b64enc }}
+   auth: {{ htpasswd .Values.username .Values.password | b64enc }}
 ---
 apiVersion: v1
 kind: Service

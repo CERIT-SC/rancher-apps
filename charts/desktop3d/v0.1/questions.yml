@@ -37,10 +37,16 @@ questions:
     label: Application Hostname
     group: Hostname
     valid_chars: "a-zA-Z0-9.-"
+- variable: username
+  default: "user"
+  type: string
+  label: Desktop Username
+  description: "Username used to log into the desktop. You can use default \"user\"."
+  group: "Password Settings"
 - variable: password
   default: ""
   required: true
-  description: "You must enter a password that will be used log into desktop. You need to remember this password! Username will be 'desktop'."
+  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
   type: password
   label: Desktop Password
   group: "Password Settings"
