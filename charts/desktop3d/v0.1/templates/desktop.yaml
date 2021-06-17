@@ -267,7 +267,8 @@ spec:
           resources:
             limits:
               cpu: 1500m
-              memory: 8192Mi
+              memory: 1024Mi
+              nvidia.com/gpu: 1            
 
         - name: web
           image: cerit.io/webrtc-web:v0.2

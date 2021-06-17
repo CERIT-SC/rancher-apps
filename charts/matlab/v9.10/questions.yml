@@ -39,7 +39,7 @@ questions:
   label: Desktop Password
   group: "Password Settings"
 - variable: persistenthome
-  description: "If true, content of /home/user directory will be preserved across ANSYS install/uninstall."
+  description: "If true, content of /home/user directory will be preserved across MATLAB install/uninstall."
   default: false
   required: false
   type: boolean
