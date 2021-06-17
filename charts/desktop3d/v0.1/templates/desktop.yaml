@@ -257,8 +257,6 @@ spec:
               value: "http://turnapi.turnapi.svc.cluster.local/"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: all
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: all
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
