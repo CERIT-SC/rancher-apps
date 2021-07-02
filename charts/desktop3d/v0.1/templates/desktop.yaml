@@ -111,7 +111,21 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+{{- if .Values.persistenthome }}
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.desktop }}
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+          - name: home
+            mountPath: /home/user2
+{{- else }}
       initContainers: []
+{{- end }}
       containers:
         - name: xserver
           image: cerit.io/xserver:v0.1
@@ -257,6 +271,8 @@ spec:
               value: "http://turnapi.turnapi.svc.cluster.local/"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: all
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
@@ -265,8 +281,7 @@ spec:
           resources:
             limits:
               cpu: 1500m
-              memory: 1024Mi
-              nvidia.com/gpu: 1            
+              memory: 8192Mi
 
         - name: web
           image: cerit.io/webrtc-web:v0.2
