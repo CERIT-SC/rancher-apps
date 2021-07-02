@@ -3,6 +3,11 @@ labels:
 
 rancher_min_version: 2.3.0
 
+categories:
+- GUI Apps
+- WEBRTC
+
+
 questions:
 - variable: desktop
   description: "Select desktop container image to run."

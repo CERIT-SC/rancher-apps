@@ -3,6 +3,10 @@ labels:
 
 rancher_min_version: 2.3.0
 
+categories:
+- GUI Apps
+- WEBRTC
+
 questions:
 - variable: resolution
   description: "Desktop resolution. Can be changed via xrandr. Web page needs reload after change."

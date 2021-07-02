@@ -3,6 +3,10 @@ labels:
 
 rancher_min_version: 2.5.0
 
+categories:
+- WEB Apps
+- Developement
+
 questions:
 - variable: defhostname
   default: true
