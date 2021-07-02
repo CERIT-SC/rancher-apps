@@ -115,7 +115,7 @@ spec:
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
-          command: ['cp', '-rn', '/home/user', '/home/user2']
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
           securityContext:
             privileged: false
             runAsUser: 1000
