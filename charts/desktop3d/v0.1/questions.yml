@@ -12,7 +12,6 @@ questions:
   options: 
     - "cerit.io/ubuntufocalxfce:v0.1"
     - "cerit.io/ubuntuhirsutexfce:v0.1"
-    - "cerit.io/ansys-desktop:2019R3"
     - "cerit.io/witcher:2"
   group: "Image"
   type: enum
