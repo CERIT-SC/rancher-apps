@@ -5,34 +5,6 @@ categories:
 - Blog
 - CMS
 questions:
-- variable: defaultImage
-  default: true
-  description: "Use default Docker image"
-  label: Use Default Image
-  type: boolean
-  show_subquestion_if: false
-  group: "Container Images"
-  subquestions:
-  - variable: image.repository
-    default: "bitnami/wordpress"
-    description: "WordPress image name"
-    type: string
-    label: WordPress Image Name
-  - variable: image.tag
-    default: "5.7.2-debian-10-r30"
-    description: "WordPress image tag"
-    type: string
-    label: Image Tag
-  - variable: mariadb.image.repository
-    default: "bitnami/mariadb"
-    description: "MariaDB image name"
-    type: string
-    label: MariaDB Image Name
-  - variable: mariadb.image.tag
-    default: "10.3.22-debian-10-r44"
-    description: "MariaDB image tag"
-    type: string
-    label: MariaDB Image Tag
 - variable: wordpressUsername
   default: "user"
   description: "User of the application"
@@ -132,11 +104,6 @@ questions:
     description: "MariaDB Persistent Volume Size"
     type: string
     label: MariaDB Volume Size
-  - variable: mariadb.master.persistence.storageClass
-    default: ""
-    description: "If undefined or null, uses the default StorageClass. Default to null"
-    type: storageclass
-    label: Default StorageClass for MariaDB
 - variable: persistence.enabled
   default: false
   description: "Enable persistent volume for WordPress"
@@ -151,57 +118,23 @@ questions:
     description: "WordPress Persistent Volume Size"
     type: string
     label: WordPress Volume Size
-  - variable: persistence.storageClass
-    default: ""
-    description: "If undefined or null, uses the default StorageClass. Default to null"
-    type: storageclass
-    label: Default StorageClass for WordPress
   - variable: persistence.existingClaim
     default: ""
     description: "If not empty, uses the specified existing PVC instead of creating new one"
     type: pvc
     label: Existing Persistent Volume Claim for Wordpress
-- variable: ingress.enabled
+- variable: ingress.defhostname
   default: true
-  description: "Expose app using Layer 7 Load Balancer - ingress"
+  description: "Set hostname to: wordpress-{namespace}.dyn.cerit-sc.cz. You can specify arbitraty name in dyn.cerit-sc.cz domain setting false."
   type: boolean
-  label: Expose app using Layer 7 Load Balancer
-  show_subquestion_if: true
-  group: "Services and Load Balancing"
+  label: Use predefined hostname
+  group: Hostname
+  show_subquestion_if: false
   subquestions:
-  - variable: ingress.hostname
-    default: "xip.io"
-    description: "Hostname to your WordPress installation"
-    type: hostname
-    required: true
-    label: Hostname
-- variable: service.type
-  default: "NodePort"
-  description: "WordPress Service type"
-  type: enum
-  show_if: "ingress.enabled=false"
-  options:
-  - "ClusterIP"
-  - "NodePort"
-  - "LoadBalancer"
-  required: true
-  label: WordPress Service Type
-  show_subquestion_if: "NodePort"
-  group: "Services and Load Balancing"
-  subquestions:
-  - variable: service.nodePorts.http
-    default: ""
-    description: "NodePort http port(to set explicitly, choose port between 30000-32767)"
-    type: int
-    min: 30000
-    max: 32767
-    show_if: "ingress.enabled=false&&serviceType=NodePort"
-    label: NodePort Http Port
-  - variable: service.nodePorts.https
-    default: ""
-    description: "NodePort https port(to set explicitly, choose port between 30000-32767)"
-    type: int
-    min: 30000
-    max: 32767
-    show_if: "ingress.enabled=false&&serviceType=NodePort"
-    label: NodePort Https Port
+  - variable: ingress.customhostname
+    default: ".dyn.cerit-sc.cz"
+    description: "Hostname of your wordpress installation. Must end with '.dyn.cerit-sc.cz' and must not already exist, e.g. wordpress-username.dyn.cerit-sc.cz."
+    type: string
+    label: Application Hostname
+    group: Hostname
+    valid_chars: "a-zA-Z0-9.-"
