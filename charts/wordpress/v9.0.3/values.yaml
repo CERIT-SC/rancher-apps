@@ -197,14 +197,14 @@ healthcheckHttps: false
 ## WordPress pod extra options for liveness and readiness probes
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 120
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 30
   periodSeconds: 10
   timeoutSeconds: 5
@@ -256,7 +256,7 @@ service:
   ## Enable client source IP preservation
   ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: {}
   annotations: {}
   ## Limits which cidr blocks can connect to service's load balancer
   ## Only valid if service.type: LoadBalancer
