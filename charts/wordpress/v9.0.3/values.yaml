@@ -197,14 +197,14 @@ healthcheckHttps: false
 ## WordPress pod extra options for liveness and readiness probes
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 livenessProbe:
-  enabled: false
+  enabled: true
   initialDelaySeconds: 120
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
 readinessProbe:
-  enabled: false
+  enabled: true
   initialDelaySeconds: 30
   periodSeconds: 10
   timeoutSeconds: 5
