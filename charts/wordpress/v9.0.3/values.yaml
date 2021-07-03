@@ -232,7 +232,7 @@ service:
   type: ClusterIP
   ## HTTP Port
   ##
-  port: 80
+  port: 8080
   ## HTTPS Port
   ##
   httpsPort: 443
