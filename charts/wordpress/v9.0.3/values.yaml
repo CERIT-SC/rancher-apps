@@ -205,10 +205,10 @@ livenessProbe:
   successThreshold: 1
 readinessProbe:
   enabled: true
-  initialDelaySeconds: 30
+  initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 5
-  failureThreshold: 6
+  failureThreshold: 10
   successThreshold: 1
 
 ## If using an HTTPS-terminating load-balancer, the probes may need to behave
