@@ -216,14 +216,14 @@ readinessProbe:
 ## docs, 302 should be considered "successful", but this issue on GitHub
 ## (https://github.com/kubernetes/kubernetes/issues/47893) shows that it isn't.
 ##
-# livenessProbeHeaders:
-# - name: X-Forwarded-Proto
-#   value: https
-# readinessProbeHeaders:
-# - name: X-Forwarded-Proto
-#   value: https
-livenessProbeHeaders: {}
-readinessProbeHeaders: {}
+livenessProbeHeaders:
+ - name: X-Forwarded-Proto
+   value: https
+readinessProbeHeaders:
+ - name: X-Forwarded-Proto
+   value: https
+#livenessProbeHeaders: {}
+#readinessProbeHeaders: {}
 
 ## Kubernetes configuration
 ## For minikube, set this to NodePort, elsewhere use LoadBalancer or ClusterIP
