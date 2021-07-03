@@ -37,5 +37,5 @@ spec:
             service:
                name: {{ template "wordpress.fullname" . }}
                port:
-                 number: 80
+                 number: 8080
 {{- end }}
