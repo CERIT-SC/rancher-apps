@@ -90,7 +90,7 @@ questions:
   show_if: "mariadb.enabled=false"
   group: "Database Settings"
 - variable: mariadb.master.persistence.enabled
-  default: false
+  default: true
   description: "Enable persistent volume for MariaDB"
   type: boolean
   required: true
@@ -105,7 +105,7 @@ questions:
     type: string
     label: MariaDB Volume Size
 - variable: persistence.enabled
-  default: false
+  default: true
   description: "Enable persistent volume for WordPress"
   type: boolean
   required: true
