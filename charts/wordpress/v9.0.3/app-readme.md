@@ -8,3 +8,7 @@ This chart bootstraps a [WordPress](https://github.com/bitnami/bitnami-docker-wo
 It also packages the [Bitnami MariaDB chart](https://github.com/kubernetes/charts/tree/master/stable/mariadb) which is required for bootstrapping a MariaDB deployment for the database requirements of the WordPress application.
 
 Bitnami charts can be used with [Kubeapps](https://kubeapps.com/) for deployment and management of Helm Charts in clusters. This chart has been tested to work with NGINX Ingress, cert-manager, fluentd and Prometheus on top of the [BKPR](https://kubeprod.io/).
+
+## Note
+
+If you select persistent volume for database, be sure to set always *the same password* when removing/installing database to the same namespace.
