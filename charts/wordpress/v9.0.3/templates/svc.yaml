@@ -26,15 +26,6 @@ spec:
       {{- else if eq .Values.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
-    - name: https
-      port: {{ .Values.service.httpsPort }}
-      targetPort: {{ .Values.service.httpsTargetPort }}
-      {{- if (and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.https))) }}
-      nodePort: {{ .Values.service.nodePorts.https }}
-      {{- else if eq .Values.service.type "ClusterIP" }}
-      nodePort: null
-      {{- end }}
-      {{- if .Values.metrics.enabled }}
     - name: metrics
       port: {{ .Values.service.metricsPort }}
       targetPort: metrics
