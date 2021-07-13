@@ -1,0 +1,12 @@
+desktop: "cerit.io/ansys-desktop:2021R1-licence"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+customhostname: ""
+dnstarget: k8s-public-u.cerit-sc.cz
+username: ""
+password: ""
+persistenthome: true
+resolution: "1920x1080"
