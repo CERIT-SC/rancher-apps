@@ -18,6 +18,7 @@ questions:
     - "cerit.io/ubuntufocalxfce:v0.1"
     - "cerit.io/ubuntuhirsutexfce:v0.1"
     - "cerit.io/witcher:2"
+    - "cerit.io/witcher2-wine:v0.1"
   group: "Image"
   type: enum
 - variable: resolution
