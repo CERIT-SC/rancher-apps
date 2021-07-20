@@ -155,7 +155,7 @@ spec:
 {{- end }}
       containers:
         - name: xserver
-          image: cerit.io/xserver:v0.3
+          image: cerit.io/xserver:v0.5
           imagePullPolicy: IfNotPresent
           env:
           - name: NVIDIA_DRIVER_CAPABILITIES
