@@ -23,7 +23,7 @@ spec:
           runAsGroup: 1000
         volumeMounts:
           - name: home
-            mountPath: /home/user2
+            mountPath: /home/student2
       containers:
       - name: {{ .Release.Name }}
         image: cerit.io/bioconductor:v0.1
