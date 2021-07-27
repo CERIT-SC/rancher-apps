@@ -14,7 +14,6 @@ spec:
       secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
   - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
-{{- end }}
     http:
       paths:
       - backend:
