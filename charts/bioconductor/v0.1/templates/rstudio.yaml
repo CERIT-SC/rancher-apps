@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.name }}
+  name: {{ .Release.Name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.name }}
-  serviceName: {{ .Release.name }}
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.name }}
+        app: {{ .Release.Name }}
     spec:
       initContainers:
-      - name: {{ .Release.name }}
+      - name: {{ .Release.Name }}
         image: cerit.io/cerit.io/bioconductor:v0.1
         command: [ 'cp', '-rn', '/home/student/.', '/home/student2' ]
         securityContext:
@@ -25,14 +25,14 @@ spec:
           - name: home
             mountPath: /home/user2
       containers:
-      - name: {{ .Release.name }}
+      - name: {{ .Release.Name }}
         image: cerit.io/cerit.io/bioconductor:v0.1
         env:
         - name: PASSWORD
           valueFrom:
            secretKeyRef:
              key: password
-             name: {{ .Release.name }}
+             name: {{ .Release.Name }}
         securityContext:                                                          
           runAsUser: 1000 
           runAsGroup: 1000
