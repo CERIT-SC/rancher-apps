@@ -14,7 +14,7 @@ spec:
         app: {{ .Release.Name }}
     spec:
       initContainers:
-      - name: {{ .Release.Name }}
+      - name: init-{{ .Release.Name }}
         image: cerit.io/cerit.io/bioconductor:v0.1
         command: [ 'cp', '-rn', '/home/student/.', '/home/student2' ]
         securityContext:
