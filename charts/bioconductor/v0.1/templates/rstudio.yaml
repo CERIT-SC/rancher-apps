@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.name }}
+  serviceName: {{ .Release.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.name }}
+    spec:
+      containers:
+      - name: {{ .Release.name }}
+        image: cerit.io/cerit.io/bioconductor:v0.1
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: {{ .Release.name }}
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        ports:
+        - containerPort: 8787
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: home
+          mountPath: /home/student
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
