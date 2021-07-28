@@ -8,8 +8,10 @@ spec:
   clusterIP: None
   ports:
   - port: 8787
+    name: rstudio
     targetPort: 8787
   - port: 8080
+    name: terminal
     targetPort: 8080
   selector:
     app: {{ .Release.Name }}
