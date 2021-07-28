@@ -35,18 +35,17 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: terminal-{{ .Release.Name }}
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   tls:
     - hosts: 
-        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
+      secretName: {{ printf "terminal-%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
     http:
       paths:
         - pathType: Prefix
-          path: /terminal(/|$)(.*)
+          path: /
           backend:
             service:
               name: {{ .Release.Name }}
