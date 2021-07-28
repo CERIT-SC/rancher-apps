@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
       - name: init-{{ .Release.Name }}
-        image: cerit.io/bioconductor:v0.2
+        image: cerit.io/bioconductor:v0.3
         command: [ 'cp', '-rn', '/home/student/.', '/home/student2' ]
         securityContext:
           privileged: false
@@ -26,7 +26,7 @@ spec:
             mountPath: /home/student2
       containers:
       - name: {{ .Release.Name }}
-        image: cerit.io/bioconductor:v0.2
+        image: cerit.io/bioconductor:v0.3
         env:
         - name: PASSWORD
           valueFrom:

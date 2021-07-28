@@ -38,14 +38,14 @@ metadata:
 spec:
   tls:
     - hosts: 
-        - terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "terminal-%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
+      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
     http:
       paths:
         - pathType: Prefix
-          path: /
+          path: /terminal
           backend:
             service:
               name: {{ .Release.Name }}
