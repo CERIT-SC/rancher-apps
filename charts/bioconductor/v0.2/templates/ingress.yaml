@@ -16,12 +16,13 @@ spec:
   - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
     http:
       paths:
-      - backend:
-          service: 
-            name: {{ .Release.Name }}
-            port:
-              number: 8787
-        pathType: ImplementationSpecific
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8787
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -37,15 +38,16 @@ metadata:
 spec:
   tls:
     - hosts: 
-        - terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "terminal-%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
+      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: terminal-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
     http:
       paths:
-      - backend:
-          service: 
-            name: {{ .Release.Name }}
-            port:
-              number: 8080
-        pathType: ImplementationSpecific
+        - pathType: Prefix
+          path: "/terminal"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
