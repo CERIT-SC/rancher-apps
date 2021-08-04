@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rstudio-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rstudio-server
+  serviceName: rstudio-server
+  template:
+    metadata:
+      labels:
+        app: rstudio-server
+    spec:
+      containers:
+      - name: rstudio-server
+{{- if eq .Values.image "R 3.6.3/Debian 10" }}
+        image: cerit.io/rstudio:v0.2 
+{{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04" }}
+        image: cerit.io/rstudio:v4.0.5
+{{- end }}
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: rstudiopassword
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        ports:
+        - containerPort: 8787
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: home
+          mountPath: /home/rstudio
+{{- if ne .Values.storage "" }}
+        - name: data
+          mountPath: /home/rstudio/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-rstudio-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
+{{ end }}       
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi

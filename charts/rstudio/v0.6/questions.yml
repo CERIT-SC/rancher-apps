@@ -1,0 +1,70 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+
+questions:
+- variable: image
+  description: R Studio Image
+  options:
+    - "R 4.0.5/Ubuntu 20.04"
+    - "R 3.6.3/Debian 10"
+  default: "R 4.0.5/Ubuntu 20.04"
+  type: enum
+  group: "Image"
+- variable: rstudiopassword
+  default: ""
+  required: true
+  description: "You must enter a password that will be used log into rstudio. You need to remember this password! Username will be 'rstudio'."
+  type: password
+  label: RStudio Password (please avoid chars "{" and "}")
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: storage
+  description: "Connect Cerit-SC Storage as /home/rstudio/data"
+  label: Storage hostname
+  default: ""
+  options:
+   - "storage-brno12-cerit.metacentrum.cz/share"
+  group: "Storage"
+  type: enum
+- variable: storageusername
+  description: "Storage connect username"
+  label: Storage username
+  default: ""
+  type: string
+  group: "Storage"
+- variable: storagepassword
+  label: Storage password
+  description: "Storage connect password"
+  default: ""
+  type: password
+  group: "Storage"
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "16384Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
