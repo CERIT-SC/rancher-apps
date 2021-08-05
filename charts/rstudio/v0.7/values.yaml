@@ -1,0 +1,12 @@
+image: "cerit.io/rstudio:v0.2"
+rstudiopassword: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+customhostname: ""
+dnstarget: k8s-public-u.cerit-sc.cz
+storage: ""
+storageusername: ""
+storagepassword: ""
