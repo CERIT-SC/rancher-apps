@@ -1,7 +1,7 @@
 apiVersion: v1
 name: ansys
-version: 2021l
-appVersion: 2021R1
+version: 2021
+appVersion: 2021R1L
 description: ANSYS 2021R1
 icon: file://logo.jpg
 keywords:
