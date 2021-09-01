@@ -27,13 +27,7 @@ RUN mkdir -p /var/run/sshd
 
 RUN useradd -m mpiuser
 WORKDIR /home/mpiuser
-COPY --chown=mpiuser sshd_config .sshd_config
 COPY sshd_config /etc/ssh/
 RUN sed -i 's/[ #]\(.*StrictHostKeyChecking \).*/ \1no/g' /etc/ssh/ssh_config
 RUN sed -i 's/.*Port 22.*/   Port 2222/g' /etc/ssh/ssh_config
 COPY --from=builder /pi /home/mpiuser/pi
-RUN mkdir /etc/mpi
-RUN echo "pi-worker-0.pi-worker" >> /etc/mpi/hostfile
-RUN echo "pi-worker-1.pi-worker" >> /etc/mpi/hostfile
-
-CMD /usr/sbin/sshd -De -f /home/mpiuser/.sshd_config
