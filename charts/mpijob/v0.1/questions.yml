@@ -1,0 +1,54 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- MPI
+- Development
+- OpenMPI
+
+questions:
+- variable: image
+  default: "cerit.io/mpi-pi:latest"
+  type: enum
+  group: "Parameters"
+  required: true
+- variable: command
+  type: string
+  default: "/home/mpiuser/pi"
+  required: true
+  group: "Parameters"
+  description: "Command to run that mpirun will invoke. Not including mpirun."
+  label: Command
+- variable: workers
+  default: 2
+  type: int
+  group: "Parameters"
+  description: "Number of worker instances."
+  label: Workers
+- variable: sshpath
+  default: '/home/mpiuser/.ssh'
+  required: true
+  group: "Parameters"
+  label: Ssh path
+  description: "Writable path where to store ssh keys. Container must be setup to search keys in this directory."
+  type: string
+- variable: cpu
+  default: 1
+  description: "Requested CPUs."
+  type: string
+  label: CPU
+  group: "Resources"
+- variable: memory
+  default: "1024Mi"
+  description: "Requested memory."
+  type: string
+  label: Memory
+  group: "Resources"
+- variable: infiniband
+  default: false
+  type: boolean
+  group: "Resources"
+  label: Use InfiniBand
+  description: "Use InfiniBand for computation. May delay startup because of current resource limitation"

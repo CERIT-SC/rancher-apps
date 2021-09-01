@@ -1,0 +1,48 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  slotsPerWorker: 1
+  runPolicy:
+    cleanPodPolicy: All
+    ttlSecondsAfterFinished: 60
+  sshAuthMountPath: {{ .Values.sshpath }}
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          containers:
+          - image: {{ .Values.image }}
+            name: {{ .Release.Name }}-launcher
+            securityContext:
+              runAsUser: 1000
+{{ - if eq .Values.infiniband "true" }}
+            command: [ 'mpirun', '-mca', 'btl', 'openib,self', '-n', {{ .Values.workers }}, {{ .Values.command }} ]
+{{- else }}
+            command: [ 'mpirun', '-n', {{ .Values.workers }}, {{ .Values.command }} ]
+{{- end }}
+            resources:
+              limits:
+                cpu: 1
+                memory: 1Gi
+{{ - if eq .Values.infiniband "true" }}
+                rdma/hca: 1
+{{- end }}
+    Worker:
+      replicas: {{ .Values.workers }}
+      template:
+        spec:
+          containers:
+          - image: {{ .Values.image }}
+            name: {{ .Release.Name }}-worker
+            securityContext:
+              runAsUser: 1000
+            resources:
+              limits:
+                cpu: {{ .Values.cpu }}
+                memory: {{ .Values.memory }}
+{{ - if eq .Values.infiniband "true" }}
+                rdma/hca: 1
+{{- end }}

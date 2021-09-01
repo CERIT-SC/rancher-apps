@@ -1,0 +1,7 @@
+image: "cerit.io/mpi-pi:latest"
+cpu: 1
+memory: 1024Mi
+infiniband: false
+sshpath: '/home/mpiuser/.ssh'
+workers: 2
+command: '/home/mpiuser/pi'
