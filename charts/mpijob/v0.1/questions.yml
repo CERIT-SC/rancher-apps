@@ -11,9 +11,11 @@ categories:
 questions:
 - variable: image
   default: "cerit.io/mpi-pi:latest"
-  type: enum
+  type: string
   group: "Parameters"
   required: true
+  label: Image
+  description: "Image to run."
 - variable: command
   type: string
   default: "/home/mpiuser/pi"
