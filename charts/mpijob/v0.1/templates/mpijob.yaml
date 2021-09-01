@@ -19,9 +19,9 @@ spec:
             securityContext:
               runAsUser: 1000
 {{- if .Values.infiniband }}
-            command: [ 'mpirun', '-mca', 'btl', 'openib,self', '-n', {{ .Values.workers }}, {{ .Values.command }} ]
+            command: [ 'mpirun', '-mca', 'btl', 'openib,self', '-n', {{ .Values.workers | quote }}, {{ .Values.command | quote }} ]
 {{- else }}
-            command: [ 'mpirun', '-n', {{ .Values.workers }}, {{ .Values.command }} ]
+            command: [ 'mpirun', '-n', {{ .Values.workers | quote }}, {{ .Values.command | quote }} ]
 {{- end }}
             resources:
               limits:
