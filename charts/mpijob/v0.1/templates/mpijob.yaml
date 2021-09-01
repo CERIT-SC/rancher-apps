@@ -15,13 +15,13 @@ spec:
         metadata:
           labels: 
             io.cattle.field/appId: {{ .Release.Name }}
-{{- if .Values.storage }}
-        volumes:
-        - name: vol1
-          persistentVolumeClaim:
-            claimName: pvc-{{ .Release.Name }}
-{{- end }}
         spec:
+{{- if .Values.storage }}
+          volumes:
+          - name: vol1
+            persistentVolumeClaim:
+              claimName: pvc-{{ .Release.Name }}
+{{- end }}
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-launcher
@@ -50,13 +50,13 @@ spec:
         metadata:
           labels:
             io.cattle.field/appId: {{ .Release.Name }}
-{{- if .Values.storage }}
-        volumes:
-        - name: vol1
-          persistentVolumeClaim:
-            claimName: pvc-{{ .Release.Name }}
-{{- end }}
         spec:
+{{- if .Values.storage }}
+          volumes:
+          - name: vol1
+            persistentVolumeClaim:
+              claimName: pvc-{{ .Release.Name }}
+{{- end }}
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-worker
