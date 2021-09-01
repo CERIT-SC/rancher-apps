@@ -15,12 +15,23 @@ spec:
         metadata:
           labels: 
             io.cattle.field/appId: {{ .Release.Name }}
+{{- if .Values.storage }}
+        volumes:
+        - name: vol1
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Release.Name }}
+{{- end }}
         spec:
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-launcher
             securityContext:
               runAsUser: 1000
+{{- if .Values.storage }}
+            volumeMounts:
+            - name: vol1
+              mountPath: {{ .Values.storagemnt }}
+{{- end }}
 {{- if .Values.infiniband }}
             command: [ 'mpirun', '-mca', 'btl', 'openib,self', '-n', {{ .Values.workers | quote }}, {{ .Values.command | quote }} ]
 {{- else }}
@@ -39,12 +50,23 @@ spec:
         metadata:
           labels:
             io.cattle.field/appId: {{ .Release.Name }}
+{{- if .Values.storage }}
+        volumes:
+        - name: vol1
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Release.Name }}
+{{- end }}
         spec:
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-worker
             securityContext:
               runAsUser: 1000
+{{- if .Values.storage }}
+            volumeMounts:
+            - name: vol1
+              mountPath: {{ .Values.storagemnt }}
+{{- end }}
             resources:
               limits:
                 cpu: {{ .Values.cpu }}

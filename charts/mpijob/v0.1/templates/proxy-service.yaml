@@ -1,0 +1,16 @@
+{{- if .Values.proxy }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: terminal-{{ .Release.Name }}
+  labels:
+    app: terminal-{{ .Release.Name }}
+spec:
+  clusterIP: None
+  ports:
+  - port: 8080
+    name: terminal-{{ .Release.Name }}
+    targetPort: 8080
+  selector:
+    app: terminal-{{ .Release.Name }}
+{{- end }}

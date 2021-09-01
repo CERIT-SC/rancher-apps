@@ -1,0 +1,38 @@
+{{- if .Values.proxy }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terminal-{{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terminal-{{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: terminal-{{ .Release.Name }}
+    spec:
+      containers:
+      - name: terminal-{{ .Release.Name }}
+        image: cerit.io/gotty:v0.1
+        imagePullPolicy: Always
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: {{ .Release.Name }}
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: vol1
+          mountPath: {{ .Values.storagemnt }}
+      volumes:
+      - name: vol1
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Name }}
+{{- end }}

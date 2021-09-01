@@ -36,6 +36,34 @@ questions:
   label: Ssh path
   description: "Writable path where to store ssh keys. Container must be setup to search keys in this directory."
   type: string
+- variable: storage
+  default: false
+  group: "Storage and Proxy"
+  label: Attach storage
+  description: "Attach persistent storage to launcher and workers."
+  type: boolean
+  show_subquestion_if: true
+  subquestions:
+  - variable: storagemnt
+    default: "/mnt"
+    type: string
+    label: Storage mount point
+    description: "Attach persistent storage to this directory."
+    group: "Storage and Proxy"
+  - variable: proxy
+    default: false
+    type: boolean
+    label: Run proxy
+    description: "Run web proxy to access persistent storage from web browser."
+    group: "Storage and Proxy"
+  - variable: password
+    type: password
+    default: ""
+    label: Proxy password
+    description: "Proxy password. Username is 'user'."
+    required: true
+    show_if: "proxy=true"
+    group: "Storage and Proxy"
 - variable: cpu
   default: 1
   description: "Requested CPUs."

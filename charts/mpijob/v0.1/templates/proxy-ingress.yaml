@@ -1,0 +1,27 @@
+{{- if .Values.proxy }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: terminal-{{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/target: {{ .Values.dnstarget }}
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/terminal"
+          backend:
+            service:
+              name: terminal-{{ .Release.Name }}
+              port:
+                number: 8080
+{{- end }}
