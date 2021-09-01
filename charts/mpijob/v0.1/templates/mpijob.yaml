@@ -13,7 +13,7 @@ spec:
       replicas: 1
       template:
         metadata:
-          label: 
+          labels: 
             io.cattle.field/appId: {{ .Release.Name }}
         spec:
           containers:
@@ -37,7 +37,7 @@ spec:
       replicas: {{ .Values.workers }}
       template:
         metadata:
-          label:
+          labels:
             io.cattle.field/appId: {{ .Release.Name }}
         spec:
           containers:
