@@ -12,6 +12,9 @@ spec:
     Launcher:
       replicas: 1
       template:
+        metadata:
+          label: 
+            io.cattle.field/appId: {{ .Release.Name }}
         spec:
           containers:
           - image: {{ .Values.image }}
@@ -33,6 +36,9 @@ spec:
     Worker:
       replicas: {{ .Values.workers }}
       template:
+        metadata:
+          label:
+            io.cattle.field/appId: {{ .Release.Name }}
         spec:
           containers:
           - image: {{ .Values.image }}
