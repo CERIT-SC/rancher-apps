@@ -22,8 +22,6 @@ RUN apt update && apt install -y --no-install-recommends \
 			openssh-client \
 		        strace \
 			&& rm -rf /var/lib/apt/lists/*
-# Add priviledge separation directoy to run sshd as root.
-RUN mkdir -p /var/run/sshd
 
 RUN useradd -m mpiuser
 WORKDIR /home/mpiuser
