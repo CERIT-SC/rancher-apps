@@ -249,7 +249,7 @@ spec:
               memory: 500Mi
 
         - name: watchdog
-          image: cerit.io/webrtc-app:v0.2
+          image: cerit.io/webrtc-app:1.19.1-mtufix-nv
           imagePullPolicy: Always
           securityContext:
             privileged: false
