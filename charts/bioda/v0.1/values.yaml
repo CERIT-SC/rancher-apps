@@ -1,0 +1,11 @@
+image: "cerit.io/bioda:v0.1"
+username: "student"
+password: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+dnstarget: k8s-public-u.cerit-sc.cz
+storageusername: ''
+storagepassword: ''
