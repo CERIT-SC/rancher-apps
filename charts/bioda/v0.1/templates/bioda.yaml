@@ -55,7 +55,7 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: pvc-storage-elixir1-cerit-sc-cz
+          claimName: pvc-{{ .Release.Name }}-storage-elixir1-cerit-sc-cz
   volumeClaimTemplates:
   - metadata:
       name: home
