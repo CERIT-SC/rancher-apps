@@ -11,13 +11,13 @@ questions:
 - variable: password
   default: ""
   required: true
-  description: "You must enter a password that will be used log into bioda. You need to remember this password! Username will be 'student'."
+  description: "You must enter a password that will be used log into bioda. You need to remember this password! Username will be 'user'."
   type: password
   label: Password (please avoid chars "{" and "}")
   group: "Password Settings"
   invalid_chars: "{}"
 - variable: storageusername
-  description: "Storage connect username"
+  description: "Storage connect username (UČO)"
   label: Storage username
   required: true
   default: ""
@@ -25,7 +25,7 @@ questions:
   group: "Password Settings"
 - variable: storagepassword
   label: Storage password
-  description: "Storage connect password"
+  description: "Storage connect password (secondary IS password)"
   default: ""
   required: true
   type: password

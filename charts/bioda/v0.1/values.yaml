@@ -1,5 +1,5 @@
 image: "cerit.io/bioda:v0.1"
-username: "student"
+username: "user"
 password: ""
 mincpu: 1
 maxcpu: 4
