@@ -32,6 +32,12 @@ spec:
         securityContext:                                                          
           runAsUser: 1000 
           runAsGroup: 1000
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: auth
+             name: terminal-{{ .Release.Name }}
         ports:
         - containerPort: 8080
         resources:
