@@ -44,6 +44,14 @@ spec:
         volumeMounts:
         - name: home
           mountPath: /home/user
+{{- if ne .Values.storage "" }}
+        - name: data
+          mountPath: /mnt
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
+{{ end }}
   volumeClaimTemplates:
   - metadata:
       name: home
