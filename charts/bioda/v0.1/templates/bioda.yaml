@@ -18,7 +18,10 @@ spec:
       initContainers:
       - name: init-{{ .Release.Name }}
         image: {{ .Values.image }}
-        command: [ 'cp', '-rn', '/home/user/.', '/home/user2' ]
+        command: 
+        - /bin/sh
+        - -c 
+        - "cp -rn /home/user/. /home/user2; cp -rn /opt/. /opt2"
         securityContext:
           privileged: false
           runAsUser: 1000
@@ -26,6 +29,8 @@ spec:
         volumeMounts:
           - name: home
             mountPath: /home/user2
+          - name: opt
+            mountPath: /opt2
       containers:
       - name: {{ .Release.Name }}
         image: {{ .Values.image }}
@@ -52,6 +57,8 @@ spec:
           mountPath: /home/user
         - name: data
           mountPath: /mnt
+        - name: opt
+          mountPath: /opt
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -59,6 +66,14 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: opt
     spec:
       accessModes: [ "ReadWriteMany" ]
       storageClassName: "nfs-csi"
