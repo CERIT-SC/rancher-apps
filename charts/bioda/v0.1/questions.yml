@@ -21,7 +21,7 @@ questions:
   label: Storage username
   required: true
   default: ""
-  type: string
+  type: int
   group: "Password Settings"
 - variable: storagepassword
   label: Storage password
