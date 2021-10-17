@@ -50,6 +50,7 @@ spec:
              name: sshkey-{{ .Release.Name }}
         ports:
         - containerPort: 8080
+        - containerPort: 2222
         resources:
           limits:
             cpu: {{ .Values.maxcpu }}

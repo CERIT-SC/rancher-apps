@@ -10,5 +10,8 @@ spec:
   - port: 8080
     name: terminal
     targetPort: 8080
+  - port: 2222
+    name: ssh
+    targetPort: 2222
   selector:
     app: {{ .Release.Name }}
