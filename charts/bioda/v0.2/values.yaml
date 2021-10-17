@@ -1,4 +1,4 @@
-image: "cerit.io/bioda:v0.5"
+image: "cerit.io/bioda:v0.6"
 username: "user"
 password: ""
 mincpu: 1
