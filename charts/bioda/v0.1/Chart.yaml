@@ -3,7 +3,7 @@ name: bibs
 version: 0.1
 appVersion: 0.1
 description: 
-icon: file://bobcat_color.png
+icon: file://logo.png
 keywords:
 - Bioda
 sources:
