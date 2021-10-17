@@ -31,6 +31,13 @@ questions:
   type: password
   group: "Password Settings"
   invalid_chars: "{}"
+- variable: sshkey
+  label: SSH Public key
+  description: "SSH pub key for access via proxy"
+  default: ""
+  type: string
+  group: "Password Settings"
+  invalid_chars: "{}"
 - variable: mincpu
   default: 1
   description: "Minimum guaranteed CPUs"

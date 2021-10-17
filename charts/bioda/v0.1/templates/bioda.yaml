@@ -43,6 +43,11 @@ spec:
            secretKeyRef:
              key: auth
              name: terminal-{{ .Release.Name }}
+        - name: SSH_KEY
+          valueFrom:
+           secretKeyRef:
+             key: key
+             name: sshkey-{{ .Release.Name }}
         ports:
         - containerPort: 8080
         resources:
