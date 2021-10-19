@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      nodeSelector:
+        storage: local-ssd
+      initContainers:
+      - name: init-{{ .Release.Name }}
+        image: {{ .Values.image }}
+        command: 
+        - /bin/sh
+        - -c 
+        - "cp -rn /home/user/. /home/user2; cp -rn /opt/. /opt2"
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+        volumeMounts:
+          - name: home
+            mountPath: /home/user2
+          - name: opt
+            mountPath: /opt2
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: Always
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: auth
+             name: terminal-{{ .Release.Name }}
+        - name: SSH_KEY
+          valueFrom:
+           secretKeyRef:
+             key: key
+             name: sshkey-{{ .Release.Name }}
+        ports:
+        - containerPort: 8080
+        - containerPort: 2222
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: home
+          mountPath: /home/user
+        - name: data
+          mountPath: /mnt
+        - name: opt
+          mountPath: /opt
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Name }}-storage-elixir1-cerit-sc-cz
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: opt
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
