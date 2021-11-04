@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: Always
+        env:
+        - name: MINIO_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: {{ .Release.Name }}-minioauth
+        - name: MINIO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: {{ .Release.Name }}-minioauth
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        resources:
+          limits:
+            cpu: 1
+            memory: 1024Mi
+        ports:
+        - containerPort: 9000
+        - containerPort: 8443
+        volumeMounts:
+        - name: vol-1
+          mountPath: /data
+      volumes:
+      - name: vol-1
+        persistentVolumeClaim:
+          claimName: {{ .Values.pvc }}

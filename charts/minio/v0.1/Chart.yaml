@@ -1,0 +1,16 @@
+apiVersion: v1
+name: minio
+version: 0.1
+appVersion: 2021.11.03
+description: Minio personal server
+icon: file://logo.png
+keywords:
+- Minio
+- S3
+home: https://min.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl

@@ -1,0 +1,34 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- S3
+- Object Storage
+- Minio
+
+questions:
+- variable: username
+  default: ""
+  required: true
+  description: "Enter username to use to access web console and S3 endpoint -- access key"
+  type: string
+  label: Username
+  group: "Authentication"
+  invalid_chars: "{}"
+- variable: password
+  default: ""
+  required: true
+  description: "Enter password to use to access web console and S3 endpoint -- secret token"
+  type: password
+  label: Password
+  min_length: 8
+  group: "Authentication"
+  invalid_chars: "{}"
+- variable: pvc
+  default: ""
+  description: "Select Persitent Volume Claim (PVC) that will be exposed via minio"
+  type: string
+  group: "Storage PVC"
+  label: PVC
