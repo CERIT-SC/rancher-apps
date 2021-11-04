@@ -21,7 +21,7 @@ Navigate through the link `443/https` to the minio web console. Use `username` a
 
 Open Web Access to see the domain name of running server. It should be something like `minio-user-ns.dyn.cerit-sc.cz`. S3 endpoint is this URL prefixed `s3-`, e.g., `s3-minio-user-ns.dyn.cerit-sc.cz`. **Access key** and **secret key** are filled in the form below. 
 
-You can use [`s4cmd`](https://github.com/bloomreach/s4cmd) command to utilize S3 api, this can be usually directly installed in most distros, e.g., `apt-get install s4cmd`. 
+You can use [`s4cmd` command](https://github.com/bloomreach/s4cmd) to utilize S3 api, this can be usually directly installed in most distros, e.g., `apt-get install s4cmd`. 
 
 Example of listing buckets:
 ```
