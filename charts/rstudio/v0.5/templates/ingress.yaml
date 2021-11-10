@@ -10,10 +10,10 @@ spec:
   tls:
 {{- if eq .Values.defhostname true }}
     - hosts: 
-        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
 {{- else }}
     - hosts:
         - {{ .Values.customhostname }}

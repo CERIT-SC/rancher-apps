@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts: 
-        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
     http:
       paths:
       - path: "/"
@@ -35,10 +35,10 @@ metadata:
 spec:
   tls:
     - hosts: 
-        - s3-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz 
-      secretName: {{ printf "s3-%s-%s-dyn-cerit-sc-cz-tls" .Release.Name .Release.Namespace  }}
+        - s3-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
+      secretName: {{ printf "s3-%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: s3-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+  - host: s3-{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
     http:
       paths:
       - path: "/"
