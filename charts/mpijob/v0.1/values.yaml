@@ -7,6 +7,5 @@ workers: 2
 command: '/home/mpiuser/pi'
 storage: false
 storagemnt: '/mnt'
-dnstarget: k8s-public-u.cerit-sc.cz
 proxy: false
 password: ''

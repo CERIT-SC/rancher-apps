@@ -30,7 +30,6 @@ metadata:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    external-dns.alpha.kubernetes.io/target: {{ .Values.dnstarget }}
 spec:
   tls:
 {{- if eq .Values.defhostname true }}

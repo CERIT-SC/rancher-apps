@@ -13,7 +13,6 @@ metadata:
     {{- if .Values.ingress.annotations }}
     {{- include "wordpress.tplValue" (dict "value" .Values.ingress.annotations "context" $) | nindent 4 }}
     {{- end }}
-    external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.dnstarget }}
 spec:
   tls:
 {{- if eq .Values.ingress.defhostname true }}

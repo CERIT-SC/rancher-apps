@@ -275,7 +275,6 @@ ingress:
 
   defhostname:
   customhostname:
-  dnstarget: k8s-public-u.cerit-sc.cz
 
   ## Set this to true in order to add the corresponding annotations for cert-manager
   ##

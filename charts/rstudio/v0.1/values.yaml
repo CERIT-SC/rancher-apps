@@ -4,7 +4,6 @@ maxcpu: 4
 minram: 4096Mi
 maxram: 16384Mi
 hostname: ""
-dnstarget: k8s-public-u.cerit-sc.cz
 storage: ""
 storageusername: ""
 storagepassword: ""

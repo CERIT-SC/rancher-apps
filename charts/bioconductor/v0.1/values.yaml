@@ -4,4 +4,3 @@ maxcpu: 4
 minram: 4096Mi
 maxram: 16384Mi
 defhostname: true
-dnstarget: k8s-public-u.cerit-sc.cz
