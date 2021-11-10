@@ -48,7 +48,7 @@ questions:
   label: Min RAM
   group: "Resources"
 - variable: maxram
-  default: "16384Mi"
+  default: "8000Mi"
   description: "Maximum allowed RAM"
   type: string
   label: Max RAM
