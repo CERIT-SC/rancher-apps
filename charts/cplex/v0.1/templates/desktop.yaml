@@ -174,7 +174,7 @@ spec:
           resources:
             limits:
               cpu: 1500m
-              memory: 8192Mi
+              memory: 500Mi
               cerit.io/gpu-mem: 1            
 
         - name: desktop
@@ -308,7 +308,7 @@ spec:
           resources:
             limits:
               cpu: 1500m
-              memory: 8192Mi
+              memory: 500Mi
 
         - name: web
           image: cerit.io/webrtc-web:v0.4
@@ -329,7 +329,7 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 512Mi
+              memory: 400Mi
 {{- if .Values.persistenthome }}
   volumeClaimTemplates:
   - metadata:
