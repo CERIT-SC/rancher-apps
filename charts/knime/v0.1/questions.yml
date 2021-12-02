@@ -13,6 +13,8 @@ questions:
   default: false
   description: "Use custom Docker image"
   label: Custom Image
+  type: boolean
+  group: Image
 - variable: image
   description: "Container image"
   required: true
@@ -33,31 +35,31 @@ questions:
   description: "This is password for VNC access"
   type: password
   label: VNC Password (please avoid chars "{" and "}")
-  group: "Password Settings"
+  group: "VNC Password"
   invalid_chars: "{}"
 - variable: storageserver
   type: string
   description: "Storage server to connect."
   label: "Storage server"
   default: "ha-bay.ics.muni.cz"
-  group: storage
+  group: Storage
 - variable: storagepath
   type: string
   description: "Path on storage server to connect."
   label: "Storage path"
   default: "share/712006-Proteomics/KNIME_workspaces"
-  group: storage
+  group: Storage
 - variable: storageusername
   type: string
   description: "Storage username, UCO or service account."
   label: Storage username
   default: ""
   required: true
-  group: storage
+  group: Storage
 - variable: storagepassword
   type: password
   description: "Storage password, i.e., secondary password."
   label: Storage password
   default: ""
   required: true
-  group: storage
+  group: Storage

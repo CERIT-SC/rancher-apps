@@ -1,8 +1,5 @@
 # KNIME Server
-KNIME Analytics Platform is the open source software for creating data science.
-Intuitive, open, and continuously integrating new developments, KNIME makes
-understanding data and designing data science workflows and reusable components
-accessible to everyone.
+KNIME Analytics Platform is the open source software for creating data science. Intuitive, open, and continuously integrating new developments, KNIME makes understanding data and designing data science workflows and reusable components accessible to everyone.
 
 You can connect storage with your data. Access is available via `vncviewer`.
 
@@ -17,8 +14,7 @@ On Linux distributions, the `vncviewer` is usually provided as a package and can
 In the form, you choose password for VNC client, there is no default and it is required to set a password.
 
 ## Storage
-This application supports currently `ha-bay.ics.muni.cz` storage only. You need to enter your UCO and *secondary* password, 
-or if you possess a service account, you can provide it. You need to specify a path also or select built in.
+This application supports currently `ha-bay.ics.muni.cz` storage only. You need to enter your UCO and *secondary* password,  or if you possess a service account, you can provide it. You need to specify a path also or select built in.
 
 ## VNC Access
 
