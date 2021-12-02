@@ -1,7 +1,7 @@
 vncpassword: ""
 image: ""
-storageserver: ""
-storagepath: ""
+storageserver: "ha-bay.ics.muni.cz"
+storagepath: "home"
 storageusername: ""
 storagepassword: ""
 mincpu: 500m
