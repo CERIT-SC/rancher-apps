@@ -1,7 +1,7 @@
 vncpassword: ""
 image: ""
 storageserver: "ha-bay.ics.muni.cz"
-storagepath: "home"
+storagepath: "share/712006-Proteomics/KNIME_workspaces"
 storageusername: ""
 storagepassword: ""
 mincpu: 500m
