@@ -1,0 +1,11 @@
+vncpassword: ""
+image: ""
+storageserver: ""
+storagepath: ""
+storageusername: ""
+storagepassword: ""
+mincpu: 500m
+maxcpu: 4
+minram: 4096Mi
+maxram: 12288Mi
+ephem: 10Gi

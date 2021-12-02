@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.name }}
+    spec:
+      containers:
+      - name: {{ .Release.name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: IfNotPresent
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        env:
+        - name: VNCPASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: {{ .Release.Name }}-vnc
+        ports:
+        - containerPort: 5901
+        resources:
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+            ephemeral-storage: {{ .Values.ephem }}
+        volumeMounts:
+        - name: storagedata
+          mountPath: /home/knimeuser/knime-workspace
+      volumes:
+      - name: storagedata
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Name }}-storage-{{ printf "%s" .Values.storageserver | replace "," "-" }}  

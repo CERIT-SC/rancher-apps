@@ -1,0 +1,63 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- KNIME
+- R
+- Python
+
+questions:
+- variable: customimage
+  default: false
+  description: "Use custom Docker image"
+  label: Custom Image
+- variable: image
+  description: "Container image"
+  required: true
+  options:
+  - "cerit.io/knime:v4.1.3a-vnc"
+  group: Image
+  type: enum
+  show_if: "customimage=false"
+- variable: image
+  description: "Custom container image. Select any valid image. Image needs to start vncserver and set a password."
+  required: true
+  type: string
+  group: Image
+  show_if: "customimage=true"
+- variable: vncpassword
+  default: ""
+  required: true
+  description: "This is password for VNC access"
+  type: password
+  label: VNC Password (please avoid chars "{" and "}")
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: storageserver
+  type: string
+  description: "Storage server to connect."
+  label: "Storage server"
+  default: "ha-bay.ics.muni.cz"
+  group: storage
+- variable: storagepath
+  type: string
+  description: "Path on storage server to connect."
+  label: "Storage path"
+  default: "share/712006-Proteomics/KNIME_workspaces"
+  group: storage
+- variable: storageusername
+  type: string
+  description: "Storage username, UCO or service account."
+  label: Storage username
+  default: ""
+  required: true
+  group: storage
+- variable: storagepassword
+  type: password
+  description: "Storage password, i.e., secondary password."
+  label: Storage password
+  default: ""
+  required: true
+  group: storage
