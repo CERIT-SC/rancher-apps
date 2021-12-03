@@ -6,7 +6,7 @@ metadata:
     app: {{ .Release.Name }}
   annotations:
     purelb.io/service-group: privmuni
-    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.dyn.cloud.e-infra.cz
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
 spec:
   type: LoadBalancer
   ports:
@@ -14,3 +14,4 @@ spec:
     targetPort: 5901
   selector:
     app: {{ .Release.Name }}
+  externalTrafficPolicy: Local
