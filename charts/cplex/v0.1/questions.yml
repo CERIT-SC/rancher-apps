@@ -10,6 +10,12 @@ categories:
 - CPLEX
 
 questions:
+- variable: vnc
+  default: true
+  type: boolean
+  label: Use VNC
+  group: Display
+  description: "Use either VNC client (if true) or WebRTC."
 - variable: username
   default: "user"
   type: string
@@ -29,6 +35,7 @@ questions:
   required: false
   type: boolean
   label: Persistent home
+  group: Storage
 - variable: mincpu
   default: 1
   description: "Minimum guaranteed CPUs"
