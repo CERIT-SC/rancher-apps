@@ -29,6 +29,6 @@ questions:
 - variable: pvc
   default: ""
   description: "Select Persitent Volume Claim (PVC) that will be exposed via minio"
-  type: string
+  type: pvc
   group: "Storage PVC"
   label: PVC
