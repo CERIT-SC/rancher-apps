@@ -63,3 +63,27 @@ questions:
   default: ""
   required: true
   group: Storage
+- variable: mincpu
+  default: 500m
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "12288Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "12288Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
