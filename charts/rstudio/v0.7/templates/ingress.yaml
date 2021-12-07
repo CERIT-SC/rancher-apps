@@ -5,21 +5,24 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+    cert-manager.io/cluster-issuer: "letsencrypt-dns"
+{{- else }}
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+{{- end }}
 spec:
   tls:
-{{- if eq .Values.defhostname true }}
-    - hosts: 
+    - hosts:
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.einfra.cz 
+      secretName: {{ printf "%s-%s-dyn-cloud-trusted-einfra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.einfra.cz
+{{- else }}
         - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
       secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
   - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
-{{- else }}
-    - hosts:
-        - {{ .Values.customhostname }}
-      secretName: {{ printf "%s-tls" .Values.customhostname | replace "." "-"  }}
-  rules:
-  - host: {{ .Values.customhostname }}
 {{- end }}
     http:
       paths:

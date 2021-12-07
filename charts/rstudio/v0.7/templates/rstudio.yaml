@@ -27,8 +27,6 @@ spec:
            secretKeyRef:
              key: password
              name: {{ .Release.Name }}-rstudiopassword
-        - name: TEST
-          value: {{ .Values.global.cattle.clusterName }}  
         securityContext:                                                          
           runAsUser: 1000 
           runAsGroup: 1000
