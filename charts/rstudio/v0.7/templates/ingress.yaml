@@ -14,10 +14,10 @@ spec:
   tls:
     - hosts:
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.einfra.cz 
-      secretName: {{ printf "%s-%s-dyn-cloud-trusted-einfra-cz-tls" .Release.Name .Release.Namespace  }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.e-infra.cz 
+      secretName: {{ printf "%s-%s-dyn-cloud-trusted-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
   rules:
-  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.einfra.cz
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.e-infra.cz
 {{- else }}
         - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
       secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
