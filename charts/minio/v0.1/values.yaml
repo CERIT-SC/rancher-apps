@@ -1,4 +1,4 @@
-image: "cerit.io/personalminio:v0.1"
+image: "cerit.io/personalminio:v0.2"
 pvc: ""
 username: "user"
 password: ""
