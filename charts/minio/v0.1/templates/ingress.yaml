@@ -40,7 +40,6 @@ metadata:
   name: s3-{{ .Release.Name }}
   annotations:
     kubernetes.io/ingress.class: nginx
-    external-dns.alpha.kubernetes.io/target: {{ .Values.dnstarget }}
     kubernetes.io/tls-acme: "true"
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
     cert-manager.io/cluster-issuer: "letsencrypt-prod-dns"
