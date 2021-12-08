@@ -29,7 +29,11 @@ spec:
               key: password
               name: {{ .Release.Name }}-minioauth
         - name: MINIO_BROWSER_REDIRECT_URL
-          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cerit-sc.cz
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.e-infra.cz
+{{- else }}
+          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+{{- end }}
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
