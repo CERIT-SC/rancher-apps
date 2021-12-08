@@ -1,5 +1,7 @@
 apiVersion: v1
 name: rstudio-server
+annotations:
+  catalog.cattle.io/release-name: rstudio
 version: 0.7
 appVersion: 1.2.5042
 description: 
