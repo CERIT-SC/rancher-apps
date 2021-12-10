@@ -43,7 +43,7 @@ spec:
       volumes:
       - name: storagedata
         persistentVolumeClaim:
-          claimName: pvc-{{ .Release.Name }}-storage-{{ printf "%s" .Values.storageserver | replace "," "-" }}  
+          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}-storage-{{ printf "%s" .Values.storageserver | replace "," "-" }}  
       - name: dshm
         emptyDir:
           medium: Memory
