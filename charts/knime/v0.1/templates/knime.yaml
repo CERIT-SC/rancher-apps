@@ -38,7 +38,13 @@ spec:
         volumeMounts:
         - name: storagedata
           mountPath: /home/knimeuser/knime-workspace
+        - name: dshm
+          mountPath: /dev/shm
       volumes:
       - name: storagedata
         persistentVolumeClaim:
           claimName: pvc-{{ .Release.Name }}-storage-{{ printf "%s" .Values.storageserver | replace "," "-" }}  
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: {{ .Values.shm }}

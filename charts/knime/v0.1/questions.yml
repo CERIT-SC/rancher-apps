@@ -87,3 +87,9 @@ questions:
   type: string
   label: Max RAM
   group: "Resources"
+- variable: shm
+  default: "1Gi"
+  description: "Set SHM size"
+  type: string
+  label: SHM Size
+  group: "Resources"
