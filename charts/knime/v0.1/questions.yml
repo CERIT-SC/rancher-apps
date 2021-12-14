@@ -63,6 +63,12 @@ questions:
   default: ""
   required: true
   group: Storage
+- varuable: timezone
+  type: string
+  description: "Set timezone of running container."
+  label: Timezone
+  required: false
+  group: Timezone
 - variable: mincpu
   default: 500m
   description: "Minimum guaranteed CPUs"

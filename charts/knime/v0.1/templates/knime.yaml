@@ -25,6 +25,8 @@ spec:
            secretKeyRef:
              key: password
              name: {{ .Release.Name }}-vnc
+        - name: CONTAINER_TIMEZONE
+          value: {{ .Values.timezone }}
         ports:
         - containerPort: 5901
         resources:

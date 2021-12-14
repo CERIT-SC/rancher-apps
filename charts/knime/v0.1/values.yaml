@@ -10,3 +10,4 @@ minram: 12288Mi
 maxram: 12288Mi
 ephem: 10Gi
 shm: 1Gi
+timezone: "Europe/Prague"
