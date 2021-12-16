@@ -4,7 +4,7 @@ annotations:
   catalog.cattle.io/release-name: shinysom
 version: 0.1
 appVersion: 1.2.10
-description: 
+description: ShinySOM
 icon: file://logo.svg
 keywords:
 - R
