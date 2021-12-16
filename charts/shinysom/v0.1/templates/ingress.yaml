@@ -12,6 +12,8 @@ metadata:
 {{- end }}
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: {{ .Release.Name }}-password 
+    nginx.ingress.kubernetes.io/proxy-body-size: 4096m
+    nginx.org/client-max-body-size: 4096m
 spec:
   tls:
     - hosts:
