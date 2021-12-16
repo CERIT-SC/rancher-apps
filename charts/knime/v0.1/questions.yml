@@ -63,7 +63,7 @@ questions:
   default: ""
   required: true
   group: Storage
-- varuable: timezone
+- variable: timezone
   type: string
   description: "Set timezone of running container."
   label: Timezone
