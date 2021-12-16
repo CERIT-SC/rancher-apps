@@ -1,0 +1,38 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+- R
+
+questions:
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into ShinySOM. You need to remember this password! Username will be 'user'."
+  type: password
+  label: Password (please avoid chars "{" and "}")
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: mincpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"

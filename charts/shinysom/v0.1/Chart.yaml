@@ -1,0 +1,20 @@
+apiVersion: v1
+name: shinysom
+annotations:
+  catalog.cattle.io/release-name: shinysom
+version: 0.1
+appVersion: 1.2.10
+description: 
+icon: file://logo.svg
+keywords:
+- R
+- rstudio shiny
+- shinysom
+- rstudio-server
+home: https://gitlab.com/exaexa/ShinySOM
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
