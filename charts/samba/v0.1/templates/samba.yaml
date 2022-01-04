@@ -39,10 +39,6 @@ spec:
           mountPath: /run
         - name: logs
           mountPath: /var/log/samba
-        - name: cache
-          mountPath: /var/cache/samba
-        - name: lib
-          mountPath: /var/lib/samba
       volumes:
       - name: vol-1
         persistentVolumeClaim:
@@ -52,11 +48,5 @@ spec:
           medium: Memory
           sizeLimit: 100Mi
       - name: logs
-        emptyDir:
-          sizeLimit: 1Gi
-      - name: cache
-        emptyDir:
-          sizeLimit: 1Gi
-      - name: lib
         emptyDir:
           sizeLimit: 1Gi

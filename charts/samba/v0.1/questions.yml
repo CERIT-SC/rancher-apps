@@ -14,12 +14,12 @@ questions:
   type: password
   label: Password
   min_length: 8
-  group: "Authentication"
+  group: "Server Settings"
   invalid_chars: "{}"
 - variable: pvc
   description: "Select Persitent Volume Claim (PVC) that will be exposed via Samba"
   type: pvc
-  group: "Storage PVC"
+  group: "Server Settings"
   label: PVC
   required: true
 - variable: public
