@@ -8,7 +8,7 @@ Persistent Volume Claim is used as a storage for running applications/pods in Ku
 
 ## Namespace
 
-**It is important do deploy minio server into the same namespace where your PVC is located.** The PVC name is selected in the form below, select *Use an existing namespace* and select the one that the PVC is from.
+**It is important to deploy minio server into the same namespace where your PVC is located.** The PVC name is selected in the form below, select *Use an existing namespace* and select the one that the PVC is from.
 
 ## Authentication
 In the form below, enter username and password that will be used for Web authentication and S3 authentication. In case of S3 authentication, `username` is an **access key** and `password` is a **secret key**.

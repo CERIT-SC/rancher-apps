@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+{{- if eq .Values.public false }}
+    purelb.io/service-group: privmuni
+{{- end }}
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.trusted.einfra.cz
+{{- else }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+{{- end }}
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 443
+    targetPort: 1443
+    name: smb
+  selector:
+    app: {{ .Release.Name }}
