@@ -16,8 +16,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 443
-    targetPort: 1443
+  - port: 445
+    targetPort: 1445
     name: smb
   selector:
     app: {{ .Release.Name }}
