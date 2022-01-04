@@ -21,6 +21,7 @@ questions:
   type: pvc
   group: "Storage PVC"
   label: PVC
+  required: true
 - variable: public
   description: "Use public IP (accessible from public Internet) if true, private IP is used otherwise (accessible from MUNI or VPN network only)."
   type: boolean
