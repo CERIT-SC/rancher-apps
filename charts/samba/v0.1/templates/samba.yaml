@@ -48,15 +48,15 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.pvc }}
       - name: run
-          emptyDir:
-            medium: Memory
-            sizeLimit: 100Mi
+        emptyDir:
+          medium: Memory
+          sizeLimit: 100Mi
       - name: logs
-          emptyDir:
-            sizeLimit: 1Gi
+        emptyDir:
+          sizeLimit: 1Gi
       - name: cache
-          emptyDir:
-            sizeLimit: 1Gi
+        emptyDir:
+          sizeLimit: 1Gi
       - name: lib
-          emptyDir:
-            sizeLimit: 1Gi
+        emptyDir:
+          sizeLimit: 1Gi
