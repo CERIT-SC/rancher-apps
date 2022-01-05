@@ -1,0 +1,64 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Portals
+- Bio
+
+questions:
+- variable: password
+  default: ""
+  required: true
+  description: "You must enter a password that will be used log into bioda. You need to remember this password! Username will be 'user'."
+  type: password
+  label: Password (please avoid chars "{" and "}")
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: storageusername
+  description: "Storage connect username (UČO)"
+  label: Storage username
+  required: true
+  default: ""
+  type: int
+  group: "Password Settings"
+- variable: storagepassword
+  label: Storage password
+  description: "Storage connect password (secondary IS password)"
+  default: ""
+  required: true
+  type: password
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: sshkey
+  label: SSH Public key
+  description: "SSH pub key for access via proxy"
+  default: ""
+  type: string
+  group: "Password Settings"
+  invalid_chars: "{}"
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "16384Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"

@@ -1,0 +1,11 @@
+image: "cerit.io/bioda:v1.0"
+username: "user"
+password: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+storageusername: ''
+storagepassword: ''
+sshkey: ''
