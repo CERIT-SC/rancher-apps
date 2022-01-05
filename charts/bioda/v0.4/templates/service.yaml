@@ -12,7 +12,6 @@ spec:
     targetPort: 8080
   selector:
     app: {{ .Release.Name }}
-  externalTrafficPolicy: Local
   sessionAffinity: ClientIP
   sessionAffinityConfig:
     clientIP:
