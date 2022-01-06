@@ -12,6 +12,7 @@ questions:
   description: R Studio Image
   options:
     - "R 4.0.5/Ubuntu 20.04"
+    - "R 4.0.5/Ubuntu 20.04 Full"
     - "R 3.6.3/Debian 10"
   default: "R 4.0.5/Ubuntu 20.04"
   type: enum
