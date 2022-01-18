@@ -1,14 +1,15 @@
 apiVersion: v1
 name: ansys
-version: 2019
-appVersion: 2019R3
-description: ANSYS 2019R3
+version: 2020
+appVersion: 2020R1
+description: ANSYS 2020R1
 icon: file://logo.jpg
 keywords:
 - Remote desktop
-- Ansys 2019R3
+- Ansys 2020R1
 - Webrtc
 - 3D Acceleration
+- VNC
 home: https://cerit.io
 sources:
 - https://github.com/CERIT-SC/rancher-apps
