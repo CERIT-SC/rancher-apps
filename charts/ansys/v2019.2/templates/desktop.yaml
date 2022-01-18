@@ -235,13 +235,6 @@ spec:
             - name: data
               mountPath: /storage
 {{- end }}
-
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-
-" }}
-
           resources:
             limits:
               cpu: {{ .Values.maxcpu }}
