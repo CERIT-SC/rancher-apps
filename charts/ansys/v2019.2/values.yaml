@@ -8,3 +8,7 @@ password: ""
 persistenthome: true
 resolution: "1920x1080"
 vnc: true
+storage: ""
+storageusername: ""
+storagepassword: ""
+extrstorage: false

@@ -136,6 +136,11 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+{{- if ne .Values.storage "" }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
+{{- end }}
 {{- if .Values.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -226,6 +231,17 @@ spec:
             - name: home
               mountPath: /home/user
 {{- end }}
+{{- if ne .Values.storage "" }}
+            - name: data
+              mountPath: /storage
+{{- end }}
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-
+" }}
+
           resources:
             limits:
               cpu: {{ .Values.maxcpu }}
