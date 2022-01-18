@@ -1,0 +1,60 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- WEBRTC
+- ANSYS 
+- VNC
+
+questions:
+- variable: vnc
+  default: true
+  type: boolean
+  label: Use VNC
+  group: Display
+  description: "Use either VNC client (if true) or WebRTC."
+- variable: username
+  type: string
+  label: Desktop Username
+  description: "Username used to log into the desktop. You can use default \"user\"."
+  group: "Password Settings"
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
+  type: password
+  label: Desktop Password
+  group: "Password Settings"
+- variable: persistenthome
+  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
+  default: true
+  required: false
+  type: boolean
+  label: Persistent home
+  group: Storage
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "8000Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
