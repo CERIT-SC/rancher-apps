@@ -204,7 +204,7 @@ spec:
 {{- end }}
         - name: desktop
           image: {{ .Values.desktop }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           securityContext:
             privileged: false
             runAsUser: 1000
