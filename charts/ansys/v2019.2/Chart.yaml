@@ -1,10 +1,10 @@
 apiVersion: v1
 name: ansys
+annotations:
+  catalog.cattle.io/release-name: ansys
 version: 2019.2
 appVersion: 2019.2
 description: ANSYS 2019.2
-annotations:
-  catalog.cattle.io/release-name: ansys
 icon: file://logo.jpg
 keywords:
 - Remote desktop
