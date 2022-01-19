@@ -136,7 +136,7 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-{{- if ne .Values.storage "" }}
+{{- if ne .Values.extrstorage false }}
         - name: data
           persistentVolumeClaim:
             claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
@@ -231,7 +231,7 @@ spec:
             - name: home
               mountPath: /home/user
 {{- end }}
-{{- if ne .Values.storage "" }}
+{{- if ne .Values.extrstorage false }}
             - name: data
               mountPath: /storage
 {{- end }}
