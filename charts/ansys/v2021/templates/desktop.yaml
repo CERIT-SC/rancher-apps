@@ -137,9 +137,12 @@ spec:
             medium: Memory
             sizeLimit: 1Gi
 {{- if ne .Values.extrstorage false }}
+{{- if ne .Values.storage "" }}
+
         - name: data
           persistentVolumeClaim:
             claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage | regexFind "^[^/]*" | replace "." "-" }}
+{{- end }}
 {{- end }}
 {{- if .Values.persistenthome }}
       initContainers:
@@ -232,8 +235,11 @@ spec:
               mountPath: /home/user
 {{- end }}
 {{- if ne .Values.extrstorage false }}
+{{- if ne .Values.storage "" }}
+
             - name: data
               mountPath: /storage
+{{- end }}
 {{- end }}
           resources:
             limits:
