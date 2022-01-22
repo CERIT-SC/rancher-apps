@@ -1,8 +1,8 @@
-# OwnCloud Client
+# ownCloud Client
 
-OwnCloud client can be used to sync [Persistent Volume Claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) with [OwnCloud](https://owncloud.com) servers, such as [OwnCloud CESNET](https://owncloud.cesnet.cz).
+ownCloud client can be used to sync [Persistent Volume Claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) with [ownCloud](https://owncloud.com) servers, such as [ownCloud CESNET](https://owncloud.cesnet.cz).
 
-Persistent Volume Claim is used as a storage for running applications/pods in Kubernetes. If you want to sync data to/from this storage with OwnCloud server, Owncloud client provides convenient way to do it.
+Persistent Volume Claim is used as a storage for running applications/pods in Kubernetes. If you want to sync data to/from this storage with ownCloud server, owncloud client provides convenient way to do it.
 
 ## Namespace
 
@@ -10,7 +10,7 @@ Persistent Volume Claim is used as a storage for running applications/pods in Ku
 
 ## Authentication
 
-At first, it is required to setup access name and password on the OwnCloud server, in case of OwnCloud CESNET, follow documentation [here](https://du.cesnet.cz/en/navody/owncloud/start#access_via_webdav_protocol) (see Access via WebDAV protocol). Access name and password needs to be passed in the form during launching this application.
+At first, it is required to setup access name and password on the ownCloud server, in case of ownCloud CESNET, follow documentation [here](https://du.cesnet.cz/en/navody/owncloud/start#access_via_webdav_protocol) (see Access via WebDAV protocol). Access name and password needs to be passed in the form during launching this application.
 
 ## Folders
 
@@ -20,10 +20,10 @@ You need to fill *local* and *remote* folders. The local folder is relative to P
 
 You can check the mount point entering the `pod` and issuing `df -h` to see the mount point, for more, see [documentation](https://docs.cerit.io/docs/owncloudclient.html).
 
-The *remote* folder if name on the OwnCloud server such as, `Documents`, `Photos`. If you set remote folder to `/`, all your data from the OwnCloud server will be synced.
+The *remote* folder if name on the ownCloud server such as, `Documents`, `Photos`. If you set remote folder to `/`, all your data from the ownCloud server will be synced.
 
 ### Note
 
-* Data synchronisation is *always bidirectional*, meaning you cannot sync only from OwnCloud server or only to OwnCloud server. Data is synced both from and to the OwnCloud server.
+* Data synchronisation is *always bidirectional*, meaning you cannot sync only from ownCloud server or only to ownCloud server. Data is synced both from and to the ownCloud server.
 
 * Data synchronisation is done every 30 seconds.

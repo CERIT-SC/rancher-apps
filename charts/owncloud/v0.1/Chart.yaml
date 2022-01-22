@@ -4,10 +4,10 @@ annotations:
 name: owncloud
 version: 0.1
 appVersion: 2.9.2
-description: OwnCloud Client
+description: ownCloud Client
 icon: file://logo.svg
 keywords:
-- OwnCloud
+- ownCloud
 - Sync and Share
 home: https://owncloud.com/
 sources:
