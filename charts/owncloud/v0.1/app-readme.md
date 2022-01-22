@@ -1,5 +1,5 @@
 
-## ownCloud Client
+# ownCloud Client
 
 ownCloud client can be used to sync [Persistent Volume Claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) with [ownCloud](https://owncloud.com) servers, such as [ownCloud CESNET](https://owncloud.cesnet.cz).
 
