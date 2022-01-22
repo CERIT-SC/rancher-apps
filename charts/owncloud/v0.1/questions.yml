@@ -1,0 +1,48 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- OwnCloud
+- Sync and Share
+
+questions:
+- variable: server
+  required: true
+  description: "Owncloud Server"
+  type: string
+  label: Server
+  group: "Client Settings"
+- variable: username
+  required: true
+  description: "Enter username for owncloud"
+  type: string
+  label: Username
+  group: "Client Settings"
+  invalid_chars: "{}"
+- variable: password
+  required: true
+  description: "Enter password for owndcloud"
+  type: password
+  label: Password
+  group: "Client Settings"
+  invalid_chars: "{}"
+- variable: pvc
+  description: "Select Persistent Volume Claim (PVC) that into which data is synced."
+  type: pvc
+  group: "Client Settings"
+  label: PVC
+  required: true
+- variable: localdir
+  description: "Name of local directory to sync to. Note, this directory is relative to mounted PVC. E.g., if you have PVC in '/home/user' and set this option to 'data', you find data in '/home/user/data'"
+  type: string
+  label: Local Directory
+  required: true
+  group: "Client Settings"
+- variable: remotedir
+  description: "Name of remote directory (owncloud) to sync from. Setting '/' means sync your owncloud completely."
+  type: string
+  label: Remote Directory
+  required: true
+  group: "Client Settings"

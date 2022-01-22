@@ -1,0 +1,18 @@
+apiVersion: v1
+annotations:
+  catalog.cattle.io/release-name: owncloud
+name: owncloud
+version: 0.1
+appVersion: 2.9.2
+description: OwnCloud Client
+icon: file://logo.svg
+keywords:
+- OwnCloud
+- Sync and Share
+home: https://owncloud.com/
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl

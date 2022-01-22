@@ -17,7 +17,7 @@ questions:
   group: "Server Settings"
   invalid_chars: "{}"
 - variable: pvc
-  description: "Select Persitent Volume Claim (PVC) that will be exposed via Samba"
+  description: "Select Persistent Volume Claim (PVC) that will be exposed via Samba"
   type: pvc
   group: "Server Settings"
   label: PVC

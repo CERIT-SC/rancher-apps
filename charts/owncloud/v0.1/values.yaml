@@ -1,0 +1,7 @@
+image: "cerit.io/owncloud/client:v2.9.2"
+pvc: ""
+username: "user"
+password: ""
+server: "https://owncloud.du.cesnet.cz/remote.php/webdav"
+remotedir: "/"
+localdir: "owncloud-data"
