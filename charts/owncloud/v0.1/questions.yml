@@ -10,20 +10,20 @@ categories:
 questions:
 - variable: server
   required: true
-  description: "Owncloud Server"
+  description: "OwnCloud Server"
   type: string
   label: Server
   group: "Client Settings"
 - variable: username
   required: true
-  description: "Enter username for owncloud"
+  description: "Enter username for OwnCloud"
   type: string
   label: Username
   group: "Client Settings"
   invalid_chars: "{}"
 - variable: password
   required: true
-  description: "Enter password for owndcloud"
+  description: "Enter password for OwnCloud"
   type: password
   label: Password
   group: "Client Settings"
@@ -41,7 +41,7 @@ questions:
   required: true
   group: "Client Settings"
 - variable: remotedir
-  description: "Name of remote directory (owncloud) to sync from. Setting '/' means sync your owncloud completely."
+  description: "Name of remote directory (OwnCloud) to sync from. Setting '/' means sync your owncloud completely."
   type: string
   label: Remote Directory
   required: true
