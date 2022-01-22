@@ -16,37 +16,30 @@ spec:
       containers:
       - name: {{ .Release.Name }}
         image: {{ .Values.image }}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         env:
-        - name: SMBPASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: {{ .Release.Name }}-sambaauth
+        - name: OWNCLOUDSERVER
+          value: {{ regexReplaceAll "/$" .Values.server "" | quote }}
+        - name: OWNCLOUDREMOTE
+          value: {{ regexReplaceAll "^/" .Values.remotedir "" | quote }}
+        - name: OWNCLOUDLOCAL
+          value: {{ printf "/mnt/%s" .Values.localdir | quote }}
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
         resources:
           limits:
-            cpu: 1
-            memory: 1024Mi
-        ports:
-        - containerPort: 1445
+            cpu: 100m
+            memory: 512Mi
         volumeMounts:
         - name: vol-1
           mountPath: /mnt
-        - name: run
-          mountPath: /run
-        - name: logs
-          mountPath: /var/log/samba
+        - name: netrc
+          mountPath: /etc/netrc
       volumes:
       - name: vol-1
         persistentVolumeClaim:
           claimName: {{ .Values.pvc }}
-      - name: run
-        emptyDir:
-          medium: Memory
-          sizeLimit: 100Mi
-      - name: logs
-        emptyDir:
-          sizeLimit: 1Gi
+      - name: netrc
+        secret:
+          secretName: {{ .Release.Name }}-netrc 

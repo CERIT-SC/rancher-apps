@@ -10,7 +10,7 @@ categories:
 questions:
 - variable: server
   required: true
-  description: "OwnCloud Server"
+  description: "OwnCloud Server. It must start with 'https://'"
   type: string
   label: Server
   group: "Client Settings"
