@@ -1,31 +1,29 @@
-# Samba Server
+# OwnCloud Client
 
-Samba server can be used to expose [Persistent Volume Claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) via CIFS/SMB protocol as Windows network drive.
+OwnCloud client can be used to sync [Persistent Volume Claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) with [OwnCloud](https://owncloud.com) servers, such as [OwnCloud CESNET](https://owncloud.cesnet.cz).
 
-Persistent Volume Claim is used as a storage for running applications/pods in Kubernetes. If you want to upload/download data to/from this storage, Samba server provides convenient way to do it.
+Persistent Volume Claim is used as a storage for running applications/pods in Kubernetes. If you want to sync data to/from this storage with OwnCloud server, Owncloud client provides convenient way to do it.
 
 ## Namespace
 
-**It is important to deploy samba server into the same namespace where your PVC is located.** The PVC name is selected in the form below, select *Use an existing namespace* and select the one that the PVC is from.
+**It is important to deploy owncloud client into the same namespace where your PVC is located.** The PVC name is selected in the form below, select *Use an existing namespace* and select the one that the PVC is from.
 
 ## Authentication
-In the form below, enter password that will be used for authentication. Username is always `user`.
 
-## Access
+At first, it is required to setup access name and password on the OwnCloud server, in case of OwnCloud CESNET, follow documentation [here](https://du.cesnet.cz/en/navody/owncloud/start#access_via_webdav_protocol) (see Access via WebDAV protocol). Access name and password needs to be passed in the form during launching this application.
 
-To access the network drive, a URL needs to be provided. It is in the following form: `\\{$ns-$samba}.dyn.cloud.e-infra.cz\data`. Where `$samba` is replaced by instance name (selected in the next step, usually `samba`) and $ns is replaced by `namespace` you run this server in, e.g., `hejtmanek-ns`, so full URL can be `\\hejtmanek-ns-samba.dyn.cloud.e-infra.cz\data`.
+## Folders
 
-### Windows
+For more information, consult our [documentation](https://docs.cerit.io/docs/owncloudclient.html).
 
-Map a network drive to get to it from File Explorer in Windows without having to look for it or type its network address each time.
+You need to fill *local* and *remote* folders. The local folder is relative to PVC mount point. E.g., if PVC is connected to `/home/user` and you select local folder as `owncloud-data`, data will be synced into `/home/user/owncloud-data`.
 
-1. Open **File Explorer** from the taskbar or the **Start** menu, or press the **Windows logo key `❖` + E.**
+You can check the mount point entering the `pod` and issuing `df -h` to see the mount point, for more, see [documentation](https://docs.cerit.io/docs/owncloudclient.html).
 
-2. Select **This PC** from the left pane. Then, on the **Computer** tab, select **Map network drive**. 
+The *remote* folder if name on the OwnCloud server such as, `Documents`, `Photos`. If you set remote folder to `/`, all your data from the OwnCloud server will be synced.
 
-3. In the **Folder** box, type the path of the folder or computer `\\{ns-samba}.dyn.cloud.e-infra.cz\data`. Replace `{ns-samba}` with correct name, see above. Fill in logon credentials, select `user` as username and selected password below.
+### Note
 
-### Linux
+* Data synchronisation is *always bidirectional*, meaning you cannot sync only from OwnCloud server or only to OwnCloud server. Data is synced both from and to the OwnCloud server.
 
-As root, type `mount //{ns-samba}.dyn.cloud.e-infra.cz/data /mnt -t cifs -o username=user,password=$PASSWORD` to mount the drive into the `/mnt` directory. Replace `$PASSWORD` with password selected below.
-
+* Data synchronisation is done every 30 seconds.
