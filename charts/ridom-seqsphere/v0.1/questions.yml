@@ -38,6 +38,7 @@ questions:
   group: "Storage"
   label: External storage
   show_subquestion_if: true
+  subquestions:
   - variable: storage.server
     description: "Connect Storage as /home/rstudio/data"
     label: Storage hostname
