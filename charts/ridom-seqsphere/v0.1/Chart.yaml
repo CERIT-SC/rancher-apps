@@ -1,7 +1,9 @@
 apiVersion: v1
 name: ridom-seqsphere
-version: 8.3.0
+version: 0.1
 appVersion: 8.3.0
+annotations:
+  catalog.cattle.io/release-name: ridom-seqsphere
 description: Ridom Seq Sphere server and client
 icon: file://logo.png
 keywords:
