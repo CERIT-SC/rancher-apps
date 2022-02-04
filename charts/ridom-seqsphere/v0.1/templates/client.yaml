@@ -68,6 +68,11 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+{{- if eq .Values.storage.enable true }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.storage.server | regexFind "^[^/]*" | replace "." "-" }}
+{{ end }}
       initContainers:
         - name: init-desktop
           image: {{ .Values.client.image }}
@@ -112,6 +117,13 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
@@ -121,13 +133,10 @@ spec:
               mountPath: /dev/shm
             - name: home
               mountPath: /home/user
-          resources:
-            limits:
-              cpu: {{ .Values.maxcpu }}
-              memory: {{ .Values.maxram }}
-            requests:
-              cpu: {{ .Values.mincpu }}
-              memory: {{ .Values.minram }}
+{{- if eq .Values.storage.enable true }}
+            - name: data
+              mountPath: /home/user/data
+{{- end }}
   volumeClaimTemplates:
   - metadata:
       name: home

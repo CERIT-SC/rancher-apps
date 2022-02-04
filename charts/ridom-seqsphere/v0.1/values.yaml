@@ -13,6 +13,6 @@ persistenthome: true
 vnc: true
 storage: 
   enable: false
-  server: ''
+  server: 'ha-bay.ics.muni.cz/share'
   username: ''
   password: ''
