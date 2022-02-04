@@ -1,0 +1,18 @@
+client:
+  enable: true
+  image: "cerit.io/ridomclient:v0.1"
+server:
+  enable: true
+  image: "cerit.io/ridomserver:v0.1"
+mincpu: 1
+maxcpu: 4
+minram: 32Gi
+maxram: 32Gi
+password: ""
+persistenthome: true
+vnc: true
+storage: 
+  enable: false
+  server: ''
+  username: ''
+  password: ''

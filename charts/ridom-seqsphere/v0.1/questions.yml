@@ -1,0 +1,83 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- Ridom
+- SeqSphere
+- VNC
+
+questions:
+- variable: client.enable
+  type: boolean
+  label: Run Client
+  description: "Run client part ofr Ridom Seqsphere"
+  group: "Mode"
+- variable: server.enable
+  type: boolean
+  label: Run Server
+  description: "Run server part ofr Ridom Seqsphere"
+  group: "Mode"
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
+  type: password
+  label: VNC Password
+  group: "Authentication"
+- variable: persistenthome
+  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
+  required: false
+  type: boolean
+  label: Persistent home
+  group: Storage
+- variable: storage.enable
+  description: "Connect external storage"
+  type: boolean
+  group: "Storage"
+  label: External storage
+  show_subquestion_if: true
+  - variable: storage.server
+    description: "Connect Storage as /home/rstudio/data"
+    label: Storage hostname
+    required: true
+    options:
+     - "ha-bay.ics.muni.cz/share"
+     - "storage-brno12-cerit.metacentrum.cz/share"
+    group: "Storage"
+    type: enum
+  - variable: storage.username
+    description: "Storage connect username"
+    label: Storage username
+    required: true
+    default: ""
+    type: string
+    group: "Storage"
+  - variable: storage.password
+    label: Storage password
+    description: "Storage connect password"
+    default: ""
+    required: true
+    type: password
+    group: "Storage"
+- variable: mincpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
