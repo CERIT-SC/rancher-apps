@@ -28,11 +28,12 @@ questions:
   group: "Authentication"
   show_if: "client.enable=true"
 - variable: persistenthome
-  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
+  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall. For Client mode only."
   required: false
   type: boolean
   label: Persistent home
   group: Storage
+  show_if: "client.enable=true"
 - variable: storage.enable
   description: "Connect external storage"
   type: boolean
