@@ -1,0 +1,14 @@
+image: "R 3.6.3/Debian 10"
+rstudiopassword: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+storage:
+  enable: true
+  server: "ha-bay.ics.muni.cz/share"
+  username: "a"
+  password: "b"
+global:
+  cattle:
+    clusterName: 'kubas'
