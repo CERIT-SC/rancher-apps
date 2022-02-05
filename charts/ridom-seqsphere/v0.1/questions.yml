@@ -26,6 +26,7 @@ questions:
   type: password
   label: VNC Password
   group: "Authentication"
+  show_if: "client.enable=true"
 - variable: persistenthome
   description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
   required: false
@@ -37,6 +38,7 @@ questions:
   type: boolean
   group: "Storage"
   label: External storage
+  show_if: "client.enable=true"
   show_subquestion_if: true
   subquestions:
   - variable: storage.server
