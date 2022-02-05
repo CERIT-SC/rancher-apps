@@ -36,6 +36,7 @@ questions:
     required: true
     options:
      - "storage-brno12-cerit.metacentrum.cz/share"
+     - "ha-bay.ics.muni.cz/share"
     group: "Storage"
     type: enum
   - variable: storage.username
