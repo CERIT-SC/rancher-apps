@@ -65,7 +65,6 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: desktoppassword
-    nginx.ingress.kubernetes.io/auth-realm: "Use 'desktop' username and choosen password"
 spec:
   tls:
 {{- if eq .Values.defhostname true }}
