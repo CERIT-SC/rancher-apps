@@ -1,6 +1,6 @@
 client:
   enable: true
-  image: "cerit.io/ridomclient:v0.1"
+  image: "cerit.io/ridomclient:v0.2"
 server:
   enable: true
   image: "cerit.io/ridomserver:v0.1"
