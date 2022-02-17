@@ -21,12 +21,6 @@ questions:
     - "cerit.io/wine-gaming:v0.5"
   group: "Image"
   type: enum
-- variable: resolution
-  description: "Desktop resolution. Can be changed via xrandr. Web page needs reload after change."
-  default: "1920x1080"
-  type: string
-  group: "Resolution"
-  label: Desktop resolution
 - variable: defhostname
   default: true
   description: "Set hostname to: desktop-server-{namespace}.dyn.cerit-sc.cz. You can specify arbitraty name in dyn.cerit-sc.cz domain setting false."
