@@ -49,11 +49,29 @@ spec:
 {{- if eq .Values.storage.enable true }}
         - name: data
           mountPath: /home/rstudio/data
+{{- if ne .Values.storage.pvc "" }}
+        - name: pvc
+          mountPath: /home/rstudio/pvc
+{{- end }}
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: pvc-{{ include "storage.name" . }}
-{{ end }}       
+{{- if ne .Values.storage.pvc "" }}
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc }}
+{{- end }}
+{{- else }}
+{{- if ne .Values.storage.pvc "" }}
+        - name: pvc
+          mountPath: /home/rstudio/pvc
+      volumes:
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc }}
+{{- end }}
+{{- end }}       
   volumeClaimTemplates:
   - metadata:
       name: home
