@@ -8,6 +8,7 @@ keywords:
 - Remote desktop
 - Webrtc
 - 3D Acceleration
+- applications
 home: https://cerit.io
 sources:
 - https://github.com/CERIT-SC/rancher-apps

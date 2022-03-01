@@ -11,6 +11,7 @@ keywords:
 - rstudio shiny
 - shinysom
 - rstudio-server
+- applications
 home: https://gitlab.com/exaexa/ShinySOM
 sources:
 - https://github.com/CERIT-SC/rancher-apps

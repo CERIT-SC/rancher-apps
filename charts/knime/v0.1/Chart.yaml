@@ -8,6 +8,7 @@ keywords:
 - KNIME
 - R
 - Python
+- applications
 home: https://knime.com
 sources:
 - https://github.com/CERIT-SC/rancher-apps
