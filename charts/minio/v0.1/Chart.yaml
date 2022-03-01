@@ -9,6 +9,7 @@ icon: file://logo.png
 keywords:
 - Minio
 - S3
+- storage
 home: https://min.io
 sources:
 - https://github.com/CERIT-SC/rancher-apps

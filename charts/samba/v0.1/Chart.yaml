@@ -9,6 +9,7 @@ icon: file://logo.svg
 keywords:
 - Samba
 - Windows Share
+- storage
 home: https://samba.org
 sources:
 - https://github.com/CERIT-SC/rancher-apps
