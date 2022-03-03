@@ -6,8 +6,11 @@ metadata:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-{{- if ne .Values.ingress.whitelistips "" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.ingress.whitelistips | quote }}
+#{{- if ne .Values.ingress.whitelistips "" }}
+#    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.ingress.whitelistips | quote }}
+#{{- end }}
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" -}}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.whitelistips | quote }}
 {{- end }}
 spec:
   tls:
