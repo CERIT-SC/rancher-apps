@@ -6,7 +6,6 @@ metadata:
   labels:
     app: {{ .Release.Name }}
   annotations:
-    purelb.io/service-group: privmuni
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
 spec:
   type: LoadBalancer
