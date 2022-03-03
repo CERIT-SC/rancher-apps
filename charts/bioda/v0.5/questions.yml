@@ -10,7 +10,7 @@ categories:
 
 questions:
 - variable: enablessh
-  description: "Enable direct access via SSH. SSH will be accessible through port 2222, not 22!"
+  description: "Enable direct access via SSH. SSH will be accessible through port 2222, not 22! This option disables web-based ssh client."
   label: Enable SSH
   type: boolean
   group: "Services"
