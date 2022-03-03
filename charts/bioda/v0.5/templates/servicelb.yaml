@@ -10,10 +10,6 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
 spec:
   type: LoadBalancer
-  ipFamilies:
-  - IPv6
-  - IPv4
-  ipFamilyPolicy: PreferDualStack
   ports:
   - port: 2222
     name: ssh
