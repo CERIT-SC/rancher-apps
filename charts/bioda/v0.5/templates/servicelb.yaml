@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-ssh
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-ssh
   annotations:
     purelb.io/service-group: privmuni
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
