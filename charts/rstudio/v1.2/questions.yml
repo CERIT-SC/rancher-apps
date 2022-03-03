@@ -26,7 +26,7 @@ questions:
   invalid_chars: "{}"
 - variable: ingress.whitelistip
   required: false
-  description: "Optinally whitelist IP. Access to RStudio will be allowed only from this IP, specify given IP."
+  description: "Optionally whitelist IP. Access to RStudio will be allowed only from this IP, specify given IP. Applicable only to secure K8s."
   label: Whitelist IP
   group: "Security"
   type: string
