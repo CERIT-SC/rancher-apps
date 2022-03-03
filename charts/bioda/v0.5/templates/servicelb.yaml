@@ -1,0 +1,24 @@
+{{- if eq .Values.enablessh true -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+    purelb.io/service-group: privmuni
+    external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
+spec:
+  type: LoadBalancer
+  ipFamilies:
+  - IPv6
+  - IPv4
+  ipFamilyPolicy: PreferDualStack
+  ports:
+  - port: 2222
+    name: ssh
+    targetPort: 2222
+  selector:
+    app: {{ .Release.Name }}
+  externalTrafficPolicy: Local
+{{- end -}}
