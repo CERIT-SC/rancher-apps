@@ -24,10 +24,10 @@ questions:
   label: RStudio Password (please avoid chars "{" and "}")
   group: "Security"
   invalid_chars: "{}"
-- variable: ingress.whitelistips
+- variable: ingress.whitelistip
   required: false
-  description: "Optinally whitelist IPs. Access to RStudio will be allowed only from these IPs, enter comma separated IPs or CIDRs."
-  label: Whitelist IPs
+  description: "Optinally whitelist IP. Access to RStudio will be allowed only from this IP, specify given IP."
+  label: Whitelist IP
   group: "Security"
   type: string
 - variable: networkpolicy

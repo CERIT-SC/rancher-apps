@@ -11,5 +11,5 @@ storage:
   password: ""
   pvc: ""
 ingress:
-  whitelistips: ""
+  whitelistip: ""
 networkpolicy: true
