@@ -22,6 +22,7 @@ questions:
   label: Password (please avoid chars "{" and "}")
   group: "Password Settings"
   invalid_chars: "{}"
+  show_if: "enablessh=false"
 - variable: storageusername
   description: "Storage connect username (UČO)"
   label: Storage username
@@ -39,7 +40,7 @@ questions:
   invalid_chars: "{}"
 - variable: sshkey
   label: SSH Public key
-  description: "SSH pub key for access via proxy"
+  description: "SSH pub key for access via proxy. Required for SSH access!"
   default: ""
   type: string
   group: "Password Settings"
