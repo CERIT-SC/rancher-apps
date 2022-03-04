@@ -27,6 +27,10 @@ spec:
 {{- if eq .Values.image "R 4.1.1/Ubuntu 20.04 Full" }}
         image: cerit.io/rstudio-full:v4.1.1
 {{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04 ESF" }}
+        image: cerit.io/rstudio:v4.0.5-esf
+{{- end }}
+
         env:
         - name: PASSWORD
           valueFrom:
