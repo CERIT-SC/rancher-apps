@@ -90,18 +90,34 @@ spec:
               port:
                 number: 80
 {{- end }}
+{{- if .Values.persistenthome }}
+{{- if lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( printf "%s-home" .Release.Name) }}
 ---
-apiVersion: apps/v1
-kind: StatefulSet
+{{- else }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-home
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+{{- end }}
+{{- end }}
+---
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: {{ .Release.Name }}
 spec:
-  selector:
-    matchLabels:
-      app: {{ .Release.Name }}
-  serviceName: {{ .Release.Name }}
-  replicas: 1
-  volumeClaimTemplates: []
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 100
   template:
     metadata:
       annotations: {}
@@ -110,6 +126,12 @@ spec:
     spec:
       # Disable service account used for accessing the kubernetes API/
       automountServiceAccountToken: false
+      restartPolicy: Never
+{{- if gt .Values.walltime .Values.maxwalltime }}
+      activeDeadlineSeconds: {{ mul .Values.maxwalltime 3600 }}
+{{- else }}
+      activeDeadlineSeconds: {{ mul .Values.walltime 3600 }}
+{{- end}}
 
       # Terminate pod after 10 seconds of receiving SIGTERM
       terminationGracePeriodSeconds: 5
@@ -136,6 +158,11 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+{{- if .Values.persistenthome }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-home
+{{- end }}
 {{- if ne .Values.extrstorage false }}
 {{- if ne .Values.storage "" }}
 
@@ -368,14 +395,3 @@ spec:
               cpu: 500m
               memory: 400Mi
 {{- end }}
-{{- if .Values.persistenthome }}
-  volumeClaimTemplates:
-  - metadata:
-      name: home
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: "nfs-csi"
-      resources:
-        requests:
-          storage: 1Gi
-{{ end }}

@@ -13,3 +13,4 @@ storageusername: ""
 storagepassword: ""
 extrstorage: false
 walltime: 24
+maxwalltime: 96
