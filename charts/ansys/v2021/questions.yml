@@ -64,7 +64,7 @@ questions:
     group: "Storage"
 - variable: walltime
   description: "Maximum runtime of application in hours. 24 = 1 day, 96 = 4 days. Maximum allowed is 4 days, higher values are cut to 4 days."
-  type: integer
+  type: int
   label: Walltime hours
   group: "Resources"
 - variable: mincpu
