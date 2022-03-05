@@ -62,26 +62,27 @@ questions:
     required: true
     type: password
     group: "Storage"
+- variable: walltime
+  description: "Maximum runtime of application in hours. 24 = 1 day, 96 = 4 days. Maximum allowed is 4 days, higher values are cut to 4 days"
+  type: integer
+  label: Walltime hours
+  group: "Resources"
 - variable: mincpu
-  default: 1
   description: "Minimum guaranteed CPUs"
   type: string
   label: Min CPU
   group: "Resources"
 - variable: maxcpu
-  default: 4
   description: "Maximum allowed CPUs"
   type: string
   label: Max CPU
   group: "Resources"
 - variable: minram
-  default: "4096Mi"
   description: "Minimum guaranteed RAM"
   type: string
   label: Min RAM
   group: "Resources"
 - variable: maxram
-  default: "8000Mi"
   description: "Maximum allowed RAM"
   type: string
   label: Max RAM
