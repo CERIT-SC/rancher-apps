@@ -1,5 +1,7 @@
 apiVersion: v1
 name: matlab
+annotations:
+  catalog.cattle.io/release-name: matlab
 version: 9.9
 appVersion: 9.9
 description: Matlab 9.9
