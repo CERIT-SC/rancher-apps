@@ -4,7 +4,7 @@ maxcpu: 4
 minram: 4096Mi
 maxram: 16384Mi
 username: "user"
-password: ""
+password: "kokos"
 persistenthome: true
 resolution: "1920x1080"
 vnc: true

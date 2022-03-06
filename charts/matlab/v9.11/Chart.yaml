@@ -1,12 +1,12 @@
 apiVersion: v1
 name: matlab
-version: 9.10
-appVersion: 9.10
-description: Matlab 9.10
+version: 9.11
+appVersion: 9.11
+description: Matlab 9.11
 icon: file://logo.svg
 keywords:
 - Remote desktop
-- Matlab 9.10
+- Matlab 9.11
 - Webrtc
 - 3D Acceleration
 - applications
