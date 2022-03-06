@@ -168,6 +168,11 @@ spec:
           persistentVolumeClaim:
             claimName: pvc-{{ include "storage.name" . }}
 {{- end }}
+{{- if ne .Values.storage.pvc "" }}
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.pvc }}
+{{- end }}
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -261,6 +266,10 @@ spec:
 {{- if eq .Values.storage.enable true }}
             - name: data
               mountPath: /storage
+{{- end }}
+{{- if ne .Values.storage.pvc "" }}
+            - name: pvc
+              mountPath: /home/user/pvc
 {{- end }}
           resources:
             limits:

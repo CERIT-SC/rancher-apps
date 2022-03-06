@@ -36,7 +36,7 @@ questions:
   label: Persistent home
   group: Storage
 - variable: storage.pvc
-  description: "Connect existing persistent volume (optional)."
+  description: "Connect existing persistent volume (optional). It will be connected to /home/user/pvc."
   group: "Storage"
   label: "PVC storage"
   type: pvc

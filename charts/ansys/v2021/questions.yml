@@ -6,7 +6,7 @@ rancher_min_version: 2.3.0
 categories:
 - GUI Apps
 - WEBRTC
-- ANSYS 
+- ANSYS
 - VNC
 
 questions:
@@ -35,28 +35,35 @@ questions:
   type: boolean
   label: Persistent home
   group: Storage
-- variable: extrstorage
+- variable: storage.pvc
+  description: "Connect existing persistent volume (optional). It will be connected to /home/user/pvc."
+  group: "Storage"
+  label: "PVC storage"
+  type: pvc
+  required: false
+- variable: storage.enable
   description: "Connect external storage from CERIT-SC"
   type: boolean
   group: "Storage"
   label: External storage
   show_subquestion_if: true
   subquestions:
-  - variable: storage
+  - variable: storage.server
     description: "Connect Cerit-SC Storage as /storage"
     label: Storage hostname
     required: true
     options:
      - "storage-brno12-cerit.metacentrum.cz/share"
+     - "ha-bay.ics.muni.cz/share"
     group: "Storage"
     type: enum
-  - variable: storageusername
+  - variable: storage.username
     description: "Storage connect username"
     label: Storage username
     required: true
     type: string
     group: "Storage"
-  - variable: storagepassword
+  - variable: storage.password
     label: Storage password
     description: "Storage connect password"
     required: true
