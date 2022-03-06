@@ -1,16 +1,18 @@
-desktop: "cerit.io/ansys-desktop:v19.2"
+desktop: "cerit.io/ansys-desktop:v2021R1"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
 maxram: 16384Mi
 username: "user"
 password: ""
-persistenthome: true
 resolution: "1920x1080"
 vnc: true
-storage: ""
-storageusername: ""
-storagepassword: ""
-extrstorage: false
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  pvc: ""
+  persistenthome: true
 walltime: 24
 maxwalltime: 96

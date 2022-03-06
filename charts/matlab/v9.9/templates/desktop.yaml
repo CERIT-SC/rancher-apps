@@ -90,7 +90,7 @@ spec:
               port:
                 number: 80
 {{- end }}
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
 {{- if lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( printf "%s-home" .Release.Name) }}
 ---
 {{- else }}
@@ -158,7 +158,7 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
         - name: home
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-home
@@ -168,7 +168,7 @@ spec:
           persistentVolumeClaim:
             claimName: pvc-{{ include "storage.name" . }}
 {{- end }}
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
@@ -254,7 +254,7 @@ spec:
               mountPath: /var/run/appconfig
             - name: dshm
               mountPath: /dev/shm
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
             - name: home
               mountPath: /home/user
 {{- end }}

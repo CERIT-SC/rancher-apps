@@ -28,7 +28,7 @@ questions:
   type: password
   label: Desktop Password
   group: "Password Settings"
-- variable: persistenthome
+- variable: storage.persistenthome
   description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
   default: true
   required: false
