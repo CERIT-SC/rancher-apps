@@ -43,11 +43,13 @@ spec:
           runAsUser: 1000 
           runAsGroup: 1000
         env:
+{{- if ne. Values.password "" }}
         - name: PASSWORD
           valueFrom:
            secretKeyRef:
              key: auth
              name: terminal-{{ .Release.Name }}
+{{- end }}
 {{- if ne .Values.sshkey "" }}
         - name: SSH_KEY
           valueFrom:
