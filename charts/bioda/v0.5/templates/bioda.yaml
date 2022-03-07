@@ -43,7 +43,7 @@ spec:
           runAsUser: 1000 
           runAsGroup: 1000
         env:
-{{- if ne. Values.password "" }}
+{{- if ne .Values.password "" }}
         - name: PASSWORD
           valueFrom:
            secretKeyRef:
