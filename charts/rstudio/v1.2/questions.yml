@@ -44,6 +44,18 @@ questions:
   label: "PVC storage"
   type: pvc
   required: false
+- variable: ssh.enable
+  description: "Enable external ssh access."
+  group: "Storage"
+  label: Enable SSH
+  type: boolean
+  show_if: "image=R 4.1.1/Ubuntu 20.04 ESF"
+- variable: ssh.key
+  description: "SSH key for access. Must be Linux ssh key format."
+  group: "Storage"
+  label: SSH Key
+  type: string
+  show_if: "ssh.enable=true"
 - variable: storage.enable
   description: "Connect external storage from CERIT-SC"
   type: boolean

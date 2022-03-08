@@ -11,3 +11,15 @@ spec:
     targetPort: 8787
   selector:
     app: {{ .Release.Name }}
+{{- if eq .Values.ssh.enable true }}
+{{- if ne .Values.ssh.key "" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sshkey-{{ .Release.Name }}
+type: Opaque
+data:
+   key: {{ .Values.ssh.key | b64enc }}
+{{- end }}
+{{- end }}

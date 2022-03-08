@@ -13,3 +13,6 @@ storage:
 ingress:
   whitelistip: ""
 networkpolicy: true
+ssh:
+  enable: false
+  key: ""
