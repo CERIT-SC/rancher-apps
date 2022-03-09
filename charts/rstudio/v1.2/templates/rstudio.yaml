@@ -39,7 +39,7 @@ spec:
            secretKeyRef:
              key: password
              name: {{ .Release.Name }}-rstudiopassword
-{{- if eq .Values.ssh.enable "" }}
+{{- if eq .Values.ssh.enable true }}
 {{- if ne .Values.ssh.key "" }}
         - name: SSH_KEY
           valueFrom:
