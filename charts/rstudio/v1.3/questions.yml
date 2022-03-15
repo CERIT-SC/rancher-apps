@@ -48,7 +48,7 @@ questions:
   group: "Storage"
   label: "PVC Storage Enable"
   type: boolean
-  description: "Add existing persistent volume. Note: do not add rstudio-home or similar name, rstudio server will not start. This PVC is attached by default."
+  description: "Add existing persistent volume. Note: do not add rstudio-home or similar name, rstudio server will not start. Home PVC is attached according to the persistent home checkbox."
 - variable: storage.pvc.name
   description: "Connect existing persistent volume (optional)."
   group: "Storage"
