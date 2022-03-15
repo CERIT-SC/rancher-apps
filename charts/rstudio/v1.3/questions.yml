@@ -1,0 +1,123 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+
+questions:
+- variable: image
+  description: R Studio Image
+  options:
+    - "R 4.0.5/Ubuntu 20.04"
+    - "R 4.0.5/Ubuntu 20.04 Full"
+    - "R 4.0.5/Ubuntu 20.04 ESF"
+    - "R 4.1.1/Ubuntu 20.04 ESF"
+    - "R 4.1.1/Ubuntu 20.04 Full"
+    - "R 3.6.3/Debian 10"
+  type: enum
+  group: "Image"
+- variable: rstudiopassword
+  required: true
+  description: "You must enter a password that will be used log into rstudio. You need to remember this password! Username will be 'rstudio'."
+  type: password
+  label: RStudio Password (please avoid chars "{" and "}")
+  group: "Security"
+  invalid_chars: "{}"
+- variable: ingress.whitelistip
+  required: false
+  description: "Optionally whitelist IP. Access to RStudio will be allowed only from this IP, specify given IP. Applicable only to secure K8s."
+  label: Whitelist IP
+  group: "Security"
+  type: string
+- variable: networkpolicy
+  required: false
+  description: "Enable Network Policy that restrict access to RStudio only from outside of cluster (if enabled)."
+  label: Network Policy Enable
+  type: boolean
+  group: "Security"
+- variable: storage.persistenthome
+  group: "Storage"
+  label: "Enable persistent home"
+  type: boolean
+  description: "Preserve home content if application is deleted and created again. Note: this home is bound with application name. E.g. rstudio and rstudio1 will have different homes."
+- variable: storage.pvc.enable
+  group: "Storage"
+  label: "PVC Storage Enable"
+  type: boolean
+  description: "Add existing persistent volume. Note: do not add rstudio-home or similar name, rstudio server will not start. This PVC is attached by default."
+- variable: storage.pvc.name
+  description: "Connect existing persistent volume (optional)."
+  group: "Storage"
+  label: "PVC storage"
+  type: pvc
+  required: false
+  show_if: "storage.pvc.enable=true"
+- variable: ssh.enable
+  description: "Enable external ssh access."
+  group: "Storage"
+  label: Enable SSH
+  type: boolean
+  show_if: "image=R 4.1.1/Ubuntu 20.04 ESF"
+- variable: ssh.key
+  description: "SSH key for access. Must be Linux ssh key format."
+  group: "Storage"
+  label: SSH Key
+  type: string
+  show_if: "ssh.enable=true"
+- variable: storage.enable
+  description: "Connect external storage from CERIT-SC"
+  type: boolean
+  group: "Storage"
+  label: External storage
+  show_subquestion_if: true
+  subquestions:
+  - variable: storage.server
+    description: "Connect Cerit-SC Storage as /home/rstudio/data"
+    label: Storage hostname
+    required: true
+    options:
+     - "storage-brno12-cerit.metacentrum.cz/share"
+     - "ha-bay.ics.muni.cz/share"
+    group: "Storage"
+    type: enum
+  - variable: storage.username
+    description: "Storage connect username"
+    label: Storage username
+    required: true
+    default: ""
+    type: string
+    group: "Storage"
+  - variable: storage.password
+    label: Storage password
+    description: "Storage connect password"
+    default: ""
+    required: true
+    type: password
+    group: "Storage"
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "16384Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.whitelistip | quote }}
+{{- end }}
+spec:
+  tls:
+    - hosts:
+        - {{ include "dns.name" . }}
+      secretName: {{ include "secret.name" . }}
+  rules:
+  - host: {{ include "dns.name" . }}
+    http:
+      paths:
+      - backend:
+          service: 
+            name: {{ .Release.Name }}
+            port:
+              number: 8787
+        pathType: ImplementationSpecific
