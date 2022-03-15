@@ -15,7 +15,7 @@ storage:
     name: ""
 ingress:
   whitelistip: ""
-networkpolicy: true
+networkpolicy: false
 ssh:
   enable: false
   key: ""
