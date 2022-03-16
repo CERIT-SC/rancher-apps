@@ -20,14 +20,14 @@ questions:
   type: string
   label: Desktop Username
   description: "Username used to log into the desktop. You can use default \"user\"."
-  group: "Password Settings"
+  group: "Security"
   show_if: "vnc=false"  
 - variable: password
   required: true
-  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
+  description: "You must enter a password that will be used log into desktop. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
   type: password
-  label: Desktop Password
-  group: "Password Settings"
+  label: Desktop Password (please avoid chars "{" and "}")
+  group: "Security"
 - variable: storage.persistenthome
   description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
   default: true
@@ -35,12 +35,18 @@ questions:
   type: boolean
   label: Persistent home
   group: Storage
-- variable: storage.pvc
+- variable: storage.pvc.enable
+  group: "Storage"
+  label: "PVC Storage Enable"
+  type: boolean
+  description: "Add existing persistent volume. Note: do not add matlab-home or similar name, Matlab will not start. Home PVC is attached according to the persistent home checkbox."
+- variable: storage.pvc.name
   description: "Connect existing persistent volume (optional). It will be connected to /home/user/pvc."
   group: "Storage"
   label: "PVC storage"
   type: pvc
   required: false
+  show_if: "storage.pvc.enable=true"
 - variable: storage.enable
   description: "Connect external storage from CERIT-SC"
   type: boolean

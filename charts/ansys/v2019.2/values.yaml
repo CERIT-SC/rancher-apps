@@ -1,4 +1,4 @@
-desktop: "cerit.io/ansys-desktop:v2021R1"
+desktop: "cerit.io/ansys-desktop:v19.2"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi

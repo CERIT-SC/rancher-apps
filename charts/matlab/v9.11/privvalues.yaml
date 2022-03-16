@@ -1,18 +1,20 @@
-desktop: "cerit.io/matlab:v9.9"
+desktop: "cerit.io/matlab:v9.11"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
 maxram: 16384Mi
 username: "user"
 password: "kokos"
-persistenthome: true
 resolution: "1920x1080"
 vnc: true
 storage:
+  persistenthome: true
   enable: false
   server: ""
   username: ""
   password: ""
-  pvc: ""
+  pvc:
+   enable: false
+   name: ""
 walltime: 24
 maxwalltime: 96

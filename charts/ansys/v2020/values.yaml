@@ -1,4 +1,4 @@
-desktop: "cerit.io/ansys-desktop:v2021R1"
+desktop: "cerit.io/ansys-desktop:v2020R1"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
@@ -12,7 +12,9 @@ storage:
   server: ""
   username: ""
   password: ""
-  pvc: ""
+  pvc:
+    enable: false
+    name: ""
   persistenthome: true
 walltime: 24
 maxwalltime: 96

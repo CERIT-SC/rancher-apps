@@ -163,15 +163,15 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-home
 {{- end }}
-{{- if eq .Values.storage.enable true }}
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
         - name: data
           persistentVolumeClaim:
             claimName: pvc-{{ include "storage.name" . }}
 {{- end }}
-{{- if ne .Values.storage.pvc "" }}
+{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
         - name: pvc
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.pvc }}
+            claimName: {{ .Values.storage.pvc.name }}
 {{- end }}
 {{- if .Values.storage.persistenthome }}
       initContainers:
@@ -263,11 +263,11 @@ spec:
             - name: home
               mountPath: /home/user
 {{- end }}
-{{- if eq .Values.storage.enable true }}
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
             - name: data
               mountPath: /storage
 {{- end }}
-{{- if ne .Values.storage.pvc "" }}
+{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
             - name: pvc
               mountPath: /home/user/pvc
 {{- end }}
