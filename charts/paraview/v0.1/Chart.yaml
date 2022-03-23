@@ -1,0 +1,18 @@
+apiVersion: v1
+annotations:
+  catalog.cattle.io/release-name: paraview
+name: paraview
+version: 0.1
+appVersion: 5.10.1
+description: Paraview Server
+icon: file://logo.svg
+keywords:
+- Paraview
+- application
+home: https://paraview.org
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl

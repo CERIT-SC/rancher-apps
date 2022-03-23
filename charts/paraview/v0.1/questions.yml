@@ -1,0 +1,51 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Application
+- Paraview
+- 3D
+
+questions:
+- variable: storage.persistenthome
+  description: "Preserve home content if application is deleted and created again. Note: this home is bound with application name. E.g. paraview and paraview1 will have different homes."
+  label: "Enable persistent home"
+  type: boolean
+  group: "Storage"
+- variable: access.ssh.enable
+  description: "Enable SSH access from external network. Username will be 'paraview'. Access is based on sshkey below."
+  label: "Enable SSH"
+  type: boolean
+  group: "Access"
+- variable: access.ssh.key
+  description: "SSH public key for authentication."
+  type: string
+  group: "Access"
+  label: "SSH Key"
+- variable: resources.cpu.min
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Guaranteed CPUs
+  group: "Resources"
+- variable: resources.cpu.max
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: resources.memory.min
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Guaranteed RAM
+  group: "Resources"
+- variable: resources.memory.max
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
+- variable: resources.gpu
+  description: "Number of GPU required"
+  type: string
+  label: GPU
+  group: "Resources"

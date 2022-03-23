@@ -1,0 +1,15 @@
+image: "cerit.io/paraview-egl-py3:v5.10.1"
+storage:
+   persistenthome: true
+resources:
+   cpu:
+     min: 4
+     max: 4
+   memory:
+     min: 8Gi
+     max: 32Gi
+   gpu: "1"
+access:
+   ssh:
+     enable: true
+     key: ""
