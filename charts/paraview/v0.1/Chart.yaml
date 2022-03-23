@@ -4,10 +4,10 @@ annotations:
 name: paraview
 version: 0.1
 appVersion: 5.10.1
-description: Paraview Server
+description: ParaView Server
 icon: file://logo.svg
 keywords:
-- Paraview
+- ParaView
 - application
 home: https://paraview.org
 sources:
