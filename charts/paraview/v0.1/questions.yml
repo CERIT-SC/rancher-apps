@@ -14,16 +14,17 @@ questions:
   label: "Enable persistent home"
   type: boolean
   group: "Storage"
-- variable: directport.enable
+- variable: access.directport.enable
   description: "Enable direct communication with ParaView server. Caution, it is not authenticated or encrypted!"
   type: boolean
   label: "Direct Access"
   group: "Access"
-- variable: directport.port
+- variable: access.directport.port
   description: "Direct port to use"
   label: "Direct Port"
   group: "Access"
   type: string
+  show_if: "access.directport.enable=true"
 - variable: access.ssh.enable
   description: "Enable SSH access from external network. Username will be 'paraview'. Access is based on sshkey below."
   label: "Enable SSH"
@@ -34,6 +35,7 @@ questions:
   type: string
   group: "Access"
   label: "SSH Key"
+  show_if: "access.ssh.enable=true"
 - variable: resources.cpu.min
   description: "Minimum guaranteed CPUs"
   type: string
