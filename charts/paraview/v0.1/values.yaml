@@ -10,6 +10,9 @@ resources:
      max: 32Gi
    gpu: "1"
 access:
+   directport:
+     enable: false
+     port: 11111
    ssh:
      enable: true
      key: ""

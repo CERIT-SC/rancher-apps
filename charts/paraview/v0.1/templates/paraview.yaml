@@ -1,3 +1,4 @@
+{{- if or .Values.access.directport.enable .Values.access.ssh.enable }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,9 +8,11 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 11111
-    targetPort: 11111
+{{- if .Values.access.directport.enable }}
+  - port: {{ .Values.access.directport.port }}
+    targetPort: {{ .Values.access.directport.port }}
     name: data
+{{- end }}
 {{- if .Values.access.ssh.enable }}
   - port: 22
     targetPort: 2222
@@ -17,13 +20,16 @@ spec:
 {{- end }}
   selector:
     app: {{ .Release.Name }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}
 spec:
+{{- if or .Values.access.directport.enable .Values.access.ssh.enable }}
   serviceName: {{ .Release.Name  }}
+{{- end }}
   replicas: 1
   selector:
     matchLabels:
@@ -57,12 +63,16 @@ spec:
 {{- if ne .Values.resources.gpu "0" }}
             nvidia.com/gpu: {{ .Values.resources.gpu }}
 {{- end }}
+{{- if or .Values.access.directport.enable .Values.access.ssh.enable }}
         ports:
-        - containerPort: 11111
+{{- if .Values.access.directport.enable }}
+        - containerPort: {{ .Values.access.directport.port }}
           name: data
+{{- end }}
 {{- if .Values.access.ssh.enable }}
         - containerPort: 2222
           name: ssh
+{{- end }}
 {{- end }}
         volumeMounts:
         - name: dshm
