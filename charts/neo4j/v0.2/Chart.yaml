@@ -2,7 +2,7 @@ apiVersion: v2
 name: neo4j
 annotations:
   catalog.cattle.io/release-name: neo4j
-version: 0.1
+version: 0.2
 appVersion: 4.4.5
 description: neo4j server
 icon: file://logo.svg
