@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        env:
+        - name: NEO4J_AUTH
+          valueFrom:
+           secretKeyRef:
+             key: auth
+             name: {{ .Release.Name }}-auth
+        securityContext:                                                          
+          runAsUser: 7474 
+          runAsGroup: 7474
+        ports:
+        - containerPort: 7687
+        - containerPort: 7474
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+            ephemeral-storage: "10Gi"
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+{{- if .Values.storage.persistenthome }}
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          subPath: data
+        - name: data
+          mountPath: /var/lib/neo4j/import  
+          subPath: import
+        - name: data
+          mountPath: /plugins
+          subPath: plugins
+        - name: data
+          mountPath: /logs
+          subPath: logs
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 20Gi
+{{- end }}

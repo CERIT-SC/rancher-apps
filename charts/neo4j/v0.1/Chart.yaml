@@ -1,0 +1,20 @@
+apiVersion: v1
+name: neo4j
+annotations:
+  catalog.cattle.io/release-name: neo4j
+version: 0.1
+appVersion: 4.4.5
+description: neo4j server
+icon: file://logo.svg
+keywords:
+- neo4j-server
+- graph data 
+- development
+- applications
+home: https://neo4j.com
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
