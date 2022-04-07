@@ -8,6 +8,24 @@ categories:
 - Development
 
 questions:
+- variable: webauth
+  description: "Enable web authentication. Web UI will be authenticated. This is strongly recommended."
+  type: boolean
+  label: Web authentication
+  group: "Security"
+- variable: webusername
+  description: "Web username to be passed to web authentication."
+  type: string
+  label: Web username
+  group: "Security"
+  show_if: "webauth=true"
+- variable: webpassword
+  description: "Web password to be passed to web authentication."
+  type: password
+  label: Web password
+  group: "Security"
+  show_if: "webauth=true"
+  invalid_chars: "{}"
 - variable: password
   description: "You must enter a password that will be used log into neo4j. You need to remember this password! Username will be 'neo4j'. Avoid trivial passwords such as `password` or `123456`."
   type: password

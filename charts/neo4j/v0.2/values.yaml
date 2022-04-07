@@ -7,3 +7,6 @@ minram: 4096Mi
 maxram: 16384Mi
 storage:
   persistenthome: true
+webauth: true
+webusername: "neo4j"
+webpassword: ""

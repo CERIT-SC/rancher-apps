@@ -8,6 +8,10 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/proxy-body-size: 600m
     nginx.org/client-max-body-size: 600m
+{{- if .Values.webauth }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ .Release.Name }}-web
+{{- end }}
 spec:
   tls:
     - hosts:
