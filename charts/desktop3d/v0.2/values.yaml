@@ -16,5 +16,3 @@ storage:
     enable: false
     name: ""
   persistenthome: true
-walltime: 24
-maxwalltime: 96

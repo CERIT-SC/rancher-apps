@@ -111,13 +111,15 @@ spec:
 {{- end }}
 {{- end }}
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}
 spec:
-  backoffLimit: 0
-  ttlSecondsAfterFinished: 100
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       annotations: {}
@@ -126,12 +128,6 @@ spec:
     spec:
       # Disable service account used for accessing the kubernetes API/
       automountServiceAccountToken: false
-      restartPolicy: Never
-{{- if gt .Values.walltime .Values.maxwalltime }}
-      activeDeadlineSeconds: {{ mul .Values.maxwalltime 3600 }}
-{{- else }}
-      activeDeadlineSeconds: {{ mul .Values.walltime 3600 }}
-{{- end}}
 
       # Terminate pod after 10 seconds of receiving SIGTERM
       terminationGracePeriodSeconds: 5
