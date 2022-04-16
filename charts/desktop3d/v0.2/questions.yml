@@ -33,7 +33,7 @@ questions:
   label: Desktop Username
   description: "Username used to log into the desktop. You can use default \"user\"."
   group: "Security"
-  show_if: "vnc=false"  
+  show_if: "display=WEBRTC"  
 - variable: password
   required: true
   description: "You must enter a password that will be used log into desktop. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
