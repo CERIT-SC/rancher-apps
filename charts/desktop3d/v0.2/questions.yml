@@ -1,0 +1,112 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- WEBRTC
+- VNC
+
+questions:
+- variable: desktop
+  description: "Select desktop container image to run."
+  label: Desktop image
+  default: ""
+  required: true
+  options:
+    - "cerit.io/ubuntufocalxfce:v0.1"
+    - "cerit.io/ubuntuhirsutexfce:v0.1"
+    - "cerit.io/wine-gaming:v0.5"
+  group: "Image"
+  type: enum
+- variable: vnc
+  default: true
+  type: boolean
+  label: Use VNC
+  group: Display
+  description: "Use either VNC client (if true) or WebRTC."
+- variable: username
+  type: string
+  label: Desktop Username
+  description: "Username used to log into the desktop. You can use default \"user\"."
+  group: "Security"
+  show_if: "vnc=false"  
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
+  type: password
+  label: Desktop Password (please avoid chars "{" and "}")
+  group: "Security"
+- variable: storage.persistenthome
+  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
+  default: true
+  required: false
+  type: boolean
+  label: Persistent home
+  group: Storage
+- variable: storage.pvc.enable
+  group: "Storage"
+  label: "PVC Storage Enable"
+  type: boolean
+  description: "Add existing persistent volume. Note: do not add matlab-home or similar name, Matlab will not start. Home PVC is attached according to the persistent home checkbox."
+- variable: storage.pvc.name
+  description: "Connect existing persistent volume (optional). It will be connected to /home/user/pvc."
+  group: "Storage"
+  label: "PVC storage"
+  type: pvc
+  required: false
+  show_if: "storage.pvc.enable=true"
+- variable: storage.enable
+  description: "Connect external storage from CERIT-SC"
+  type: boolean
+  group: "Storage"
+  label: External storage
+  show_subquestion_if: true
+  subquestions:
+  - variable: storage.server
+    description: "Connect Cerit-SC Storage as /storage"
+    label: Storage hostname
+    required: true
+    options:
+     - "storage-brno12-cerit.metacentrum.cz/share"
+     - "ha-bay.ics.muni.cz/share"
+    group: "Storage"
+    type: enum
+  - variable: storage.username
+    description: "Storage connect username"
+    label: Storage username
+    required: true
+    type: string
+    group: "Storage"
+  - variable: storage.password
+    label: Storage password
+    description: "Storage connect password"
+    required: true
+    type: password
+    group: "Storage"
+- variable: walltime
+  description: "Maximum runtime of application in hours. 24 = 1 day, 96 = 4 days. Maximum allowed is 4 days, higher values are cut to 4 days."
+  type: int
+  label: Walltime hours
+  group: "Resources"
+- variable: mincpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
