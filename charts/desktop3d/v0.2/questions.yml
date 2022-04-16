@@ -20,12 +20,14 @@ questions:
     - "cerit.io/wine-gaming:v0.5"
   group: "Image"
   type: enum
-- variable: vnc
-  default: true
-  type: boolean
-  label: Use VNC
+- variable: display
+  options:
+    - "VNC"
+    - "WEBRTC"
+  type: enum
+  label: Display Method
   group: Display
-  description: "Use either VNC client (if true) or WebRTC."
+  description: "Use either VNC client or WebRTC."
 - variable: username
   type: string
   label: Desktop Username
