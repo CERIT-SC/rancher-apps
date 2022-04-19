@@ -1,4 +1,4 @@
-desktop: "cerit.io/ubuntufocalxfce:v0.2"
+desktop: "cerit.io/ubuntufocalxfce:v0.3"
 webrtcimages:
   xserver: cerit.io/xserver:v0.3
   pulseaudio: cerit.io/pulseaudio:v0.1

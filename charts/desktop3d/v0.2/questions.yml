@@ -15,8 +15,8 @@ questions:
   default: ""
   required: true
   options:
-    - "cerit.io/ubuntufocalxfce:v0.2"
-    - "cerit.io/ubuntuhirsutexfce:v0.2"
+    - "cerit.io/ubuntufocalxfce:v0.3"
+    - "cerit.io/ubuntuhirsutexfce:v0.3"
     - "cerit.io/wine-gaming:v0.5"
   group: "Image"
   type: enum
