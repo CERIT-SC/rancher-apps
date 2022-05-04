@@ -1,0 +1,29 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Monitoring
+
+questions:
+- variable: customhostname
+  default: ".dyn.cerit-sc.cz"
+  description: "Hostname of your monitoring installation. Must end with '.dyn.cerit-sc.cz' and must not already exist, e.g. my-namespace-monitoring.dyn.cerit-sc.cz."
+  type: string
+  label: Grafana Hostname
+  group: Hostname
+  valid_chars: "a-zA-Z0-9.-"
+- variable: username
+  default: "user"
+  type: string
+  label: Grafana Username
+  description: "Username used to log into Grafana. You can use default \"user\"."
+  group: "Password Settings"
+- variable: password
+  default: ""
+  required: true
+  description: "You must enter a password that will be used log into Grafana. You need to remember this password!"
+  type: password
+  label: Grafana Password
+  group: "Password Settings"
