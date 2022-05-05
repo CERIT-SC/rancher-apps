@@ -4,5 +4,10 @@ monitoring-personal:
       enabled: false
     adminUser: user
     adminPassword: password
+  prometheus:
+    kube-state-metrics:
+      enabled: false
+    kubeStateMetrics:
+      enabled: false
 
 customhostname: ""
