@@ -1,0 +1,28 @@
+{{- $fullName := include "grafana.fullname" . -}}
+{{- if $.Values.customhostname }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ $.Release.Namespace }}
+  annotations:
+    kuberentes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - secretName: {{ printf "%s-tls" $.Values.customhostname | replace "." "-"  }}
+      hosts:
+        - {{ $.Values.customhostname }}
+  rules:
+    - host: {{ $.Values.customhostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: 80
+{{- end }}
