@@ -6,3 +6,7 @@
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "grafana.service" -}}
+{{- printf "%s-grafana" .Release.Name -}}
+{{- end -}}

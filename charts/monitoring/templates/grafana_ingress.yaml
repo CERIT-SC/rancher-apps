@@ -1,4 +1,5 @@
 {{- $fullName := include "grafana.fullname" . -}}
+{{- $serviceName := include "grafana.service" . -}}
 {{- if $.Values.customhostname }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -22,7 +23,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ $fullName }}
+                name: {{ $serviceName }}
                 port:
                   number: 80
 {{- end }}
