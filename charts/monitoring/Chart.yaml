@@ -1,6 +1,6 @@
 apiVersion: v1
 name: personal-monitoring
-version: 0.0.1
+version: 0.0.12
 appVersion: 0.0.1
 description: Personal Monitoring v0.0.1
 icon: file://logo.svg
@@ -17,3 +17,8 @@ maintainers:
 - name: CERIT-SC
   email: root@cerit-sc.cz
 engine: gotpl
+type: application
+dependencies:
+  - name: monitoring-personal
+    version: "0.0.11"
+    repository: "https://cerit-sc.github.io/helm-charts"

@@ -1,3 +1,10 @@
+monitoring-personal:
+  grafana:
+    rbac:
+      create: false
+    ingress:
+      enabled: false
+    adminUser: user
+    adminPassword: password
+
 customhostname: ""
-username: ""
-password: ""
