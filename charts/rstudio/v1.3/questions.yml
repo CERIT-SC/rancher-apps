@@ -80,7 +80,7 @@ questions:
     label: Storage hostname
     required: true
     options:
-     - "storage-brno12-cerit.metacentrum.cz/share"
+     - "smb-hsm.cerit-sc.cz/share"
      - "ha-bay.ics.muni.cz/share"
     group: "Storage"
     type: enum
