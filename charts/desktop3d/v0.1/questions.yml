@@ -15,9 +15,9 @@ questions:
   default: ""
   required: true
   options: 
-    - "cerit.io/ubuntufocalxfce:v0.1"
-    - "cerit.io/ubuntuhirsutexfce:v0.1"
-    - "cerit.io/wine-gaming:v0.5"
+    - "cerit.io/desktops/ubuntufocalxfce:v0.1"
+    - "cerit.io/desktops/ubuntuhirsutexfce:v0.1"
+    - "cerit.io/desktops/wine-gaming:v0.5"
   group: "Image"
   type: enum
 - variable: defhostname

@@ -1,4 +1,4 @@
-desktop: "cerit.io/matlab:v9.11"
+desktop: "cerit.io/desktops/matlab:v9.11"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi

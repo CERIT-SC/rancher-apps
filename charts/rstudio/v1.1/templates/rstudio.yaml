@@ -16,16 +16,16 @@ spec:
       containers:
       - name: {{ .Release.Name }}
 {{- if eq .Values.image "R 3.6.3/Debian 10" }}
-        image: cerit.io/rstudio:v0.2 
+        image: cerit.io/desktops/rstudio:v0.2 
 {{- end }}
 {{- if eq .Values.image "R 4.0.5/Ubuntu 20.04" }}
-        image: cerit.io/rstudio:v4.0.5
+        image: cerit.io/desktops/rstudio:v4.0.5
 {{- end }}
 {{- if eq .Values.image "R 4.0.5/Ubuntu 20.04 Full" }}
-        image: cerit.io/rstudio:v4.0.5-full
+        image: cerit.io/desktops/rstudio:v4.0.5-full
 {{- end }}
 {{- if eq .Values.image "R 4.1.1/Ubuntu 20.04 Full" }}
-        image: cerit.io/rstudio-full:v4.1.1
+        image: cerit.io/desktops/rstudio-full:v4.1.1
 {{- end }}
         env:
         - name: PASSWORD

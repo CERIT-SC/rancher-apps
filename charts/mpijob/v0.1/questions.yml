@@ -10,7 +10,7 @@ categories:
 
 questions:
 - variable: image
-  default: "cerit.io/mpi-pi:latest"
+  default: "cerit.io/cerit/mpi-pi:latest"
   type: string
   group: "Parameters"
   required: true

@@ -1,4 +1,4 @@
-desktop: "cerit.io/cplex_studio:v1210"
+desktop: "cerit.io/desktops/cplex_studio:v1210"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
