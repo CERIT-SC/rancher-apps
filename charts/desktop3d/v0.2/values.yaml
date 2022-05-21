@@ -1,9 +1,9 @@
-desktop: "cerit.io/ubuntufocalxfce:v0.3"
+desktop: "cerit.io/desktops/ubuntufocalxfce:v0.3"
 webrtcimages:
-  xserver: cerit.io/xserver:v0.3
-  pulseaudio: cerit.io/pulseaudio:v0.1
-  gstreamer: cerit.io/webrtc-app:1.20.1-nv
-  web: cerit.io/webrtc-web:0.6
+  xserver: cerit.io/desktops/xserver:v0.3
+  pulseaudio: cerit.io/desktops/pulseaudio:v0.1
+  gstreamer: cerit.io/desktops/webrtc-app:1.20.1-nv
+  web: cerit.io/desktops/webrtc-web:0.6
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi

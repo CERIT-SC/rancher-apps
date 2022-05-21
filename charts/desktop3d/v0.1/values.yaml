@@ -1,4 +1,4 @@
-desktop: "cerit.io/desktopxfce:v0.1"
+desktop: "cerit.io/desktops/xfce:v0.1"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi

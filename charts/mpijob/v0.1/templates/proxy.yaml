@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: terminal-{{ .Release.Name }}
-        image: cerit.io/gotty:v0.1
+        image: cerit.io/cerit/gotty:v0.1
         imagePullPolicy: Always
         env:
         - name: PASSWORD

@@ -1,4 +1,4 @@
-image: "cerit.io/mpi-pi:latest"
+image: "cerit.io/cerit/mpi-pi:latest"
 cpu: 1
 memory: 1024Mi
 infiniband: false

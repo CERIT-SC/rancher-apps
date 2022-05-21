@@ -19,7 +19,7 @@ questions:
   description: "Container image"
   required: true
   options:
-  - "cerit.io/knime:v4.1.3a-vnc"
+  - "cerit.io/desktops/knime:v4.1.3a-vnc"
   - "cfprot/knime:4.5.1a_test"
   group: Image
   type: enum

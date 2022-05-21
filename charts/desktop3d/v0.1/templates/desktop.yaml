@@ -152,7 +152,7 @@ spec:
 {{- end }}
       containers:
         - name: xserver
-          image: cerit.io/xserver:v0.3
+          image: cerit.io/desktops/xserver:v0.3
           imagePullPolicy: IfNotPresent
           env:
           - name: NVIDIA_DRIVER_CAPABILITIES
@@ -212,7 +212,7 @@ spec:
               memory: {{ .Values.minram }}
 
         - name: pulseaudio
-          image: cerit.io/pulseaudio:v0.1
+          image: cerit.io/desktops/pulseaudio:v0.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -228,7 +228,7 @@ spec:
               memory: 500Mi
 
         - name: signalling
-          image: cerit.io/signalling:v0.1
+          image: cerit.io/desktops/signalling:v0.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -246,7 +246,7 @@ spec:
               memory: 500Mi
 
         - name: watchdog
-          image: cerit.io/webrtc-app:1.19.1-mtufix-nv
+          image: cerit.io/desktops/webrtc-app:1.19.1-mtufix-nv
           imagePullPolicy: Always
           securityContext:
             privileged: false
@@ -272,7 +272,7 @@ spec:
               memory: 500Mi
 
         - name: webrtc
-          image: cerit.io/webrtc-app:1.19.1-mtufix-nv
+          image: cerit.io/desktops/webrtc-app:1.19.1-mtufix-nv
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -308,7 +308,7 @@ spec:
               memory: 8192Mi
 
         - name: web
-          image: cerit.io/webrtc-web:v0.4
+          image: cerit.io/desktops/webrtc-web:v0.4
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
