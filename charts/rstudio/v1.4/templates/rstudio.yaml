@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+{{- if .Values.storage.persistentopt }}
+      initContainers:
+      - name: init-{{ .Release.Name }}
+{{- if eq .Values.image "R 3.6.3/Debian 10" }}
+        image: cerit.io/rocker/r:3.6.3 
+{{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.0.5
+{{- end }}
+{{- if eq .Values.image "R 4.1.1/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.1.1
+{{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04 ESF" }}
+        image: cerit.io/rocker/r:4.0.5-esf
+{{- end }}
+{{- if eq .Values.image "R 4.1.1/Ubuntu 20.04 ESF" }}
+        image: cerit.io/rocker/r:4.1.1-esf
+{{- end }}
+{{- if eq .Values.image "R 4.2.0/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.2.0
+{{- end }}
+        command:
+        - /bin/sh
+        - -c
+        - "cp -rn /opt/. /opt2"
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+          - name: opt
+            mountPath: /opt2
+{{- end }}
+      containers:
+      - name: {{ .Release.Name }}
+{{- if eq .Values.image "R 3.6.3/Debian 10" }}
+        image: cerit.io/rocker/r:3.6.3 
+{{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.0.5
+{{- end }}
+{{- if eq .Values.image "R 4.1.1/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.1.1
+{{- end }}
+{{- if eq .Values.image "R 4.0.5/Ubuntu 20.04 ESF" }}
+        image: cerit.io/rocker/r:4.0.5-esf
+{{- end }}
+{{- if eq .Values.image "R 4.1.1/Ubuntu 20.04 ESF" }}
+        image: cerit.io/rocker/r:4.1.1-esf
+{{- end }}
+{{- if eq .Values.image "R 4.2.0/Ubuntu 20.04" }}
+        image: cerit.io/rocker/r:4.2.0
+{{- end }}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: {{ .Release.Name }}-rstudiopassword
+{{- if eq .Values.ssh.enable true }}
+{{- if ne .Values.ssh.key "" }}
+        - name: SSH_KEY
+          valueFrom:
+           secretKeyRef:
+             key: key
+             name: sshkey-{{ .Release.Name }}
+{{- end }}
+{{- end }}
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+        ports:
+        - containerPort: 8787
+{{- if eq .Values.ssh.enable true }}
+        - containerPort: 2222
+{{- end }}
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+            ephemeral-storage: "10Gi"
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+{{- if or .Values.storage.persistentopt (or (or .Values.storage.persistenthome (and .Values.storage.enable (ne .Values.storage.server ""))) (and .Values.storage.pvc.enable (ne .Values.storage.pvc.name ""))) }}
+        volumeMounts:
+{{- end }}
+{{- if .Values.storage.persistentopt}}
+        - name: opt
+          mountPath: /opt
+{{- end }}
+{{- if .Values.storage.persistenthome}}
+        - name: home
+          mountPath: /home/rstudio
+{{- end }}
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+        - name: data
+          mountPath: /home/rstudio/data
+{{- end }}
+{{- if and (.Values.storage.pvc.enable) (ne .Values.storage.pvc.name "") }}
+        - name: pvc
+          mountPath: /home/rstudio/pvc
+{{- end }}
+{{- if or (and .Values.storage.pvc.enable (ne .Values.storage.pvc.name "")) (and .Values.storage.enable (ne .Values.storage.server "")) }}
+      volumes:
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-{{ include "storage.name" . }}
+{{- end }}
+{{- if and .Values.storage.pvc.enable (ne .Values.storage.pvc.name "")}}
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc.name }}
+{{- end }}
+{{- end }}
+{{- if or .Values.storage.persistenthome .Values.storage.persistentopt}}
+  volumeClaimTemplates:
+{{- if .Values.storage.persistenthome }}
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+{{- end }}
+{{- if .Values.storage.persistentopt }}
+  - metadata:
+      name: opt
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 10Gi
+{{- end }}
+{{- end }}
