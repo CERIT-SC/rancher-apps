@@ -1,0 +1,19 @@
+apiVersion: v2
+name: code-server
+description: VSCode Code-server
+type: application
+version: 2.5.0
+appVersion: 4.4.0
+icon: file://coderlogo.png
+keywords:
+- Coder
+- Code-server
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
+

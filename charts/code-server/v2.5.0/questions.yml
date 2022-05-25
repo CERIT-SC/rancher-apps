@@ -1,0 +1,37 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+
+questions:
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into code-server app. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
+  type: password
+  label: Password (please avoid chars "{" and "}")
+  group: "Security"
+  invalid_chars: "{}"
+- variable: resources.requests.cpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: resources.limits.cpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: resources.requests.memory
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: resources.limits.memory
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
