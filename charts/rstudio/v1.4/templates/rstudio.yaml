@@ -35,7 +35,7 @@ spec:
         image: cerit.io/rocker/r:4.2.0
 {{- end }}
 {{- if eq .Values.image "R 4.2.0/Ubuntu 20.04 Bioconductor" }}
-        image: cerit.io/rocker/r:4.2.0
+        image: cerit.io/rocker/r:4.2.0-bioconductor
 {{- end }}
         command:
         - /bin/sh
@@ -74,7 +74,7 @@ spec:
         image: cerit.io/rocker/r:4.2.0
 {{- end }}
 {{- if eq .Values.image "R 4.2.0/Ubuntu 20.04 Bioconductor" }}
-        image: cerit.io/rocker/r:4.2.0
+        image: cerit.io/rocker/r:4.2.0-bioconductor
 {{- end }}
         imagePullPolicy: IfNotPresent
         env:
