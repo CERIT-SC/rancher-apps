@@ -14,6 +14,7 @@ metadata:
   annotations:
     purelb.io/service-group: privmuni
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+    metallb.universe.tf/address-pool: privmuni
 spec:
   selector:
     app: {{ .Release.Name }}-client

@@ -8,6 +8,7 @@ metadata:
   annotations:
     purelb.io/service-group: privmuni
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
+    metallb.universe.tf/address-pool: privmuni
 spec:
   type: LoadBalancer
   ports:
