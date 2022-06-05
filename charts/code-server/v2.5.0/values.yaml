@@ -7,3 +7,5 @@ resources:
   requests:
      cpu: 100m
      memory: 512M
+install:
+  conda: true

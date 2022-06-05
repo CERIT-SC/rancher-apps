@@ -8,8 +8,12 @@ categories:
 - Developement
 
 questions:
+- variable: install.conda
+  type: boolean
+  group: "Setup"
+  description: "Install and Setup Conda/Mamba tool."
+  label: Install Conda  
 - variable: password
-  required: true
   description: "You must enter a password that will be used log into code-server app. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
   type: password
   label: Password (please avoid chars "{" and "}")
