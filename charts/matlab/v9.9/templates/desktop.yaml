@@ -173,6 +173,8 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.storage.pvc.name }}
 {{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
