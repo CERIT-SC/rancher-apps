@@ -9,7 +9,7 @@ resolution: "1920x1080"
 vnc: true
 storage:
   enable: false
-  server: ""
+  server: "storage-brno12-cerit.metacentrum.cz/share"
   username: ""
   password: ""
   pvc:

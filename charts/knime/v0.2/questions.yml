@@ -36,34 +36,64 @@ questions:
   label: VNC Password (please avoid chars "{" and "}")
   group: "VNC Password"
   invalid_chars: "{}"
-- variable: storageserver
+- variable: storage.enableinternal
+  description: "Enable internal storage"
+  required: true
+  type: boolean
+  group: Storage
+  label: "Enable internal storage"
+- variable: storage.internal.usepvc
+  description: "Use existing PVC. If not checked, new PVC is created."
+  required: true
+  type: boolean
+  group: Storage
+  label: "Use existing PVC"
+  show_if: "storage.enableeinternal=true"
+- variable: storage.internal.pvc
+  description: "PVC name"
+  required: true
+  type: pvc
+  group: Storage
+  label: "Use existing PVC"
+  show_if: "storage.internal.usepvc=true"
+- variable: storage.internal.mnt
+  type: string
+  description: "Connect storage to this path"
+  label: Connext path
+  group: Storage
+  show_if: "storage.enableeinternal=true"
+- variable: storage.enableexternal
+  description: "Enable external storage"
+  required: true
+  type: boolean
+  group: Storage
+  label: "Enable external storage"
+- variable: storage.external.server
   type: string
   description: "Storage server to connect. Only Use if you have MUNI account."
   label: "Storage server"
   group: Storage
-- variable: storagepath
-  type: string
-  description: "Path on storage server to connect."
-  label: "Storage path"
-  group: Storage
-- variable: storageusername
+  show_if: "storage.enableexternal=true"
+- variable: storage.external.username
   type: string
   description: "Storage username, UCO or service account."
   label: Storage username
   required: true
   group: Storage
-- variable: storagepassword
+  show_if: "storage.enableexternal=true"
+- variable: storage.external.password
   type: password
   description: "Storage password, i.e., secondary password."
   label: Storage password
   required: true
   group: Storage
-- variable: timezone
+  show_if: "storage.enableexternal=true"
+- variable: storage.external.mnt
   type: string
-  description: "Set timezone of running container."
-  label: Timezone
-  required: false
-  group: Timezone
+  description: "Connect storage to this path"
+  label: Connext path
+  group: Storage
+  show_if: "storage.enableexternal=true"
 - variable: mincpu
   description: "Minimum guaranteed CPUs"
   type: string
