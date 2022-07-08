@@ -1,7 +1,6 @@
 vncpassword: ""
 image: "cerit.io/desktops/knime:v4.1.3a-vnc"
 storage:
-  enable: true
   enableexternal: true
   external:
     server: "ha-bay.ics.muni.cz/share/712006-Proteomics/KNIME_workspaces"
@@ -21,3 +20,4 @@ ephem: 20Gi
 shm: 512Mi
 timezone: "Europe/Prague"
 customimage: false
+netmuni: true

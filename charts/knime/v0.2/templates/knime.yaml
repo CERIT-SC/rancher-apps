@@ -38,14 +38,31 @@ spec:
             memory: {{ .Values.maxram }}
             ephemeral-storage: {{ .Values.ephem }}
         volumeMounts:
-        - name: storagedata
-          mountPath: /home/knimeuser/knime-workspace
+{{- if .Values.storage.enableexternal }}
+        - name: externalstorage
+          mountPath: {{ .Values.storage.external.mnt }}
+{{- end }}
+{{- if .Values.storage.enableinternal }}
+        - name: internalstorage
+          mountPath: {{ .Values.storage.internal.mnt }}
+{{- end }}
         - name: dshm
           mountPath: /dev/shm
       volumes:
-      - name: storagedata
+{{- if .Values.storage.enableexternal }}
+      - name: externalstorage
         persistentVolumeClaim:
-          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}-storage-{{ printf "%s" .Values.storageserver | replace "," "-" }}  
+          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}-{{ printf "%s" .Values.storage.external.server | replace "." "-" | replace "/" "-" | replace "_" "-" | lower }}
+{{- end }}
+{{- if .Values.storage.enableinternal }}
+      - name: internalstorage
+        persistentVolumeClaim:
+{{- if and (.Values.storage.internal.usepvc) (ne .Values.storage.internal.pvc "") }}
+          claimName: {{ .Values.storage.internal.pvc }}
+{{- else }}
+          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}
+{{- end }}
+{{- end }}
       - name: dshm
         emptyDir:
           medium: Memory

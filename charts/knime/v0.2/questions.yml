@@ -29,6 +29,11 @@ questions:
   type: string
   group: Image
   show_if: "customimage=true"
+- varialbe: netmuni
+  description: "Connect from MUNI network only"
+  type: boolean
+  label: Connect from MUNI
+  group: Connection
 - variable: vncpassword
   required: true
   description: "This is password for VNC access"

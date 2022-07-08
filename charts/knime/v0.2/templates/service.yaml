@@ -5,9 +5,10 @@ metadata:
   labels:
     app: {{ .Release.Name }}
   annotations:
-    purelb.io/service-group: privmuni
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+{{- if .Values.netmuni }}
     metallb.universe.tf/address-pool: privmuni
+{{- end }}
 spec:
   type: LoadBalancer
   ports:
