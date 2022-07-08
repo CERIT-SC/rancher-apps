@@ -48,7 +48,7 @@ questions:
   type: boolean
   group: Storage
   label: "Use existing PVC"
-  show_if: "storage.enableeinternal=true"
+  show_if: "storage.enableinternal=true"
 - variable: storage.internal.pvc
   description: "PVC name"
   required: true
@@ -61,7 +61,7 @@ questions:
   description: "Connect storage to this path"
   label: Connext path
   group: Storage
-  show_if: "storage.enableeinternal=true"
+  show_if: "storage.enableinternal=true"
 - variable: storage.enableexternal
   description: "Enable external storage"
   required: true
@@ -91,7 +91,7 @@ questions:
 - variable: storage.external.mnt
   type: string
   description: "Connect storage to this path"
-  label: Connext path
+  label: Connect path
   group: Storage
   show_if: "storage.enableexternal=true"
 - variable: mincpu

@@ -18,5 +18,5 @@ maxcpu: 4
 minram: 12288Mi
 maxram: 12288Mi
 ephem: 20Gi
-shm: 1Gi
+shm: 512Mi
 timezone: "Europe/Prague"
