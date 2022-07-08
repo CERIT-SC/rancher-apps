@@ -29,7 +29,7 @@ questions:
   type: string
   group: Image
   show_if: "customimage=true"
-- varialbe: netmuni
+- variable: netmuni
   description: "Connect from MUNI network only"
   type: boolean
   label: Connect from MUNI
