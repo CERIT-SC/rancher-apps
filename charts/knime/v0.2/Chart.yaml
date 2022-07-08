@@ -1,5 +1,7 @@
 apiVersion: v1
 name: knime
+annotations:
+  catalog.cattle.io/release-name: knime
 version: 0.2
 appVersion: 4.3.1a
 description: Knime over VNC
