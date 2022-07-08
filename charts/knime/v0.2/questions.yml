@@ -42,58 +42,57 @@ questions:
   type: boolean
   group: Storage
   label: "Enable internal storage"
-- variable: storage.internal.usepvc
-  description: "Use existing PVC. If not checked, new PVC is created."
-  required: true
-  type: boolean
-  group: Storage
-  label: "Use existing PVC"
-  show_if: "storage.enableinternal=true"
-- variable: storage.internal.pvc
-  description: "PVC name"
-  required: true
-  type: pvc
-  group: Storage
-  label: "Use existing PVC"
-  show_if: "storage.internal.usepvc=true"
-- variable: storage.internal.mnt
-  type: string
-  description: "Connect storage to this path"
-  label: Connext path
-  group: Storage
-  show_if: "storage.enableinternal=true"
+  show_subquestion_if: true
+  subquestions:
+  - variable: storage.internal.usepvc
+    description: "Use existing PVC. If not checked, new PVC is created."
+    required: true
+    type: boolean
+    group: Storage
+    label: "Use existing PVC"
+  - variable: storage.internal.pvc
+    description: "PVC name"
+    required: true
+    type: pvc
+    group: Storage
+    label: "Use existing PVC"
+    show_if: "storage.internal.usepvc=true"
+  - variable: storage.internal.mnt
+    type: string
+    description: "Connect storage to this path"
+    label: Connext path
+    group: Storage
+    show_if: "storage.enableinternal=true"
 - variable: storage.enableexternal
   description: "Enable external storage"
   required: true
   type: boolean
   group: Storage
   label: "Enable external storage"
-- variable: storage.external.server
-  type: string
-  description: "Storage server to connect. Only Use if you have MUNI account."
-  label: "Storage server"
-  group: Storage
-  show_if: "storage.enableexternal=true"
-- variable: storage.external.username
-  type: string
-  description: "Storage username, UCO or service account."
-  label: Storage username
-  required: true
-  group: Storage
-  show_if: "storage.enableexternal=true"
-- variable: storage.external.password
-  type: password
-  description: "Storage password, i.e., secondary password."
-  label: Storage password
-  required: true
-  group: Storage
-  show_if: "storage.enableexternal=true"
-- variable: storage.external.mnt
-  type: string
-  description: "Connect storage to this path"
-  label: Connect path
-  group: Storage
-  show_if: "storage.enableexternal=true"
+  show_subquestion_if: true
+  subquestions:
+  - variable: storage.external.server
+    type: string
+    description: "Storage server to connect. Only Use if you have MUNI account."
+    label: "Storage server"
+    group: Storage
+  - variable: storage.external.username
+    type: string
+    description: "Storage username, UCO or service account."
+    label: Storage username
+    required: true
+    group: Storage
+  - variable: storage.external.password
+    type: password
+    description: "Storage password, i.e., secondary password."
+    label: Storage password
+    required: true
+    group: Storage
+  - variable: storage.external.mnt
+    type: string
+    description: "Connect storage to this path"
+    label: Connect path
+    group: Storage
 - variable: mincpu
   description: "Minimum guaranteed CPUs"
   type: string
