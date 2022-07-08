@@ -20,3 +20,4 @@ maxram: 12288Mi
 ephem: 20Gi
 shm: 512Mi
 timezone: "Europe/Prague"
+customimage: false
