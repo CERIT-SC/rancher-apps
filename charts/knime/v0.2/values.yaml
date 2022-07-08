@@ -12,6 +12,7 @@ storage:
     usepvc: false
     pvc: ''
     mnt: "/home/knimeuser/knime-workspace-int"
+    subpath: ''
 mincpu: 500m
 maxcpu: 4
 minram: 12288Mi

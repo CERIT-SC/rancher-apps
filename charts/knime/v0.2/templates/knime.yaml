@@ -45,6 +45,9 @@ spec:
 {{- if .Values.storage.enableinternal }}
         - name: internalstorage
           mountPath: {{ .Values.storage.internal.mnt }}
+{{- if ne .Values.storage.internal.subdir "" }}
+          subPath: {{ .Values.storage.internal.subpath }}
+{{- end }}
 {{- end }}
         - name: dshm
           mountPath: /dev/shm

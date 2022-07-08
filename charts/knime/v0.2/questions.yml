@@ -67,7 +67,11 @@ questions:
     description: "Connect storage to this path"
     label: Connext path
     group: Storage
-    show_if: "storage.enableinternal=true"
+  - variable: storage.internal.subpath
+    type: string
+    description: "Mount subpath of PVC"
+    label: PVC subpath
+    group: Storage
 - variable: storage.enableexternal
   description: "Enable external storage"
   required: true
