@@ -103,6 +103,10 @@ spec:
         - name: init-desktop
           image: {{ .Values.desktop }}
           command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
           securityContext:
             privileged: false
             runAsUser: 1000
