@@ -1,1 +1,5 @@
-hostname: ingress.hostname
+variable: ingress.hostname
+type: string
+label: hostname
+description: "Your hostname"
+group: "URL"
