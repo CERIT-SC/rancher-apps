@@ -3,3 +3,9 @@ type: string
 label: hostname
 description: "Your hostname"
 group: "URL"
+
+variable: ingress.url
+type: string
+label: URL
+description: "Your ingress URL"
+group: "URL"
