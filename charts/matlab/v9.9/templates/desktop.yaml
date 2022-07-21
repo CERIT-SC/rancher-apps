@@ -329,7 +329,7 @@ spec:
               echo "Waiting for host X server at ${DISPLAY}"
               until [[ -e /var/run/appconfig/xserver_ready ]]; do sleep 1; done
               echo "Host X server is ready"
-              exec /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh
+              while true; do /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh; sleep 5; done
           env: []
           volumeMounts:
             - name: x11
