@@ -1,0 +1,16 @@
+{{ if .Values.master.useVncClient }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: scipion-master-svc-vncclient
+  annotations:
+#    purelb.io/service-group: privmuni
+    external-dns.alpha.kubernetes.io/hostname: scipion-vnc.dyn.cloud.e-infra.cz
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5900 # default VNC port
+    targetPort: 5901
+  selector:
+    app: scipion-master
+{{ end }}

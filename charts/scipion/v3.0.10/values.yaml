@@ -1,0 +1,21 @@
+
+instance:
+  microk8s: false
+  mincpu: 2
+  maxcpu: 8
+  minram: 2048Mi
+  maxram: 8192Mi
+
+master:
+  useVncClient: false
+  vncPassword: "Scipion4u"
+
+od:
+  host: ""
+  source:
+    token: ""
+    spaceId: ""
+  project:
+    token: ""
+    spaceId: ""
+

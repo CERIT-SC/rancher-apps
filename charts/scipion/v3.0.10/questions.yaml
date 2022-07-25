@@ -1,0 +1,65 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- Scipion
+- VNC
+
+questions:
+- variable: master.vncPassword
+  type: password
+  required: true
+  default: Scipion4u
+  label: "noVNC password"
+  description: "Password required when connecting to the remote desktop of your instance"
+
+- variable: od.host
+  type: string
+  required: true
+  label: "OneData host"
+  description: "OneData host domain or IP address"
+- variable: od.source.spaceId
+  type: string
+  required: true
+  label: "OneData space-ID for source data"
+- variable: od.source.token
+  type: string
+  required: true
+  label: "OneData token for source data"
+- variable: od.project.spaceId
+  type: string
+  required: true
+  label: "OneData space-ID for project data"
+- variable: od.project.token
+  type: string
+  required: true
+  label: "OneData token for project data"
+
+- variable: instance.mincpu
+  default: 2
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: instance.maxcpu
+  default: 8
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: instance.minram
+  default: "2048Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: instance.maxram
+  default: "8192Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
+
