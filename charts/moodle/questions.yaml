@@ -53,9 +53,3 @@
   label: Database
   description: "Name of the existing database"
   
-- variable: externalDatabase.existingSecret
-  show_if: "mariadb.enabled=false"
-  type: string
-  group: "Storage"
-  label: Existing Secret
-  description: "Name of an existing secret resource containing the DB password"
