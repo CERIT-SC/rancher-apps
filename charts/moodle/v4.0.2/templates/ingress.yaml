@@ -65,7 +65,7 @@ spec:
         - {{ .name }}
         {{- end }}
       {{- if eq .Values.ingress.hostname "" }}
-      secretName: {{ {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz | replace "." "-" }}-tls
+      secretName: {{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
       {{- else }}
       secretName: {{ .Values.ingress.hostname | replace "." "-" }}-tls
       {{- end }}
