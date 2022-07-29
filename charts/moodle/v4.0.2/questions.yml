@@ -17,7 +17,7 @@ questions:
 - variable: mariadb.enabled
   type: boolean
   default: true
-  label: External database
+  label: MariaDB
   group: "Storage"
   description: "(if true) deploy a mariadb server, (if false) use external database"
   
