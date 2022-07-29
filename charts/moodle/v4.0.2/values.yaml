@@ -610,16 +610,16 @@ externalDatabase:
   host: ""
   ## @param externalDatabase.port Port of the existing database
   ##
-  port: 3306
+  port:
   ## @param externalDatabase.user Existing username in the external db
   ##
-  user: bn_moodle
+  user:
   ## @param externalDatabase.password Password for the above username
   ##
   password: ""
   ## @param externalDatabase.database Name of the existing database
   ##
-  database: bitnami_moodle
+  database:
   ## @param externalDatabase.existingSecret Name of an existing secret resource containing the DB password
   ##
   existingSecret: ""
