@@ -25,7 +25,7 @@ spec:
   rules:
     {{- if eq .Values.ingress.hostname "" }}
     - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
-    {{ else }}
+    {{- else }}
     - host: {{ .Values.ingress.hostname }}
     {{- end }}
       http:
@@ -58,7 +58,7 @@ spec:
     - hosts:
         {{- if eq .Values.ingress.hostname "" }}
         - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
-        {{ else }}
+        {{- else }}
         - {{ .Values.ingress.hostname }}
         {{- end }}
         {{- range .Values.ingress.extraHosts }}
