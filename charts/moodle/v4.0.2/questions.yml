@@ -9,7 +9,6 @@ categories:
 
 questions:
 - variable: ingress.hostname
-  required: true
   type: string
   label: Hostname
   description: "Your hostname"
