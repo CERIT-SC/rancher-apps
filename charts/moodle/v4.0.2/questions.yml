@@ -11,7 +11,7 @@ questions:
 - variable: ingress.hostname
   type: string
   label: Hostname
-  description: "Your hostname"
+  description: "Exposed URL. If empty, default moodle-namespace.dyn.cloud.e-infra.cz will be used."
   group: "URL"
 
 - variable: mariadb.enabled
@@ -19,7 +19,7 @@ questions:
   default: true
   label: Internal MariaDB 
   group: "Storage"
-  description: "(if true) deploy a mariadb server, (if false) use external database"
+  description: "Check to deploy an internal mariadb server, or uncheck to use external database."
   
 - variable: externalDatabase.type
   required: true
@@ -34,7 +34,7 @@ questions:
   group: "Storage"
   label: Type
   type: enum
-  description: "Type of the existing database (pgsql, mariadb, mysqli, mssql, sqlsrv or oci)"
+  description: "Type of the existing database (pgsql, mariadb, mysqli, mssql, sqlsrv or oci)."
   
 - variable: externalDatabase.host
   required: true
@@ -42,7 +42,7 @@ questions:
   type: string
   group: "Storage"
   label: Host
-  description: "Host of the existing database"
+  description: "Host of the existing database."
   
 - variable: externalDatabase.port
   required: true
@@ -50,7 +50,7 @@ questions:
   type: int
   group: "Storage"
   label: Port
-  description: "Port of the existing database"
+  description: "Port of the existing database."
   
 - variable: externalDatabase.user
   required: true
@@ -58,7 +58,7 @@ questions:
   type: string
   group: "Storage"
   label: User
-  description: "Existing username in the external db"
+  description: "Existing username in the external db."
   
 - variable: externalDatabase.password
   required: true
@@ -66,7 +66,7 @@ questions:
   type: password
   group: "Storage"
   label: Password
-  description: "Password for the above username"
+  description: "Password for the above username."
   
 - variable: externalDatabase.database
   required: true
@@ -74,5 +74,5 @@ questions:
   type: string
   group: "Storage"
   label: Database
-  description: "Name of the existing database"
+  description: "Name of the existing database."
   
