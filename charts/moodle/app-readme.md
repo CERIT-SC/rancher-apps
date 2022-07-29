@@ -1,4 +1,4 @@
-# **Moodle**
+# Moodle
 
 ## Info
 Moodle is a learning platform designed to provide educators, administrators and learners with a single robust, 
