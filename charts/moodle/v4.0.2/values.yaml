@@ -457,7 +457,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname When the ingress is enabled, a host pointing to this will be created
   ##
-  hostname: 'moodle.dyn.cloud.e-infra.cz'
+  hostname: ''
   ## @param ingress.path The Path to Moodle&trade;. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   path: /
@@ -604,7 +604,7 @@ mariadb:
 externalDatabase:
   ## @param externalDatabase.type Type of the existing database
   ##
-  type: ""
+  type: "mariadb"
   ## @param externalDatabase.host Host of the existing database
   ##
   host: ""

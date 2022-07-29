@@ -23,8 +23,11 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
   {{- end }}
   rules:
-    {{- if .Values.ingress.hostname }}
+    {{- if eq .Values.ingress.hostname "" }}
+    - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+    {{- else }}
     - host: {{ .Values.ingress.hostname }}
+    {{- end }}
       http:
         paths:
           {{- if .Values.ingress.extraPaths }}
@@ -53,11 +56,19 @@ spec:
   tls:
     {{- if .Values.ingress.tls }}
     - hosts:
+        {{- if eq .Values.ingress.hostname "" }}
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+        {{- else }}
         - {{ .Values.ingress.hostname }}
+        {{- end }}
         {{- range .Values.ingress.extraHosts }}
         - {{ .name }}
         {{- end }}
+      {{- if eq .Values.ingress.hostname "" }}
+      secretName: {{ {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz | replace "." "-" }}-tls
+      {{- else }}
       secretName: {{ .Values.ingress.hostname | replace "." "-" }}-tls
+      {{- end }}
     {{- end }}
     {{- if .Values.ingress.extraTls }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.extraTls "context" $ ) | nindent 4 }}

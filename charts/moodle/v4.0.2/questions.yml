@@ -17,18 +17,27 @@ questions:
 - variable: mariadb.enabled
   type: boolean
   default: true
-  label: MariaDB
+  label: Internal MariaDB 
   group: "Storage"
   description: "(if true) deploy a mariadb server, (if false) use external database"
   
 - variable: externalDatabase.type
+  required: true
   show_if: "mariadb.enabled=false"
-  type: string
+  options:
+    - "pgsql"
+    - "mariadb"
+    - "mysqli"
+    - "mssql"
+    - "sqlsrv"
+    - "oci"
   group: "Storage"
   label: Type
-  description: "Type of the existing database"
+  type: enum
+  description: "Type of the existing database (pgsql, mariadb, mysqli, mssql, sqlsrv or oci)"
   
 - variable: externalDatabase.host
+  required: true
   show_if: "mariadb.enabled=false"
   type: string
   group: "Storage"
@@ -36,6 +45,7 @@ questions:
   description: "Host of the existing database"
   
 - variable: externalDatabase.port
+  required: true
   show_if: "mariadb.enabled=false"
   type: int
   group: "Storage"
@@ -43,6 +53,7 @@ questions:
   description: "Port of the existing database"
   
 - variable: externalDatabase.user
+  required: true
   show_if: "mariadb.enabled=false"
   type: string
   group: "Storage"
@@ -50,6 +61,7 @@ questions:
   description: "Existing username in the external db"
   
 - variable: externalDatabase.password
+  required: true
   show_if: "mariadb.enabled=false"
   type: password
   group: "Storage"
@@ -57,6 +69,7 @@ questions:
   description: "Password for the above username"
   
 - variable: externalDatabase.database
+  required: true
   show_if: "mariadb.enabled=false"
   type: string
   group: "Storage"
