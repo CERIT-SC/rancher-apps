@@ -6,7 +6,7 @@ secure and integrated system to create personalised learning environments. This 
 moodle site under your hostname
 
 ## Configuration
-You will be obligated to fill hostname for your new moodle site. The adress has to already exist and 
-has to be a CNAME to adress kuba-pub.cerit-sc.cz. In case you want to use external database, 
+You will be obligated to fill hostname for your new moodle site. The adress has to already exist and has to 
+be a CNAME to adress kuba-pub.cerit-sc.cz. In case you want to use external database, 
 you will need to fill in basic information: type, host, port, username and password and name of your database.
 If you don't want to use external database, you will be provided  with MariaDB
