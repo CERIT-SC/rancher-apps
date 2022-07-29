@@ -1,0 +1,65 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Applications
+- Education
+
+questions:
+- variable: ingress.hostname
+  type: string
+  label: Hostname
+  description: "Your hostname"
+  group: "URL"
+
+- variable: mariadb.enabled
+  type: boolean
+  default: true
+  label: External database
+  group: "Storage"
+  description: "(if true) deploy a mariadb server, (if false) use external database"
+  
+- variable: externalDatabase.type
+  show_if: "mariadb.enabled=false"
+  type: string
+  group: "Storage"
+  label: Type
+  description: "Type of the existing database"
+  
+- variable: externalDatabase.host
+  show_if: "mariadb.enabled=false"
+  type: string
+  group: "Storage"
+  label: Host
+  description: "Host of the existing database"
+  
+- variable: externalDatabase.port
+  show_if: "mariadb.enabled=false"
+  type: int
+  group: "Storage"
+  label: Port
+  description: "Port of the existing database"
+  
+- variable: externalDatabase.user
+  show_if: "mariadb.enabled=false"
+  type: string
+  group: "Storage"
+  label: User
+  description: "Existing username in the external db"
+  
+- variable: externalDatabase.password
+  show_if: "mariadb.enabled=false"
+  type: password
+  group: "Storage"
+  label: Password
+  description: "Password for the above username"
+  
+- variable: externalDatabase.database
+  show_if: "mariadb.enabled=false"
+  type: string
+  group: "Storage"
+  label: Database
+  description: "Name of the existing database"
+  
