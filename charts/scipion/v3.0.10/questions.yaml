@@ -12,7 +12,6 @@ questions:
 - variable: master.vncPassword
   type: password
   required: true
-  default: Scipion4u
   label: "noVNC password"
   description: "Password required when connecting to the remote desktop of your instance"
 

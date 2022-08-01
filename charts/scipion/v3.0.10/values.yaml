@@ -8,7 +8,7 @@ instance:
 
 master:
   useVncClient: false
-  vncPassword: "Scipion4u"
+  vncPassword: ""
 
 od:
   host: ""
