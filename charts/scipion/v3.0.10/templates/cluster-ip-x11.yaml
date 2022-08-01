@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: scipion-master-svc-x11
+spec:
+  type: ClusterIP
+  ports:
+  - name: scipion-master-port                                                 
+    port: 6001
+    targetPort: 6001
+  selector:
+    app: scipion-master
