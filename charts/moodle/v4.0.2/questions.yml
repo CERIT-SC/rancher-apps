@@ -11,9 +11,36 @@ questions:
 - variable: ingress.hostname
   type: string
   label: Hostname
-  description: "Your hostname"
-  group: "URL"
-
+  description: "Access URL. If empty, default moodle-namespace.dyn.cloud.e-infra.cz will be used."
+  group: "General"
+  
+- variable: moodleUsername
+  type: string
+  label: Moodle username
+  description: "Your new Moodle username"
+  required: true
+  group: "General"
+  
+- variable: moodlePassword
+  type: password
+  label: Moodle password
+  description: "Your new Moodle password"
+  required: true
+  group: "General"
+  
+- variable: moodleSiteName
+  type: string
+  label: Site name
+  description: "Your moodle site's name"
+  group: "General"
+  
+- variable: moodleEmail
+  type: string
+  label: Moodle e-mail
+  description: "Moodle application e-mail"
+  group: "General"
+  required: true 
+  
 - variable: mariadb.enabled
   type: boolean
   default: true
