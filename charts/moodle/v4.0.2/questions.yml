@@ -52,7 +52,7 @@ questions:
   default: true
   label: Internal MariaDB 
   group: "Database"
-  description: "(if true) deploy a mariadb server, (if false) use external database"
+  description: "Check to deploy an internal mariadb server, or uncheck to use external database."
   
 - variable: externalDatabase.type
   required: true
