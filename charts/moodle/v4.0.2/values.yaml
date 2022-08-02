@@ -91,7 +91,7 @@ moodlePassword: ""
 ## @param moodleEmail Admin email
 ## ref: https://github.com/bitnami/bitnami-docker-moodle#configuration
 ##
-moodleEmail: user@example.com
+moodleEmail: 
 ## @param allowEmptyPassword Allow DB blank passwords
 ## ref: https://github.com/bitnami/bitnami-docker-moodle#environment-variables
 ##
