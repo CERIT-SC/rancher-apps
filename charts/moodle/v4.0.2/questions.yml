@@ -41,6 +41,12 @@ questions:
   group: "General"
   required: true 
   
+- variable: replicaCount
+  type: int
+  label: Replicas
+  description: "Number of Moodle replicas"
+  group: "General"
+  
 - variable: mariadb.enabled
   type: boolean
   default: true
