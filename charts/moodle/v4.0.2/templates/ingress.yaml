@@ -38,7 +38,6 @@ spec:
             pathType: {{ .Values.ingress.pathType }}
             {{- end }}
             backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" $)  | nindent 14 }}
-    {{- end }}
     {{- range .Values.ingress.extraHosts }}
     - host: {{ .name | quote }}
       http:
@@ -65,7 +64,7 @@ spec:
         - {{ .name }}
         {{- end }}
       {{- if eq .Values.ingress.hostname "" }}
-      secretName: {{ {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz | replace "." "-" }}-tls
+      secretName: {{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
       {{- else }}
       secretName: {{ .Values.ingress.hostname | replace "." "-" }}-tls
       {{- end }}
