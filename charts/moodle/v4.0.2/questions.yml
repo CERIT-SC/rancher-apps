@@ -17,34 +17,34 @@ questions:
 - variable: moodleUsername
   type: string
   label: Moodle username
-  description: "Your new Moodle username"
+  description: "Your new Moodle username."
   required: true
   group: "General"
   
 - variable: moodlePassword
   type: password
   label: Moodle password
-  description: "Your new Moodle password"
+  description: "Your new Moodle password."
   required: true
   group: "General"
   
 - variable: moodleSiteName
   type: string
   label: Site name
-  description: "Your moodle site's name"
+  description: "Your moodle site's name."
   group: "General"
   
 - variable: moodleEmail
   type: string
   label: Moodle e-mail
-  description: "Moodle application e-mail"
+  description: "Moodle application e-mail."
   group: "General"
   required: true 
   
 - variable: replicaCount
   type: int
   label: Replicas
-  description: "Number of Moodle replicas"
+  description: "Number of Moodle replicas."
   group: "General"
   
 - variable: mariadb.enabled
@@ -67,7 +67,7 @@ questions:
   group: "Database"
   label: Type
   type: enum
-  description: "Type of the existing database (pgsql, mariadb, mysqli, mssql, sqlsrv or oci)"
+  description: "Type of the existing database (pgsql, mariadb, mysqli, mssql, sqlsrv or oci)."
   
 - variable: externalDatabase.host
   required: true
@@ -75,7 +75,7 @@ questions:
   type: string
   group: "Database"
   label: Host
-  description: "Host of the existing database"
+  description: "Host of the existing database."
   
 - variable: externalDatabase.port
   required: true
@@ -83,7 +83,7 @@ questions:
   type: int
   group: "Database"
   label: Port
-  description: "Port of the existing database"
+  description: "Port of the existing database."
   
 - variable: externalDatabase.user
   required: true
@@ -91,7 +91,7 @@ questions:
   type: string
   group: "Database"
   label: User
-  description: "Existing username in the external db"
+  description: "Existing username in the external db."
   
 - variable: externalDatabase.password
   required: true
@@ -99,7 +99,7 @@ questions:
   type: password
   group: "Database"
   label: Password
-  description: "Password for the above username"
+  description: "Password for the above username."
   
 - variable: externalDatabase.database
   required: true
@@ -107,5 +107,5 @@ questions:
   type: string
   group: "Database"
   label: Database
-  description: "Name of the existing database"
+  description: "Name of the existing database."
   
