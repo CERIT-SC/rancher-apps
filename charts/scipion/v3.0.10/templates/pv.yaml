@@ -1,0 +1,33 @@
+{{ if .Values.instance.microk8s }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-scipion-od-source-{{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadOnlyMany # RO
+  capacity:
+    storage: 5000Gi
+  storageClassName: "onedata"
+  csi:
+    driver: csi-onedata
+    nodePublishSecretRef:
+      name: scipion-od-source-{{ .Release.Namespace }}
+    volumeHandle: pv-scipion-od-source-{{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-scipion-od-project-{{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany # RW
+  capacity:
+    storage: 5000Gi
+  storageClassName: "onedata"
+  csi:
+    driver: csi-onedata
+    nodePublishSecretRef:
+      name: scipion-od-project-{{ .Release.Namespace }}
+    volumeHandle: pv-scipion-od-project-{{ .Release.Namespace }}
+{{ end }}
