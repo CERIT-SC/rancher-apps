@@ -599,6 +599,9 @@ mariadb:
       ## @param mariadb.primary.persistence.existingClaim Name of an existing `PersistentVolumeClaim` for MariaDB primary replicas
       ##
       existingClaim: ""
+      
+      backup: false
+      schedule: "* * * * *"
 ## External database configuration
 ##
 externalDatabase:
