@@ -12,7 +12,7 @@ objects:
     metadata:
       name: mariadb-backup
     spec:
-      schedule: "5 * * * * "
+      schedule: {{ .Values.mariadb.schedule}}
       concurrencyPolicy: Forbid
       jobTemplate:
         spec:
