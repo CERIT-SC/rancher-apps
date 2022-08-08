@@ -116,6 +116,13 @@ questions:
   label: Backup
   description: "Check to create scheduled database backup"
   
+  - variable: mariadb.backupkeep
+  show_if: "mariadb.backup=true"
+  type: int
+  group: "Database"
+  label: Backup-keep
+  description: "Number of backups to keep"
+  
 - variable: mariadb.schedule
   show_if: "mariadb.backup=true"
   type: string
