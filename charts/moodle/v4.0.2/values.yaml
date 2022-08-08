@@ -600,8 +600,8 @@ mariadb:
       ##
       existingClaim: ""
       
-      backup: false
-      schedule: "* * * * *"
+  backup: false
+  schedule: "* * * * *"
 ## External database configuration
 ##
 externalDatabase:
