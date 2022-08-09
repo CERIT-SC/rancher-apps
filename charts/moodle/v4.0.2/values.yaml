@@ -603,6 +603,8 @@ mariadb:
   backup: false
   schedule: "* * * * *"
   backupkeep: ""
+  backupStorageClass: nfs-csi-backup
+  backupClaimName: backup-pvc
 ## External database configuration
 ##
 externalDatabase:
