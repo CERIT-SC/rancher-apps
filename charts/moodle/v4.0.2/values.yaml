@@ -602,7 +602,7 @@ mariadb:
       
   backup: false
   schedule: "* * * * *"
-  backupkeep:
+  backupkeep: ""
 ## External database configuration
 ##
 externalDatabase:
