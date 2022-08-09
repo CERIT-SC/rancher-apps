@@ -13,7 +13,7 @@ spec:
           volumes:
             - name: database-backup
               persistentVolumeClaim:
-                claimName: ${DATABASE_BACKUP_VOLUME_CLAIM}
+                claimName: {{ .Values.mariadb.backupClaimName }}
           containers:
             - name: database-backup
               image: 'registry.access.redhat.com/rhscl/mariadb-101-rhel7:10.1'
