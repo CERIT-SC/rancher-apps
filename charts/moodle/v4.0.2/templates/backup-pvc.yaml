@@ -1,0 +1,14 @@
+{{- if .Values.mariadb.backup }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.mariadb.backupClaimName }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  storageClassName: {{ .Values.mariadb.backupStorageClass }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+{{- end}}

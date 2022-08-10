@@ -109,3 +109,31 @@ questions:
   label: Database
   description: "Name of the existing database."
   
+- variable: mariadb.backup
+  show_if: "mariadb.enabled=true"
+  type: boolean
+  group: "Database"
+  label: Backup
+  description: "Check to create scheduled database backup"
+  
+  - variable: mariadb.backupkeep
+  show_if: "mariadb.backup=true"
+  type: int
+  group: "Database"
+  label: Backup-keep
+  description: "Number of backups to keep"
+  
+- variable: mariadb.schedule
+  show_if: "mariadb.backup=true"
+  type: string
+  group: "Database"
+  label: Schedule
+  description: "Create your backup schedule in format (minute hour day-of-the-month month day-of-the-week) minute(0-59) hour(0-23) day-of-the-month(1-31) month(1-12) day-of-the-week(0-6) sunday to saturday. For example: Run once a day at midnight	0 0 * * * or Run once a year at midnight of 1 January	0 0 1 1 *" 
+  
+- variable: mmariadb.backupClaimName
+  show_if: "mariadb.backup=true"
+  type: string
+  group: "Database"
+  label: ClaimName
+  description: "Fill the name of your Persistent Volume Claim for backup."
+ 

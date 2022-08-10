@@ -599,6 +599,12 @@ mariadb:
       ## @param mariadb.primary.persistence.existingClaim Name of an existing `PersistentVolumeClaim` for MariaDB primary replicas
       ##
       existingClaim: ""
+      
+  backup: false
+  schedule: "* * * * *"
+  backupkeep: ""
+  backupStorageClass: nfs-csi-backup
+  backupClaimName: backup-pvc
 ## External database configuration
 ##
 externalDatabase:
