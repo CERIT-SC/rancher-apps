@@ -281,7 +281,9 @@ resources:
   requests:
     memory: 512Mi
     cpu: 300m
-  limits: {}
+  limits: 
+    memory: 1024Mi
+    cpu: 1
 ## Configure Pods Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable Moodle&trade; pods' Security Context
@@ -666,16 +668,12 @@ volumePermissions:
   ## @param volumePermissions.resources.requests The requested resources for the container
   ##
   resources:
-    ## Example:
-    ## limits:
-    ##    cpu: 100m
-    ##    memory: 128Mi
-    limits: {}
-    ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 128Mi
-    requests: {}
+    limits:
+      cpu: 1
+      memory: 512Mi
+    requests:
+      cpu: 1
+      memory: 512Mi
 
 ## @section Metrics parameters
 
