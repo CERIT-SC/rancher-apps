@@ -8,6 +8,7 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           volumes:
@@ -29,9 +30,9 @@ spec:
                   mysqldump -u"${DATABASE_USER}" -p"${DATABASE_PASSWORD}" -h"${DATABASE_HOST}" -P"${DATABASE_PORT}" --skip-lock-tables --quick --add-drop-database --routines "${DATABASE_NAME}" | gzip > /database-backup/$FILENAME); 
                   echo "";
                   echo "Backup successful"; du -h /database-backup/$FILENAME; 
-                  echo "to restore the backup to the serviced host use: $ mysql -u$DATABASE_USER -p$DATABASE_PASSWORD -h$DATABASE_HOST < /database-backup/<backupfile> (unpacked)"
+                  echo "to restore the backup to the serviced host use: $ mysql -u$DATABASE_USER -p<redacted> -h$DATABASE_HOST < /database-backup/<backupfile> (unpacked)"
               env:
-                - name: MARIADB_USER
+                - name: DATABASE_USER
                   value: {{ .Values.mariadb.auth.username | quote }}
                 - name: DATABASE_PASSWORD
                   valueFrom:
@@ -41,14 +42,14 @@ spec:
                 - name: TZ
                   value: Europe/Zurich
                 - name: DATABASE_BACKUP_KEEP
-                  value: {{ .Values.mariadb.backupkeep}}
+                  value: {{ .Values.mariadb.backupkeep | quote }}
                 - name: DATABASE_SECRET
                   valueFrom:
                     secretKeyRef:
                       name: my-release-mariadb
                       key: mariadb-root-password
                 - name: DATABASE_HOST
-                  value: my-release-moodle
+                  value: {{.Release.Name }}-mariadb
                 - name: DATABASE_PORT
                   value: "3306"
                 - name: DATABASE_NAME
