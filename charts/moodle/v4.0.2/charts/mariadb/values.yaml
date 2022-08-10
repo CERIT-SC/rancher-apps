@@ -318,10 +318,10 @@ primary:
   resources:
     limits:
        cpu: 1
-       memory: 2048Mi
+       memory: 8192Mi
     requests:
        cpu: 1
-       memory: 1024Mi
+       memory: 4096Mi
   ## Configure extra options for MariaDB primary containers' liveness, readiness and startup probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## @param primary.startupProbe.enabled Enable startupProbe
