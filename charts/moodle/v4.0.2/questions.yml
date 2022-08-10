@@ -116,7 +116,7 @@ questions:
   label: Backup
   description: "Check to create scheduled database backup"
   
-  - variable: mariadb.backupkeep
+- variable: mariadb.backupkeep
   show_if: "mariadb.backup=true"
   type: int
   group: "Database"
