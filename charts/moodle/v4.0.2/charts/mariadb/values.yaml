@@ -316,18 +316,12 @@ primary:
   ## @param primary.resources.requests The requested resources for MariaDB primary containers
   ##
   resources:
-    ## Example:
-    ## limits:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    limits: {}
-    ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    requests: {}
+    limits:
+       cpu: 1
+       memory: 2048Mi
+    requests:
+       cpu: 1
+       memory: 1024Mi
   ## Configure extra options for MariaDB primary containers' liveness, readiness and startup probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## @param primary.startupProbe.enabled Enable startupProbe
@@ -696,17 +690,12 @@ secondary:
   ##
   resources:
     ## Example:
-    ## limits:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    limits: {}
-    ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    requests: {}
+    limits:
+      cpu: 1
+      memory: 2048Mi
+    requests:
+      cpu: 1
+      memory: 1024Mi
   ## Configure extra options for MariaDB Secondary containers' liveness, readiness and startup probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## @param secondary.startupProbe.enabled Enable startupProbe
@@ -967,8 +956,9 @@ volumePermissions:
   ## @param volumePermissions.resources.requests Init container volume-permissions resource requests
   ##
   resources:
-    limits: {}
-    requests: {}
+    limits:
+      cpu: 1
+      memory: 512Mi
 
 ## @section Metrics parameters
 ##
@@ -1071,17 +1061,13 @@ metrics:
   ##
   resources:
     ## Example:
-    ## limits:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    limits: {}
+    limits:
+       cpu: 100m
+       memory: 256Mi
     ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 256Mi
-    ##
-    requests: {}
+    requests:
+       cpu: 100m
+       memory: 256Mi
   ## Configure extra options for liveness probe
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   ## @param metrics.livenessProbe.enabled Enable livenessProbe
