@@ -53,6 +53,7 @@ questions:
   label: Internal MariaDB 
   group: "Database"
   description: "Check to deploy an internal mariadb server, or uncheck to use external database."
+  show_subquestion_if: true
   
 - variable: externalDatabase.type
   required: true
@@ -109,6 +110,7 @@ questions:
   label: Database
   description: "Name of the existing database."
   
+subquestions:
 - variable: mariadb.backup
   show_if: "mariadb.enabled=true"
   type: boolean
