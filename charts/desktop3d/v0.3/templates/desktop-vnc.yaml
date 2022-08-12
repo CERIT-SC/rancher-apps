@@ -1,0 +1,180 @@
+{{- if eq .Values.display "VNC"}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-password
+type: Opaque
+data:
+   password: {{ .Values.password | b64enc | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  type: LoadBalancer
+  ports:
+    - port: 5900
+      name: vnc
+      targetPort: 5900
+{{- if .Values.storage.persistenthome }}
+{{- if lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( printf "%s-home" .Release.Name) }}
+---
+{{- else }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-home
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+{{- end }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      automountServiceAccountToken: false
+
+      terminationGracePeriodSeconds: 5
+      volumes:
+        ###
+        # shared x11 socket volume
+        ###
+        - name: x11
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # Shared config volume
+        ###
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # shared memory mount
+        # used to bypass default container runtime of 64MB
+        ###
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+{{- if .Values.storage.persistenthome }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-home
+{{- end }}
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-{{ include "storage.name" . }}
+{{- end }}
+{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.pvc.name }}
+{{- end }}
+{{- if .Values.storage.persistenthome }}
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.desktop }}
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+          - name: home
+            mountPath: /home/user2
+{{- else }}
+      initContainers: []
+{{- end }}
+      containers:
+        - name: vncserver
+          image: cerit.io/desktops/vncserver:v1.0
+          env:
+          - name: VNCPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: {{ .Release.Name }}-password
+          ports:
+           - name: vnc
+             containerPort: 5900
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+
+        - name: desktop
+          image: {{ .Values.desktop }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+            - name: dshm
+              mountPath: /dev/shm
+{{- if .Values.storage.persistenthome }}
+            - name: home
+              mountPath: /home/user
+{{- end }}
+{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+            - name: data
+              mountPath: /storage
+{{- end }}
+{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
+            - name: pvc
+              mountPath: /home/user/pvc
+{{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+{{- end }}
