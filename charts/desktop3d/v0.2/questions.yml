@@ -17,6 +17,7 @@ questions:
   options:
     - "cerit.io/desktops/ubuntufocalxfce:v0.3"
     - "cerit.io/desktops/ubuntuhirsutexfce:v0.3"
+    - "cerit.io/desktops/ubuntu-xfce:18.04-user"
     - "cerit.io/desktops/wine-gaming:v0.5"
   group: "Image"
   type: enum
