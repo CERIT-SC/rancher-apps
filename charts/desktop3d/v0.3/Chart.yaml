@@ -4,7 +4,7 @@ annotations:
   catalog.cattle.io/release-name: desktop
 version: 0.3
 appVersion: 0.3
-description: GPU-accelerated streaming using WebRTC or non-accelerated using VNC
+description: Remote Desktop
 icon: file://logo.png
 keywords:
 - Remote desktop
