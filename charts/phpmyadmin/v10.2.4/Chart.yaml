@@ -1,5 +1,5 @@
 annotations:
-  category: Infrastructure
+  catalog.cattle.io/release-name: phpmyadmin
 apiVersion: v2
 appVersion: 5.2.0
 dependencies:
