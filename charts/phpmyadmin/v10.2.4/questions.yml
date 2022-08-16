@@ -1,0 +1,64 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Applications
+- Database
+
+questions:
+- variable: db.allowArbitraryServer
+  type: boolean
+  label: "Arbitrary Server"
+  description: "Enable connection to arbitrary MySQL server"
+  group: "Datbase"
+
+- variable: db.port
+  type: int
+  label: "Port"
+  description: "Database port to use to connect"
+  group: "Datbase"
+
+- variable: db.chartName
+  type: string
+  label: "Chart Name"
+  description: "Database suffix if included in the same release"
+  group: "Datbase"
+
+- variable: db.host
+  type: string
+  label: "Hostname"
+  description: "Database Hostname. Ignored when db.chartName is set."
+  group: "Datbase"
+
+- variable: db.enableSsl
+  type: boolean
+  label: "Enable SSL"
+  description: "Enable SSL for the connection between phpMyAdmin and the database"
+  group: "Datbase"
+  show_subquestion_if: true
+  subquestions:
+  - variable: db.ssl.clientKey
+    type: string
+    label: "Client key"
+    description: "Client key file when using SSL"
+    group: "Datbase"
+
+  - variable: db.ssl.clientCertificate	
+    type: string
+    label: "Client certificate"
+    description: "Client certificate file when using SSL"
+    group: "Datbase"
+
+  - variable: db.ssl.caCertificate
+    type: string
+    label: "CA certificate"
+    description: "CA file when using SSL"
+    group: "Datbase"
+
+  - variable: db.ssl.verify
+    type: boolean
+    label: "SSL validation"
+    description: "Enable SSL certificate validation"
+    group: "Datbase"
