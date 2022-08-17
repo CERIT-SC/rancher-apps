@@ -22,6 +22,7 @@ keywords:
   - mariadb
   - mysql
   - phpmyadmin
+  - storage
 maintainers:
   - name: Bitnami
     url: https://github.com/bitnami/charts
