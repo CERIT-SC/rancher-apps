@@ -1,0 +1,69 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- Ridom
+- SeqSphere
+- VNC
+
+questions:
+- variable: client.enable
+  type: boolean
+  label: Run Client
+  description: "Run client part ofr Ridom Seqsphere"
+  group: "Mode"
+- variable: server.enable
+  type: boolean
+  label: Run Server
+  description: "Run server part ofr Ridom Seqsphere"
+  group: "Mode"
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
+  type: password
+  label: VNC Password
+  group: "Authentication"
+  show_if: "client.enable=true"
+
+- variable: storage.persistenthome                                                                                                                                                                         
+  description: "If selected, content of /home/user directory will be preserved on new persistent volume across install/uninstall. Note: For Client mode only."
+  default: true                                                                 
+  required: false                                                               
+  type: boolean                                                                 
+  label: Persistent home                                                        
+  group: Storage                                                                
+- variable: storage.external.enable                                             
+  description: "Connect external home from CERIT-SC"                            
+  type: boolean                                                                 
+  group: "Storage"                                                              
+  label: External storage                                                       
+- variable: storage.externalpvc.name                                            
+  description: "Choose PVC representing external home exactly with name 'pvc-samba-brno12-{meta_username}'. It will be connected to /storage. If such PVC does not exist, see docs.cerit.io/docs/other/storagesecrets.html"
+  group: "Storage"                                                              
+  label: "External PVC"                                                         
+  type: pvc                                                                     
+  required: false                                                               
+  show_if: "storage.external.enable=true"                                       
+- variable: mincpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"

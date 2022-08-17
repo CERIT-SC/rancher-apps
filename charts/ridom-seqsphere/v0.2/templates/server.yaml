@@ -1,0 +1,74 @@
+{{- if eq .Values.server.enable true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-server
+spec:
+  selector:
+    app: {{ .Release.Name }}-server
+  type: ClusterIP
+  ports:
+    - port: 8064
+      name: ridom
+      targetPort: 8064
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-server
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-server
+  serviceName: {{ .Release.Name }}-server
+  replicas: 1
+  volumeClaimTemplates: []
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}-server
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 5
+      volumes:
+      containers:
+        - name: server
+          image: {{ .Values.server.image }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: home
+              mountPath: /home/user
+            - name: db
+              mountPath: /home/user/.seqsphere-server
+          ports:
+          - containerPort: 8064
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: db
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 2048Gi
+{{- end }}

@@ -1,0 +1,21 @@
+apiVersion: v1
+name: matlab
+annotations:
+  catalog.cattle.io/release-name: matlab
+version: 9.9.1
+appVersion: 9.9.1
+description: Matlab 9.9
+icon: file://logo.svg
+keywords:
+- Remote desktop
+- Matlab 9.9
+- Webrtc
+- 3D Acceleration
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
