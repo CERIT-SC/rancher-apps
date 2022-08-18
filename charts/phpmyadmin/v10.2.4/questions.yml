@@ -1,0 +1,15 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Applications
+- Database
+
+questions:
+- variable: db.port
+  type: int
+  label: "Port"
+  description: "Database port to use to connect"
+  group: "General"
