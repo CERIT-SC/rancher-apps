@@ -27,4 +27,4 @@ questions:
   type: string
   label: "Hostname"
   description: "Database Hostname. Ignored when db.chartName is set."
-  group: "General"
+  group: "General1"
