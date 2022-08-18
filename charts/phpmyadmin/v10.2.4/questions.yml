@@ -13,19 +13,16 @@ questions:
   label: "Arbitrary Server"
   description: "Enable connection to arbitrary MySQL server"
   group: "General"
-
 - variable: db.port
   type: int
   label: "Port"
   description: "Database port to use to connect"
   group: "General"
-
 - variable: db.chartName
   type: string
   label: "Chart Name"
   description: "Database suffix if included in the same release"
   group: "General"
-
 - variable: db.host
   type: string
   label: "Hostname"
