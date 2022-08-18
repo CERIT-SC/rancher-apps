@@ -134,6 +134,7 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
 {{- if or .Values.storage.persistenthome .Values.storage.persistentopt}}
   volumeClaimTemplates:
 {{- if .Values.storage.persistenthome }}
