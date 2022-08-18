@@ -8,19 +8,18 @@ categories:
 - Database
 
 questions:
-- variable: db.allowArbitraryServer
-  type: boolean
-  label: "Arbitrary Server"
-  description: "Enable connection to arbitrary MySQL server"
 - variable: db.port
   type: int
   label: "Port"
   description: "Database port to use to connect"
-- variable: db.chartName
-  type: string
-  label: "Database suffix"
-  description: "Database suffix if included in the same release"
+  group: "General"
 - variable: db.host
   type: string
   label: "Hostname"
   description: "Database Hostname. Ignored when db.chartName is set."
+  group: "General"
+
+- variable: kubeVersion
+  type: string
+  show_if: "db.allowArbitraryServer=false"
+  group: "Version"
