@@ -13,13 +13,3 @@ questions:
   label: "Port"
   description: "Database port to use to connect"
   group: "General"
-- variable: db.host
-  type: string
-  label: "Hostname"
-  description: "Database Hostname. Ignored when db.chartName is set."
-  group: "General"
-
-- variable: kubeVersion
-  type: string
-  show_if: "db.allowArbitraryServer=false"
-  group: "Version"
