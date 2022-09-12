@@ -1,7 +1,5 @@
 apiVersion: v2
 name: code-server
-annotations:
-  catalog.cattle.io/release-name: code-server
 description: VSCode Code-server
 type: application
 version: 2.6.0
