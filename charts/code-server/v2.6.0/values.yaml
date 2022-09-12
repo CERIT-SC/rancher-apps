@@ -1,0 +1,15 @@
+image: codercom/code-server:4.4.0
+password: ""
+resources:
+  limits:
+     cpu: 1
+     memory: 1Gi
+  requests:
+     cpu: 100m
+     memory: 512M
+storage:
+  external:
+    enable: false
+    name: ""
+install:
+  conda: true
