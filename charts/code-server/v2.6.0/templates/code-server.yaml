@@ -69,7 +69,7 @@ spec:
           - name: data
             mountPath: /home/coder
 {{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
-          - name: data
+          - name: metahome
             mountPath: /storage
 {{- end }}
           ports:
@@ -93,7 +93,7 @@ spec:
               memory: {{ .Values.resources.limits.memory }}
 {{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
       volumes:
-      - name: data
+      - name: metahome
         persistentVolumeClaim:
           claimName: {{ .Values.storage.externalpvc.name }}
 {{- end }}
