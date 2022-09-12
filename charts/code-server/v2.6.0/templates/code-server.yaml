@@ -69,8 +69,8 @@ spec:
           - name: data
             mountPath: /home/coder
 {{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
-        - name: data
-          mountPath: /storage
+          - name: data
+            mountPath: /storage
 {{- end }}
           ports:
             - name: http
