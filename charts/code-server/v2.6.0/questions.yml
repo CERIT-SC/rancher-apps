@@ -1,0 +1,53 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+
+questions:
+- variable: install.conda
+  type: boolean
+  group: "Setup"
+  description: "Install and Setup Conda/Mamba tool."
+  label: Install Conda  
+- variable: password
+  description: "You must enter a password that will be used log into code-server app. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
+  type: password
+  label: Password (please avoid chars "{" and "}")
+  group: "Security"
+  invalid_chars: "{}"
+- variable: resources.requests.cpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: resources.limits.cpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: resources.requests.memory
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: resources.limits.memory
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
+- variable: storage.external.enable                                             
+  description: "Connect external home from CERIT-SC"                            
+  type: boolean                                                                 
+  group: "Storage"                                                              
+  label: External storage                                                       
+- variable: storage.externalpvc.name                                            
+  description: "Choose PVC representing external home exactly with name 'pvc-samba-brno12-{meta_username}'. It will be connected to /storage. If such PVC does not exist, see docs.cerit.io/docs/other/storagesecrets.html"
+  group: "Storage"                                                              
+  label: "External PVC"                                                         
+  type: pvc                                                                     
+  required: false                                                               
+  show_if: "storage.external.enable=true"                     
