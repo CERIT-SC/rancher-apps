@@ -17,7 +17,7 @@ storage:
   server: ""
   username: ""
   password: ""
-  pvc:
+  externalpvc:
     enable: false
     name: ""
   persistenthome: true

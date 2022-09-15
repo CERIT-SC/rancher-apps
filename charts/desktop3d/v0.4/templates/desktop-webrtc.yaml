@@ -141,7 +141,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-home
 {{- end }}
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
@@ -214,7 +214,7 @@ spec:
             - name: home
               mountPath: /home/user
 {{- end }}
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
             - name: data
               mountPath: /storage
 {{- end }}
