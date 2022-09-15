@@ -6,7 +6,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-scipion-vol-source-{{ .Release.Namespace }}
   annotations:
-    "helm.sh/resource-policy": keep
+    #"helm.sh/resource-policy": keep
 spec:
   accessModes:
     - ReadWriteMany
@@ -20,7 +20,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-scipion-vol-project-{{ .Release.Namespace }}
   annotations:
-    "helm.sh/resource-policy": keep
+    #"helm.sh/resource-policy": keep
 spec:
   accessModes:
     - ReadWriteMany
