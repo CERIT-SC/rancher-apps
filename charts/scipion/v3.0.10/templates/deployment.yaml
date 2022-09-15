@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 180
       containers:
       - name: controller
-        image: jhandl/scipion-controller:latest
+        image: hub.cerit.io/josef_handl/scipion-controller:latest
         imagePullPolicy: Always
         securityContext:
           privileged: false
@@ -32,7 +32,7 @@ spec:
           mountPath: "/mnt/vol-project"
 
       - name: scipion-master
-        image: jhandl/scipion-mn:tool
+        image: hub.cerit.io/josef_handl/scipion-master:latest
         imagePullPolicy: Always
         securityContext:
           privileged: false
