@@ -68,7 +68,7 @@ spec:
           volumeMounts:
           - name: data
             mountPath: /home/coder
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
           - name: metahome
             mountPath: /storage
 {{- end }}
@@ -91,7 +91,7 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.limits.memory }}
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
       volumes:
       - name: metahome
         persistentVolumeClaim:

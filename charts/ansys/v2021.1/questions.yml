@@ -47,7 +47,7 @@ questions:
   #  type: pvc                                                                  
   #  required: false                                                            
   #  show_if: "storage.pvc.enable=true"                                         
-- variable: storage.external.enable                                             
+- variable: storage.externalpvc.enable                                             
   description: "Connect external home from CERIT-SC"                            
   type: boolean                                                                 
   group: "Storage"                                                              
@@ -58,7 +58,7 @@ questions:
   label: "External PVC"                                                         
   type: pvc                                                                     
   required: false                                                               
-  show_if: "storage.external.enable=true" 
+  show_if: "storage.externalpvc.enable=true" 
 - variable: walltime
   description: "Maximum runtime of application in hours. 24 = 1 day, 96 = 4 days. Maximum allowed is 4 days, higher values are cut to 4 days."
   type: int

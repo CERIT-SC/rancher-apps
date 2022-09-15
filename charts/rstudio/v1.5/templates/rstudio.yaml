@@ -114,7 +114,7 @@ spec:
           requests:
             cpu: {{ .Values.mincpu }}
             memory: {{ .Values.minram }}
-{{- if or .Values.storage.persistentopt (or .Values.storage.persistenthome (and .Values.storage.external.enable (ne .Values.storage.externalpvc.name ""))) }}
+{{- if or .Values.storage.persistentopt (or .Values.storage.persistenthome (and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name ""))) }}
         volumeMounts:
 {{- end }}
 {{- if .Values.storage.persistentopt}}
@@ -125,11 +125,11 @@ spec:
         - name: home
           mountPath: /home/rstudio
 {{- end }}
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
         - name: data
           mountPath: /storage
 {{- end }}
-{{- if and .Values.storage.external.enable (ne .Values.storage.externalpvc.name "") }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
       volumes:
       - name: data
         persistentVolumeClaim:
