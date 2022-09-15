@@ -18,24 +18,26 @@ questions:
 - variable: od.host
   type: string
   required: true
-  label: "Onedata provider"
-  description: "Onedata provider domain or IP address"
+  label: "Oneprovider hostname"
+  description: "Domain name of the Oneprovider instance"
 - variable: od.source.spaceId
   type: string
   required: true
-  label: "Onedata space-ID for dataset space"
+  label: "Dataset Space ID"
+  description: "ID of Onedata Space with dataset"
 - variable: od.source.token
   type: string
   required: true
-  label: "Onedata token for dataset space"
+  label: "Onedata Access token for dataset Space"
 - variable: od.project.spaceId
   type: string
   required: true
-  label: "Onedata space-ID for project space"
+  label: "Project Space ID"
+  description: "ID of Onedata Space with project"
 - variable: od.project.token
   type: string
   required: true
-  label: "Onedata token for project space"
+  label: "Onedata Access token for project Space"
 
 - variable: instance.mincpu
   default: 2

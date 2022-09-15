@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: scipion-master-ingress
   annotations:
-    "helm.sh/resource-policy": keep
+    #"helm.sh/resource-policy": keep
     kuberentes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
