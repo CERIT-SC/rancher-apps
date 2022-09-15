@@ -69,7 +69,7 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-{{- if eq .Values.storage.external.enable true }}
+{{- if eq .Values.storage.externalpvc.enable true }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
@@ -134,7 +134,7 @@ spec:
               mountPath: /dev/shm
             - name: home
               mountPath: /home/user
-{{- if eq .Values.storage.external.enable true }}
+{{- if eq .Values.storage.externalpvc.enable true }}
             - name: data
               mountPath: /storage
 {{- end }}

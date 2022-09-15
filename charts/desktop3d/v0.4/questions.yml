@@ -71,7 +71,7 @@ questions:
   label: "External PVC"                                                         
   type: pvc                                                                     
   required: false                                                               
-  show_if: "storage.external.enable=true"
+  show_if: "storage.externalpvc.enable=true"
 - variable: mincpu
   description: "Minimum guaranteed CPUs"
   type: string
