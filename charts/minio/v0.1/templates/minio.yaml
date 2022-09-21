@@ -34,12 +34,6 @@ spec:
 {{- else }}
           value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
 {{- end }}
-        - name: MINIO_SERVER_URL
-{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.trusted.e-infra.cz
-{{- else }}
-          value: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
-{{- end }}
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
