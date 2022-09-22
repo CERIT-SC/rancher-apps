@@ -1,0 +1,183 @@
+{{- if contains "molgenis" .Release.Name }}
+  {{ fail "Please choose a release name that does not contain the string 'molgenis'!" }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "molgenis.fullname" . }}
+  labels:
+    app: {{ template "molgenis.name" . }}
+    chart: {{ template "molgenis.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "molgenis.name" . }}
+      release: {{ .Release.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "molgenis.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        # Group "molgenis" so filebeat can read the logfile
+        fsGroup: 102
+      containers:
+        - name: molgenis
+          image: {{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: environment
+              value: {{ .Values.runtimeEnvironment }}
+            - name: molgenis.home
+              value: /home/molgenis
+            - name: opencpu.uri.host
+              value: {{ .Values.opencpu }}
+            - name: elasticsearch.hosts
+              value: {{ include "call-nested" (list . "molgenis-elasticsearch" "molgenis-elasticsearch.fullname") }}:9200
+            - name: elasticsearch.cluster.name
+              value: {{ index .Values "molgenis-elasticsearch" "clusterName" }}
+            - name: db_uri
+              value: jdbc:postgresql://{{ include "call-nested" (list . "postgresql" "postgresql.fullname") }}/{{ $.Values.postgresql.postgresqlDatabase }}
+            - name: db_user
+              value: {{ .Values.postgresql.postgresqlUsername }}
+            - name: db_password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "call-nested" (list . "postgresql" "postgresql.fullname") }}
+                  key: postgresql-password
+            - name: admin.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "molgenis.fullname" $ }}
+                  key: adminpassword
+            - name: admin.email
+              value: {{ .Values.adminEmail | quote  }}
+            - name: python_script_executable
+              value: {{ .Values.python.executable }}
+            - name: mail.host
+              value: {{ .Values.mail.host }}
+            {{- if .Values.mail.username }}
+            - name: mail.username
+              value: {{ .Values.mail.username }}
+            {{- end }}
+            {{- if .Values.mail.password }}
+            - name: mail.password
+              value: {{ .Values.mail.password }}
+            {{- end }}
+            - name: mail.port
+              value: {{ .Values.mail.port | quote }}
+            - name: mail.protocol
+              value: {{ .Values.mail.protocol }}
+            - name: mail.from
+              value: {{ .Values.adminEmail | quote }}
+            - name: mail.smtp.auth
+              value: {{ .Values.mail.smtp.auth | quote }}
+            {{- if .Values.sentry }}
+            - name: SENTRY_SERVERNAME
+              value: {{ template "molgenis.hostname" $ }}
+            - name: SENTRY_RELEASE
+              value: {{ .Values.image.name }}@{{ .Values.image.tag }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.environment }}
+            {{- range $key, $value := default dict .Values.sentry }}
+            - name: SENTRY_{{ $key | snakecase | upper }}
+              value: {{ $value }}
+            {{- end }}
+            {{- end }}
+            {{- with $.Values.minio }}
+            - name: MINIO_BUCKET_NAME
+              value: {{ .defaultBucket.name }}
+            - name: MINIO_REGION
+              value: {{ .environment.MINIO_REGION_NAME }}
+            - name: MINIO_ENDPOINT
+              value: http://{{ include "call-nested" (list $ "minio" "minio.fullname") }}:{{ .service.port }}
+            {{- end}}
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "call-nested" (list $ "minio" "minio.fullname") }}
+                  key: accesskey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "call-nested" (list $ "minio" "minio.fullname") }}
+                  key: secretkey
+            - name: MOLGENIS_MAX_FILE_MB
+              value: {{ .Values.maxFileMB | quote }}
+            - name: CATALINA_OPTS
+              value: {{ .Values.catalinaOpts }}
+{{- if .Values.audit.enabled }}
+            - name: audit.log.path
+              value: /home/molgenis/audit/audit.log
+{{- end }}
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: pv-molgenis
+              mountPath: /home/molgenis
+{{- if .Values.audit.enabled }}
+            - name: audit-logging
+              mountPath: /home/molgenis/audit
+{{- end }}
+          startupProbe:
+            httpGet:
+              path: /api/v2/version
+              port: 8080
+            failureThreshold: 90
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/v2/version
+              port: 8080
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+{{- if .Values.audit.enabled }}
+        - name: filebeat
+          image: {{ .Values.audit.image.name }}:{{ .Values.audit.image.tag }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - name: audit-logging
+              mountPath: /usr/share/filebeat/input/
+            - name: filebeat-config
+              mountPath: /usr/share/filebeat/filebeat.yml
+              subPath: filebeat.yml
+{{- end }}
+      volumes:
+        - name: pv-molgenis
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "molgenis.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
+{{- if .Values.audit.enabled }}
+        - name: audit-logging
+          emptyDir: {}
+        - name: filebeat-config
+          configMap:
+            name: filebeat-config
+{{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
