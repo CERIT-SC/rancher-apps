@@ -12,7 +12,7 @@ storage:
   server: "storage-brno12-cerit.metacentrum.cz/share"
   username: ""
   password: ""
-  pvc:
+  externalpvc:
     enable: false
     name: ""
   persistenthome: true

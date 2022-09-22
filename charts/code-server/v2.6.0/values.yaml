@@ -8,7 +8,7 @@ resources:
      cpu: 100m
      memory: 512M
 storage:
-  external:
+  externalpvc:
     enable: false
     name: ""
 install:

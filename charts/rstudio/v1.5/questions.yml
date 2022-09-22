@@ -65,7 +65,7 @@ questions:
   #  type: pvc                                                                  
   #  required: false                                                            
   #  show_if: "storage.pvc.enable=true"                                         
-- variable: storage.external.enable                                             
+- variable: storage.externalpvc.enable                                             
   description: "Connect external home from CERIT-SC"                            
   type: boolean                                                                 
   group: "Storage"                                                              
@@ -76,7 +76,7 @@ questions:
   label: "External PVC"                                                         
   type: pvc                                                                     
   required: false                                                               
-  show_if: "storage.external.enable=true"                                       
+  show_if: "storage.externalpvc.enable=true"                                       
 - variable: ssh.enable                                                          
   description: "Enable external ssh access."                                    
   group: "Storage"                                                              

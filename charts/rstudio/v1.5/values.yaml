@@ -11,7 +11,7 @@ storage:
   password: ""
   persistenthome: true
   persistentopt: false
-  pvc:
+  externalpvc:
     enable: false
     name: ""
 ingress:

@@ -16,3 +16,6 @@ storage:
   server: 'ha-bay.ics.muni.cz/share'
   username: ''
   password: ''
+  externalpvc:
+    enable: false
+    name: ""
