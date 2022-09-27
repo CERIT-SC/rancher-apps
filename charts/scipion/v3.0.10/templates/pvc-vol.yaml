@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-scipion-vol-source-{{ .Release.Name }}-{{ .Release.Namespace }}
+  name: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
   #annotations:
     #"helm.sh/resource-policy": keep
 spec:

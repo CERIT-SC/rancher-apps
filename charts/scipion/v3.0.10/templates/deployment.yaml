@@ -22,12 +22,12 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
         volumeMounts:
-        - name: scipion-od-source-ro
-          mountPath: "/mnt/od-source"
+        - name: scipion-od-dataset-ro
+          mountPath: "/mnt/od-dataset"
         - name: scipion-od-project-rw
           mountPath: "/mnt/od-project"
-        - name: scipion-vol-source-rw
-          mountPath: "/mnt/vol-source"
+        - name: scipion-vol-dataset-rw
+          mountPath: "/mnt/vol-dataset"
         - name: scipion-vol-project-rw
           mountPath: "/mnt/vol-project"
 
@@ -56,8 +56,8 @@ spec:
         - name: USE_VNCCLIENT
           value: {{ .Values.master.useVncClient | quote }}
         volumeMounts:
-        - name: scipion-vol-source-rw
-          mountPath: "/mnt/vol-source"
+        - name: scipion-vol-dataset-rw
+          mountPath: "/mnt/vol-dataset"
         - name: scipion-vol-project-rw
           mountPath: "/mnt/vol-project"
         resources:
@@ -76,9 +76,9 @@ spec:
        # ---------------------
 
        # Controller cloner
-       - name: scipion-od-source-ro
+       - name: scipion-od-dataset-ro
          persistentVolumeClaim:
-           claimName: pvc-scipion-od-source-{{ .Release.Name }}-{{ .Release.Namespace }}
+           claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
            readOnly: true
 
        # Controller restore,autosave,trapsave
@@ -90,15 +90,15 @@ spec:
        # ---------------------
 
        # Master + Controller cloner (master - tmp)
-       - name: scipion-vol-source-rw
+       - name: scipion-vol-dataset-rw
          persistentVolumeClaim:
-           claimName: pvc-scipion-vol-source-{{ .Release.Name }}-{{ .Release.Namespace }}
+           claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
 
 # TODO RO for RW PVC does not work
 #       # Master
-#       - name: scipion-vol-source-ro
+#       - name: scipion-vol-dataset-ro
 #         persistentVolumeClaim:
-#           claimName: pvc-scipion-vol-source-$SUBST_NAMESPACE
+#           claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
 #           readOnly: true
 
        # Master + Controller restore,autosave,trapsave
