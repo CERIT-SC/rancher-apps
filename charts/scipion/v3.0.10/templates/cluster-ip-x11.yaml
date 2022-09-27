@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: scipion-master-svc-x11
+  name: scipion-master-svc-x11-{{ .Release.Name }}
 spec:
   type: ClusterIP
   ports:
-  - name: scipion-master-port                                                 
+  - name: scipion-master-port-{{ .Release.Name }}
     port: 6001
     targetPort: 6001
   selector:
-    app: scipion-master
+    app: scipion-master-{{ .Release.Name }}

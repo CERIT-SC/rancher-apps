@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scipion-master
+  name: scipion-master-{{ .Release.Name }}
 spec:
   selector:
     matchLabels:
-      app: scipion-master
+      app: scipion-master-{{ .Release.Name }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: scipion-master
+        app: scipion-master-{{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 180
       containers:
@@ -42,6 +42,8 @@ spec:
         - containerPort: 5901
         - containerPort: 6001
         env:
+        - name: INSTANCE_NAME
+          value: {{ .Release.Name | quote }}
         - name: ROOT_PASS
           value: "abc"
         - name: USER_PASS
@@ -67,7 +69,7 @@ spec:
             memory: {{ .Values.instance.minram }}
 #            nvidia.com/gpu: 1 # dedicated GPU
 #            cerit.io/gpu-mem: 1 # shared GPU
-      serviceAccountName: pod-reader-sa
+      serviceAccountName: pod-reader-sa-{{ .Release.Name }}
       volumes:
 
        # Onedata
@@ -76,13 +78,13 @@ spec:
        # Controller cloner
        - name: scipion-od-source-ro
          persistentVolumeClaim:
-           claimName: pvc-scipion-od-source-{{ .Release.Namespace }}
+           claimName: pvc-scipion-od-source-{{ .Release.Name }}-{{ .Release.Namespace }}
            readOnly: true
 
        # Controller restore,autosave,trapsave
        - name: scipion-od-project-rw
          persistentVolumeClaim:
-           claimName: pvc-scipion-od-project-{{ .Release.Namespace }}
+           claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
 
        # Auto vol provisioning
        # ---------------------
@@ -90,7 +92,7 @@ spec:
        # Master + Controller cloner (master - tmp)
        - name: scipion-vol-source-rw
          persistentVolumeClaim:
-           claimName: pvc-scipion-vol-source-{{ .Release.Namespace }}
+           claimName: pvc-scipion-vol-source-{{ .Release.Name }}-{{ .Release.Namespace }}
 
 # TODO RO for RW PVC does not work
 #       # Master
@@ -102,5 +104,5 @@ spec:
        # Master + Controller restore,autosave,trapsave
        - name: scipion-vol-project-rw
          persistentVolumeClaim:
-           claimName: pvc-scipion-vol-project-{{ .Release.Namespace }}
+           claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}
 
