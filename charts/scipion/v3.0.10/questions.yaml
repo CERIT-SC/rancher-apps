@@ -20,12 +20,12 @@ questions:
   required: true
   label: "Oneprovider hostname"
   description: "Domain name of the Oneprovider instance"
-- variable: od.source.spaceId
+- variable: od.dataset.spaceId
   type: string
   required: true
   label: "Dataset Space ID"
   description: "ID of Onedata Space with dataset"
-- variable: od.source.token
+- variable: od.dataset.token
   type: string
   required: true
   label: "Onedata Access token for dataset Space"
