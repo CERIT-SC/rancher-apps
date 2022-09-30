@@ -12,7 +12,7 @@ master:
 
 od:
   host: ""
-  source:
+  dataset:
     token: ""
     spaceId: ""
   project:

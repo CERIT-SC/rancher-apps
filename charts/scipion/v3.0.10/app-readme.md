@@ -2,7 +2,7 @@
 This application enables you to use Scipion app in cloud environment with several 3DEM tools and queue system. The solution includes GUI with browser-based remote desktop, and is capable of using a graphics card for CUDA-accelerated tools.
 
 ## Onedata
-Onedata is used as a storage with source data (e.g. data scanned by CryoEM) and project data.
+Onedata is used as a storage with dataset data (e.g. data scanned by CryoEM) and project data.
 
 ## Required input arguments
 When launching Scipion app, you need to fill the following information:
