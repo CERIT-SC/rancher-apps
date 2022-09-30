@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: scipion-master-ingress
+  name: scipion-master-ingress-{{ .Release.Name }}
   annotations:
     #"helm.sh/resource-policy": keep
     kuberentes.io/ingress.class: "nginx"
@@ -11,15 +11,15 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "scipion.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
-      secretName: scipion-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+        - "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+      secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
   rules:
-  - host: "scipion.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+  - host: "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
     http:
       paths:
       - backend:
           service:
-            name: scipion-master-svc-novnc
+            name: scipion-master-svc-novnc-{{ .Release.Name }}
             port:
               number: 5901
         pathType: ImplementationSpecific

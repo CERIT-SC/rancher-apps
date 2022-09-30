@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-scipion-od-source-{{ .Release.Namespace }}
+  name: pv-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadOnlyMany # RO
@@ -12,13 +12,13 @@ spec:
   csi:
     driver: csi-onedata
     nodePublishSecretRef:
-      name: scipion-od-source-{{ .Release.Namespace }}
-    volumeHandle: pv-scipion-od-source-{{ .Release.Namespace }}
+      name: scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+    volumeHandle: pv-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-scipion-od-project-{{ .Release.Namespace }}
+  name: pv-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteMany # RW
@@ -28,6 +28,6 @@ spec:
   csi:
     driver: csi-onedata
     nodePublishSecretRef:
-      name: scipion-od-project-{{ .Release.Namespace }}
-    volumeHandle: pv-scipion-od-project-{{ .Release.Namespace }}
+      name: scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+    volumeHandle: pv-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
 {{ end }}
