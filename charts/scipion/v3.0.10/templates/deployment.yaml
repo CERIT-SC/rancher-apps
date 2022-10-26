@@ -23,6 +23,8 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
         volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
         - name: scipion-od-dataset-ro
           mountPath: "/mnt/od-dataset"
         - name: scipion-od-project-rw
@@ -57,6 +59,8 @@ spec:
         - name: USE_VNCCLIENT
           value: {{ .Values.master.useVncClient | quote }}
         volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
 {{ if .Values.master.useVncClient }}
         - name: cert-loadbalancer-vncclient
           mountPath: "/mnt/cert-loadbalancer-vncclient"
@@ -78,6 +82,10 @@ spec:
 
       serviceAccountName: pod-reader-sa-{{ .Release.Name }}
       volumes:
+
+      # Shared volume between containers
+      - name: shared
+        emptyDir: {}
 
 {{ if .Values.master.useVncClient }}
       # Certificate for VNC server
