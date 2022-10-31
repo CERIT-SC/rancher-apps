@@ -11,6 +11,6 @@ When launching Scipion app, you need to fill the following information:
 - Onedata storage connection credentials
 
 ## Web Access
-When the instance is running, navidate you browser to the URL with the following format: `https://scipion.`*your-namespace*`.dyn.cloud.e-infra.cz/`.  
-E.g. `https://scipion.handl-ns.dyn.cloud.e-infra.cz/`.
+When the instance is running, navidate you browser to the URL with the following format: `https://scipion.`*instance-name*`.`*your-namespace*`.dyn.cloud.e-infra.cz/`.  
+E.g. `https://scipion.test.handl-ns.dyn.cloud.e-infra.cz/`.
 

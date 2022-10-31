@@ -14,6 +14,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 180
       containers:
+
       - name: controller
         image: hub.cerit.io/josef_handl/scipion-controller:latest
         imagePullPolicy: Always
@@ -22,6 +23,8 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
         volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
         - name: scipion-od-dataset-ro
           mountPath: "/mnt/od-dataset"
         - name: scipion-od-project-rw
@@ -56,6 +59,13 @@ spec:
         - name: USE_VNCCLIENT
           value: {{ .Values.master.useVncClient | quote }}
         volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
+{{ if .Values.master.useVncClient }}
+        - name: cert-loadbalancer-vncclient
+          mountPath: "/mnt/cert-loadbalancer-vncclient"
+          readOnly: true
+{{ end }}
         - name: scipion-vol-dataset-rw
           mountPath: "/mnt/vol-dataset"
         - name: scipion-vol-project-rw
@@ -69,40 +79,52 @@ spec:
             memory: {{ .Values.instance.minram }}
 #            nvidia.com/gpu: 1 # dedicated GPU
 #            cerit.io/gpu-mem: 1 # shared GPU
+
       serviceAccountName: pod-reader-sa-{{ .Release.Name }}
       volumes:
 
-       # Onedata
-       # ---------------------
+      # Shared volume between containers
+      - name: shared
+        emptyDir: {}
 
-       # Controller cloner
-       - name: scipion-od-dataset-ro
-         persistentVolumeClaim:
-           claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
-           readOnly: true
+{{ if .Values.master.useVncClient }}
+      # Certificate for VNC server
+      - name: cert-loadbalancer-vncclient
+        secret:
+          secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+{{ end }}
 
-       # Controller restore,autosave,trapsave
-       - name: scipion-od-project-rw
-         persistentVolumeClaim:
-           claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+      # Onedata
+      # ---------------------
 
-       # Auto vol provisioning
-       # ---------------------
+      # Controller cloner
+      - name: scipion-od-dataset-ro
+        persistentVolumeClaim:
+          claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+          readOnly: true
 
-       # Master + Controller cloner (master - tmp)
-       - name: scipion-vol-dataset-rw
-         persistentVolumeClaim:
-           claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+      # Controller restore,autosave,trapsave
+      - name: scipion-od-project-rw
+        persistentVolumeClaim:
+          claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+
+      # Auto vol provisioning
+      # ---------------------
+
+      # Master + Controller cloner (master - tmp)
+      - name: scipion-vol-dataset-rw
+        persistentVolumeClaim:
+          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
 
 # TODO RO for RW PVC does not work
-#       # Master
-#       - name: scipion-vol-dataset-ro
-#         persistentVolumeClaim:
-#           claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
-#           readOnly: true
+#      # Master
+#      - name: scipion-vol-dataset-ro
+#        persistentVolumeClaim:
+#          claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
+#          readOnly: true
 
-       # Master + Controller restore,autosave,trapsave
-       - name: scipion-vol-project-rw
-         persistentVolumeClaim:
-           claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+      # Master + Controller restore,autosave,trapsave
+      - name: scipion-vol-project-rw
+        persistentVolumeClaim:
+          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}
 
