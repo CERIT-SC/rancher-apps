@@ -23,7 +23,7 @@ questions:
   description: "SSH pub key for access via proxy. Required for SSH access!"
   default: ""
   type: string
-  group: "Password Settings"
+  group: "Service"
   invalid_chars: "{}"
   show_if: "sshtype=Classic"
 - variable: password
@@ -32,11 +32,12 @@ questions:
   description: "Password for Web-based SSH. Username will be 'user'."
   type: password
   label: Password (please avoid chars "{" and "}")
-  group: "Services"
+  group: "Service"
   invalid_chars: "{}"
   show_if: "sshtype=Web-based"
 
 - variable: storage.elixir.enable
+  label: Enable storege-elixir1
   description: "Connect storage-elixir"
   type: boolean
   group: Storage
@@ -58,6 +59,7 @@ questions:
   invalid_chars: "{}"
   show_if: "storage.elixir.enable=true"
 - variable: storage.pvc.enable
+  label: Enable PVC
   description: "Connext existing PVC"
   type: boolean
   group: "Storage"
