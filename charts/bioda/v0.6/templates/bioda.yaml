@@ -70,14 +70,27 @@ spec:
         volumeMounts:
         - name: home
           mountPath: /home/user
+{{- if .Values.storage.elixir.enable }}
         - name: data
           mountPath: /mnt
+{{- end }}
         - name: opt
           mountPath: /opt
+{{- if .Values.storage.pvc.enable }}
+        - name: pvc
+          mountPath: /storage
+{{- end }}
       volumes:
+{{- if .Values.storage.elixir.enable }}
       - name: data
         persistentVolumeClaim:
           claimName: pvc-{{ .Release.Name }}-storage-elixir1-cerit-sc-cz
+{{- end }}
+{{- if .Values.storage.pvc.enable }}
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc.claim }}
+{{- end }}
   volumeClaimTemplates:
   - metadata:
       name: home

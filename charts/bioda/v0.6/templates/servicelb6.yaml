@@ -1,4 +1,4 @@
-{{- if eq .Values.enablessh true -}}
+{{- if eq .Values.sshtype "Classic" -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,7 +13,7 @@ spec:
   - IPv6
   ipFamilyPolicy: SingleStack
   ports:
-  - port: 2222
+  - port: 22
     name: ssh
     targetPort: 2222
   selector:

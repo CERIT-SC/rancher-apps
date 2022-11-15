@@ -1,4 +1,4 @@
-{{- if eq .Values.enablessh false -}}
+{{- if eq .Values.sshtype "Web-based" -}}
 apiVersion: v1
 kind: Service
 metadata:
