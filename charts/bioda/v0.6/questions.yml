@@ -10,7 +10,7 @@ categories:
 
 questions:
 - variable: sshtype
-  description: "Enable classic SSH service or Web based (browser) SSH.".
+  description: "Enable classic SSH service or Web based (browser) SSH."
   label: SSH Type
   default: ""
   options:
