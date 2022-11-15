@@ -14,8 +14,8 @@ questions:
   label: SSH Type
   default: ""
   options:
-  - "Classic"
-  - "Web-based"
+   - "Classic"
+   - "Web-based"
   group: "Service"
   type: enum
 - variable: sshkey
