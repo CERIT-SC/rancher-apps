@@ -1,0 +1,26 @@
+{{- if eq .Values.enablessh false -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts: 
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz 
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/terminal"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
+{{- end -}}

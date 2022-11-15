@@ -1,0 +1,22 @@
+{{- if eq .Values.enablessh true -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ssh6
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
+spec:
+  type: LoadBalancer
+  ipFamilies:
+  - IPv6
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 2222
+    name: ssh
+    targetPort: 2222
+  selector:
+    app: {{ .Release.Name }}
+  externalTrafficPolicy: Local
+{{- end -}}
