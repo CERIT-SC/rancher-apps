@@ -5,6 +5,7 @@ instance:
   maxcpu: 8
   minram: 2048Mi
   maxram: 8192Mi
+  keepVolumes: true
 
 master:
   useVncClient: false

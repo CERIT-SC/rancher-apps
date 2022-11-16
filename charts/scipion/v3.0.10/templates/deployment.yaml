@@ -114,7 +114,7 @@ spec:
       # Master + Controller cloner (master - tmp)
       - name: scipion-vol-dataset-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceId }}
 
 # TODO RO for RW PVC does not work
 #      # Master
@@ -126,5 +126,5 @@ spec:
       # Master + Controller restore,autosave,trapsave
       - name: scipion-vol-project-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.project.spaceId }}
 

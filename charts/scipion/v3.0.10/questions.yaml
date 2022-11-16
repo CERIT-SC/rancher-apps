@@ -39,6 +39,12 @@ questions:
   required: true
   label: "Onedata Access token for project Space"
 
+- variable: instance.keepVolumes
+  default: true
+  description: "Prevent deletion of volumes used for stage-in. They act as a cache for the next instance deploy."
+  type: boolean
+  label: "Keep volumes used for stage-in"
+  group: "Resources"
 - variable: instance.mincpu
   default: 2
   description: "Minimum guaranteed CPUs"
