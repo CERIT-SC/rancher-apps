@@ -1,4 +1,4 @@
-image: "cerit.io/ceitec/bioda:v1.1"
+image: "cerit.io/ceitec/bioda:v1.2"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi

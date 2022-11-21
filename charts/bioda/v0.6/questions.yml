@@ -16,6 +16,7 @@ questions:
   options:
    - "Classic"
    - "Web-based"
+   - "Mosh"
   group: "Service"
   type: enum
 - variable: sshkey

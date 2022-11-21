@@ -1,4 +1,4 @@
-{{- if eq .Values.sshtype "Classic" -}}
+{{- if or (eq .Values.sshtype "Classic") (eq .Values.sshtype "Mosh") -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,6 +7,7 @@ metadata:
     app: {{ .Release.Name }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
+    metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh6
 spec:
   type: LoadBalancer
   ipFamilies:
@@ -16,6 +17,31 @@ spec:
   - port: 22
     name: ssh
     targetPort: 2222
+  selector:
+    app: {{ .Release.Name }}
+  externalTrafficPolicy: Local
+{{- end }}
+---
+{{- if eq .Values.sshtype "Mosh" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mosh6
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mosh-{{ include "dns.name" . }}
+    metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh6
+spec:
+  type: LoadBalancer
+  ipFamilies:
+  - IPv6
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 60000
+    name: mosh
+    targetPort: 60000
+    protocol: UDP
   selector:
     app: {{ .Release.Name }}
   externalTrafficPolicy: Local

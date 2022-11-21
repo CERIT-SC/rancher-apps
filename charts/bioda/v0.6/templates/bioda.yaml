@@ -60,6 +60,8 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 2222
+        - containerPort: 60000
+          protocol: UDP
         resources:
           limits:
             cpu: {{ .Values.maxcpu }}
