@@ -26,7 +26,7 @@ questions:
   type: string
   group: "Service"
   invalid_chars: "{}"
-  show_if: "sshtype=Classic"
+  show_if: "sshtype=Classic || sshtype=Mosh"
 - variable: password
   default: ""
   required: true
@@ -60,7 +60,7 @@ questions:
   invalid_chars: "{}"
   show_if: "storage.elixir.enable=true"
 - variable: storage.pvc.enable
-  label: Enable PVC
+  label: Additional PVC
   description: "Connext existing PVC"
   type: boolean
   group: "Storage"
