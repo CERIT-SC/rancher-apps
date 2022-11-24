@@ -47,6 +47,10 @@ spec:
         env:
         - name: INSTANCE_NAME
           value: {{ .Release.Name | quote }}
+        - name: OD_DATASET_SPACEID
+          value: {{ .Values.od.dataset.spaceId | quote }}
+        - name: OD_PROJECT_SPACEID
+          value: {{ .Values.od.project.spaceId | quote }}
         - name: ROOT_PASS
           value: "abc"
         - name: USER_PASS
