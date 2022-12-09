@@ -3,8 +3,8 @@ name: personal-monitoring
 annotations:
   catalog.cattle.io/release-name: monitoring
 version: 0.0.14
-appVersion: 0.0.3
-description: Personal Monitoring v0.0.3
+appVersion: 0.0.4
+description: Personal Monitoring v0.0.4
 icon: file://logo.svg
 keywords:
 - Monitoring
