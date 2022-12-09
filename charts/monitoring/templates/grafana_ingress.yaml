@@ -12,11 +12,11 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
-    - secretName: {{ printf "%s-tls" $.Values.customhostname | replace "." "-"  }}
+    - secretName: {{ include "secret.name" . }} 
       hosts:
-        - {{ $.Values.customhostname }}
+        - {{ include "dns.name" . }}
   rules:
-    - host: {{ $.Values.customhostname }}
+    - host: {{ include "dns.name" . }}
       http:
         paths:
           - path: /
