@@ -7,13 +7,6 @@ categories:
 - Monitoring
 
 questions:
-- variable: customhostname
-  default: "monitoring"
-  description: "Hostname of your monitoring installation which  must not already exist."
-  type: string
-  label: Grafana Hostname
-  group: "Settings"
-  valid_chars: "a-zA-Z0-9.-"
 - variable: monitoring-personal.grafana.adminUser
   default: "user"
   type: string

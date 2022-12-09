@@ -7,4 +7,3 @@ monitoring-personal:
     adminUser: user
     adminPassword: password
 
-customhostname: ""
