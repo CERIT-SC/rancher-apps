@@ -6,5 +6,3 @@ monitoring-personal:
       enabled: false
     adminUser: user
     adminPassword: password
-
-customhostname: ""
