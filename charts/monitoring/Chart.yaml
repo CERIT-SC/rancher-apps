@@ -1,8 +1,10 @@
 apiVersion: v1
 name: personal-monitoring
-version: 0.0.13
-appVersion: 0.0.2
-description: Personal Monitoring v0.0.2
+annotations:
+  catalog.cattle.io/release-name: pmon
+version: 0.0.14
+appVersion: 0.0.4
+description: Personal Monitoring v0.0.4
 icon: file://logo.svg
 keywords:
 - Monitoring
@@ -20,5 +22,5 @@ engine: gotpl
 type: application
 dependencies:
   - name: monitoring-personal
-    version: "0.0.13"
+    version: "0.0.14"
     repository: "https://cerit-sc.github.io/helm-charts"

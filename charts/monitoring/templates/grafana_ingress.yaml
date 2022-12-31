@@ -1,6 +1,5 @@
 {{- $fullName := include "grafana.fullname" . -}}
 {{- $serviceName := include "grafana.service" . -}}
-{{- if $.Values.customhostname }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -12,11 +11,11 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
-    - secretName: {{ printf "%s-tls" $.Values.customhostname | replace "." "-"  }}
+    - secretName: {{ include "secret.name" . }} 
       hosts:
-        - {{ $.Values.customhostname }}
+        - {{ include "dns.name" . }}
   rules:
-    - host: {{ $.Values.customhostname }}
+    - host: {{ include "dns.name" . }}
       http:
         paths:
           - path: /
@@ -26,4 +25,3 @@ spec:
                 name: {{ $serviceName }}
                 port:
                   number: 80
-{{- end }}
