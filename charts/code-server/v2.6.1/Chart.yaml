@@ -1,4 +1,6 @@
 apiVersion: v2
+annotations:
+  catalog.cattle.io/featured: "1"
 name: code-server
 description: VSCode Code-server
 type: application
