@@ -1,0 +1,21 @@
+apiVersion: v2
+annotations:
+  catalog.cattle.io/featured: "1"
+name: code-server
+description: VSCode Code-server
+type: application
+version: 2.6.2
+appVersion: 4.9.1
+icon: file://coderlogo.png
+keywords:
+- Coder
+- Code-server
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
+
