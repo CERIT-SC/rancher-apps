@@ -1,5 +1,4 @@
-desktop: "cerit.io/desktops/maxquant:2.2.0-gnome"
-#desktop: "cerit.io/desktops/maxquant:2.2.0-1"
+desktop: "cerit.io/desktops/maxquant:2.2.0-1"
 webrtcimages:
   xserver: cerit.io/desktops/xserver:v0.3
   pulseaudio: cerit.io/desktops/pulseaudio:v0.1
