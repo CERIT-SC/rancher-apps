@@ -114,7 +114,7 @@ spec:
 {{- end }}
       containers:
         - name: vncserver
-          image: cerit.io/desktops/vncserver:v1.0
+          image: cerit.io/desktops/vncserver:v2.0
           env:
           - name: VNCPASSWORD
             valueFrom:
