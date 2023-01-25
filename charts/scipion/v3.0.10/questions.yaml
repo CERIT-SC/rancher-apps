@@ -52,19 +52,19 @@ questions:
   label: Min CPU
   group: "Resources"
 - variable: instance.maxcpu
-  default: 8
+  default: 4
   description: "Maximum allowed CPUs"
   type: string
   label: Max CPU
   group: "Resources"
 - variable: instance.minram
-  default: "2048Mi"
+  default: "2Gi"
   description: "Minimum guaranteed RAM"
   type: string
   label: Min RAM
   group: "Resources"
 - variable: instance.maxram
-  default: "8192Mi"
+  default: "4Gi"
   description: "Maximum allowed RAM"
   type: string
   label: Max RAM
