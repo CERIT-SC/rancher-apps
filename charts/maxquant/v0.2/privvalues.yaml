@@ -1,0 +1,18 @@
+desktop: "cerit.io/ubuntufocalxfce:v0.2"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+username: "user"
+password: "kokos"
+resolution: "1920x1080"
+vnc: true
+storage:
+  persistenthome: true
+  enable: false
+  server: ""
+  username: "user"
+  password: "kokos"
+  pvc:
+   enable: false
+   name: ""
