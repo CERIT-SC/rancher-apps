@@ -15,26 +15,7 @@ spec:
       terminationGracePeriodSeconds: 180
       containers:
 
-      - name: controller
-        image: hub.cerit.io/josef_handl/scipion-controller:latest
-        imagePullPolicy: Always
-        securityContext:
-          privileged: false
-          runAsUser: 1000
-          runAsGroup: 1000
-        volumeMounts:
-        - name: shared
-          mountPath: "/mnt/shared"
-        - name: scipion-od-dataset-ro
-          mountPath: "/mnt/od-dataset"
-        - name: scipion-od-project-rw
-          mountPath: "/mnt/od-project"
-        - name: scipion-vol-dataset-rw
-          mountPath: "/mnt/vol-dataset"
-        - name: scipion-vol-project-rw
-          mountPath: "/mnt/vol-project"
-
-      - name: scipion-master
+      - name: master
         image: hub.cerit.io/josef_handl/scipion-master:latest
         imagePullPolicy: Always
         securityContext:
@@ -45,6 +26,8 @@ spec:
         - containerPort: 5901
         - containerPort: 6001
         env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace | quote }}
         - name: INSTANCE_NAME
           value: {{ .Release.Name | quote }}
         - name: OD_DATASET_SPACEID
@@ -81,15 +64,12 @@ spec:
           requests:
             cpu: {{ .Values.instance.mincpu }}
             memory: {{ .Values.instance.minram }}
+# Now there is no need to use GPU.
 #            nvidia.com/gpu: 1 # dedicated GPU
 #            cerit.io/gpu-mem: 1 # shared GPU
 
       serviceAccountName: pod-reader-sa-{{ .Release.Name }}
       volumes:
-
-      # Shared volume between containers
-      - name: shared
-        emptyDir: {}
 
 {{ if .Values.master.useVncClient }}
       # Certificate for VNC server
@@ -100,20 +80,15 @@ spec:
 
       # Onedata
       # ---------------------
-
-      # Controller cloner
-      - name: scipion-od-dataset-ro
-        persistentVolumeClaim:
-          claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
-          readOnly: true
-
-      # Controller restore,autosave,trapsave
-      - name: scipion-od-project-rw
-        persistentVolumeClaim:
-          claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+      # No direct mount to the Onedata is needed for the master due to stage-in/out process in the controller. Look in the deployment-controller.yaml file.
 
       # Auto vol provisioning
       # ---------------------
+
+      # Shared volume between Master and Controller
+      - name: shared
+        persistentVolumeClaim:
+          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}
 
       # Master + Controller cloner (master - tmp)
       - name: scipion-vol-dataset-rw
