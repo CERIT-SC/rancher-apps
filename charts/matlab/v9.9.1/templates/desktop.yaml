@@ -268,11 +268,15 @@ spec:
             limits:
               cpu: {{ .Values.maxcpu }}
               memory: {{ .Values.maxram }}
+{{- if eq .Values.vnc false }}
               cerit.io/gpu-mem: 10
+{{- end }}
             requests:
               cpu: {{ .Values.mincpu }}
               memory: {{ .Values.minram }}
+{{- if eq .Values.vnc false }}
               cerit.io/gpu-mem: 10
+{{- end }}
 {{- if eq .Values.vnc false }}
         - name: pulseaudio
           image: cerit.io/desktops/pulseaudio:v0.1
