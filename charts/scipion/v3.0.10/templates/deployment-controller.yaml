@@ -16,7 +16,7 @@ spec:
       containers:
 
       - name: controller
-        image: hub.cerit.io/scipion/scipion-controller:dev
+        image: hub.cerit.io/scipion/scipion-controller:latest
         imagePullPolicy: Always
         securityContext:
           privileged: false
