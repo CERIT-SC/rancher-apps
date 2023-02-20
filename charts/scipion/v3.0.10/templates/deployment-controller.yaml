@@ -16,7 +16,7 @@ spec:
       containers:
 
       - name: controller
-        image: hub.cerit.io/josef_handl/scipion-controller:latest
+        image: hub.cerit.io/scipion/scipion-controller:latest
         imagePullPolicy: Always
         securityContext:
           privileged: false
@@ -48,7 +48,7 @@ spec:
             cpu: 1
             memory: 1Gi
 
-      serviceAccountName: pod-reader-sa-{{ .Release.Name }}
+      serviceAccountName: tool-spawner-sa-{{ .Release.Name }}
       volumes:
 
       # Onedata
@@ -60,7 +60,7 @@ spec:
           claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
           readOnly: true
 
-      # Controller restore,autosave,trapsave
+      # Controller restore,autosave,finalsave
       - name: scipion-od-project-rw
         persistentVolumeClaim:
           claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
@@ -85,8 +85,7 @@ spec:
 #          claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
 #          readOnly: true
 
-      # Master + Controller restore,autosave,trapsave
+      # Master + Controller restore,autosave,finalsave
       - name: scipion-vol-project-rw
         persistentVolumeClaim:
           claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.project.spaceId }}
-

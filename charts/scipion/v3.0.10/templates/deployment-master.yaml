@@ -16,7 +16,7 @@ spec:
       containers:
 
       - name: master
-        image: hub.cerit.io/josef_handl/scipion-master:latest
+        image: hub.cerit.io/scipion/scipion-master:latest
         imagePullPolicy: Always
         securityContext:
           privileged: false
@@ -68,7 +68,7 @@ spec:
 #            nvidia.com/gpu: 1 # dedicated GPU
 #            cerit.io/gpu-mem: 1 # shared GPU
 
-      serviceAccountName: pod-reader-sa-{{ .Release.Name }}
+      serviceAccountName: tool-spawner-sa-{{ .Release.Name }}
       volumes:
 
 {{ if .Values.master.useVncClient }}
