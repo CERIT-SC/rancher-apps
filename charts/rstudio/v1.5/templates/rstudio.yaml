@@ -88,7 +88,7 @@ spec:
 {{- if eq .Values.image "R 4.2.1/Ubuntu 20.04 CPLEX User" }}
         image: cerit.io/rocker/r:4.2.1-cplex-user
 {{- end }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: PASSWORD
           valueFrom:
