@@ -1,6 +1,6 @@
 apiVersion: v2
 name: scipion
-version: 0.3.0
+version: 1.0
 appVersion: "3.0.10"
 description: A Helm chart to deploy Scipion in Kubernetes
 icon: file://logo.png
