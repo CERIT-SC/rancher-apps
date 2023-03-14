@@ -1,0 +1,22 @@
+
+instance:
+  microk8s: false
+  mincpu: 1
+  maxcpu: 4
+  minram: 2048Mi
+  maxram: 4096Mi
+  keepVolumes: true
+
+master:
+  useVncClient: false
+  vncPassword: ""
+
+od:
+  host: ""
+  dataset:
+    token: ""
+    spaceId: ""
+  project:
+    token: ""
+    spaceId: ""
+

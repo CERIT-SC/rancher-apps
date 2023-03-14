@@ -1,0 +1,18 @@
+{{ if .Values.vnc.useVncClient }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+#  name: scipion-master-certificate-{{ .Release.Name }}
+  name: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+spec:
+  secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-stage-dns
+  dnsNames:
+  - "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+  usages:
+  - digital signature
+  - key encipherment
+{{ end }}

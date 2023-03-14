@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scipion-master-{{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: scipion-master-{{ .Release.Name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: scipion-master-{{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 180
+      containers:
+
+      - name: master
+        image: hub.cerit.io/scipion/scipion-master:latest
+        imagePullPolicy: Always
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace | quote }}
+        - name: INSTANCE_NAME
+          value: {{ .Release.Name | quote }}
+        - name: OD_DATASET_SPACEID
+          value: {{ .Values.od.dataset.spaceId | quote }}
+        - name: OD_PROJECT_SPACEID
+          value: {{ .Values.od.project.spaceId | quote }}
+        - name: ROOT_PASS
+          value: "abc"
+        - name: USER_PASS
+          value: "abc"
+        volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
+        - name: scipion-vol-dataset-rw
+          mountPath: "/mnt/vol-dataset"
+        - name: scipion-vol-project-rw
+          mountPath: "/mnt/vol-project"
+        resources:
+          limits:
+            cpu: {{ .Values.instance.maxcpu }}
+            memory: {{ .Values.instance.maxram }}
+          requests:
+            cpu: {{ .Values.instance.mincpu }}
+            memory: {{ .Values.instance.minram }}
+# Now there is no need to use GPU.
+#            nvidia.com/gpu: 1 # dedicated GPU
+#            cerit.io/gpu-mem: 1 # shared GPU
+
+      serviceAccountName: tool-spawner-sa-{{ .Release.Name }}
+      volumes:
+
+      # Onedata
+      # ---------------------
+      # No direct mount to the Onedata is needed for the master due to stage-in/out process in the controller. Look in the deployment-controller.yaml file.
+
+      # Auto vol provisioning
+      # ---------------------
+
+      # Shared volume between Master and Controller
+      - name: shared
+        persistentVolumeClaim:
+          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}
+
+      # Master + Controller cloner (master - tmp)
+      - name: scipion-vol-dataset-rw
+        persistentVolumeClaim:
+          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceId }}
+
+# TODO RO for RW PVC does not work
+#      # Master
+#      - name: scipion-vol-dataset-ro
+#        persistentVolumeClaim:
+#          claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
+#          readOnly: true
+
+      # Master + Controller restore,autosave,trapsave
+      - name: scipion-vol-project-rw
+        persistentVolumeClaim:
+          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.project.spaceId }}
+
