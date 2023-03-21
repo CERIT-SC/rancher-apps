@@ -1,4 +1,4 @@
-{{ if not .Values.vnc.useVncClient }}
+{{ if and (not .Values.vnc.useVncClient) (not .Values.instance.microk8s) }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
