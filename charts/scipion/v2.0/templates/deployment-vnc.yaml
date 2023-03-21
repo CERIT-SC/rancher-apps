@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scipion-vnc-{{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: scipion-vnc-{{ .Release.Name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: scipion-vnc-{{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 180
+      containers:
+
+      - name: vnc
+        image: hub.cerit.io/scipion/scipion-vnc:latest
+        imagePullPolicy: Always
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+        ports:
+        - containerPort: 5901
+        - containerPort: 6001
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace | quote }}
+        - name: INSTANCE_NAME
+          value: {{ .Release.Name | quote }}
+        - name: VNC_PASS
+          value: {{ .Values.vnc.vncPassword | quote }}
+        - name: USE_DISPLAY
+          value: "1"
+# USE_DISPLAY 1 is hardcoded in other files!
+        - name: USE_VNCCLIENT
+          value: {{ .Values.vnc.useVncClient | quote }}
+        volumeMounts:
+        - name: shared
+          mountPath: "/mnt/shared"
+{{ if .Values.vnc.useVncClient }}
+        - name: cert-loadbalancer-vncclient
+          mountPath: "/mnt/cert-loadbalancer-vncclient"
+          readOnly: true
+{{ end }}
+        resources:
+          limits:
+            cpu: 2
+            memory: 1Gi
+          requests:
+            cpu: 1
+            memory: 1Gi
+
+      volumes:
+
+{{ if .Values.vnc.useVncClient }}
+      # Certificate for VNC server
+      - name: cert-loadbalancer-vncclient
+        secret:
+          secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+{{ end }}
+
+      # Shared volume between vnc and Controller
+      - name: shared
+        persistentVolumeClaim:
+          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}

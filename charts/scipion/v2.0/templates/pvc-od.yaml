@@ -1,0 +1,30 @@
+
+# Required by pv-scipion-od (Onedata)
+
+{{ if .Values.instance.microk8s }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadOnlyMany # RO
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: "onedata"
+  volumeName: pv-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany # RW
+  resources:
+    requests:
+      storage: 5000Gi
+  storageClassName: "onedata"
+  volumeName: pv-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+{{ end }}

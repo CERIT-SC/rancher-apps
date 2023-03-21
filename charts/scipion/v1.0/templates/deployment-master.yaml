@@ -16,7 +16,7 @@ spec:
       containers:
 
       - name: master
-        image: hub.cerit.io/scipion/scipion-master:latest
+        image: hub.cerit.io/scipion/scipion-master:1.0
         imagePullPolicy: Always
         securityContext:
           privileged: false
