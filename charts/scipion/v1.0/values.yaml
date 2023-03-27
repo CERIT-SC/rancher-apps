@@ -1,10 +1,10 @@
 
 instance:
   microk8s: false
-  mincpu: 2
-  maxcpu: 8
+  mincpu: 1
+  maxcpu: 4
   minram: 2048Mi
-  maxram: 8192Mi
+  maxram: 4096Mi
   keepVolumes: true
 
 master:

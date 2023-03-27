@@ -1,0 +1,72 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- Scipion
+- VNC
+
+questions:
+- variable: master.vncPassword
+  type: password
+  required: true
+  label: "noVNC password"
+  description: "Password required when connecting to the remote desktop of your instance"
+
+- variable: od.host
+  type: string
+  required: true
+  label: "Oneprovider hostname"
+  description: "Domain name of the Oneprovider instance"
+- variable: od.dataset.spaceId
+  type: string
+  required: true
+  label: "Dataset Space ID"
+  description: "ID of Onedata Space with dataset"
+- variable: od.dataset.token
+  type: string
+  required: true
+  label: "Onedata Access token for dataset Space"
+- variable: od.project.spaceId
+  type: string
+  required: true
+  label: "Project Space ID"
+  description: "ID of Onedata Space with project"
+- variable: od.project.token
+  type: string
+  required: true
+  label: "Onedata Access token for project Space"
+
+- variable: instance.keepVolumes
+  default: true
+  description: "Prevent deletion of volumes used for stage-in. They act as a cache for the next instance deploy."
+  type: boolean
+  label: "Keep volumes used for stage-in"
+  group: "Resources"
+- variable: instance.mincpu
+  default: 2
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: instance.maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: instance.minram
+  default: "2Gi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: instance.maxram
+  default: "4Gi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
+

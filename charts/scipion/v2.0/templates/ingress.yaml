@@ -1,0 +1,27 @@
+{{ if and (not .Values.vnc.useVncClient) (not .Values.instance.microk8s) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scipion-vnc-ingress-{{ .Release.Name }}
+  annotations:
+    #"helm.sh/resource-policy": keep
+    kuberentes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    #    external-dns.alpha.kubernetes.io/target: k8s-public-u.cerit-sc.cz
+spec:
+  tls:
+    - hosts:
+        - "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+      secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+  rules:
+  - host: "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+    http:
+      paths:
+      - backend:
+          service:
+            name: scipion-vnc-svc-novnc-{{ .Release.Name }}
+            port:
+              number: 5901
+        pathType: ImplementationSpecific
+{{ end }}
