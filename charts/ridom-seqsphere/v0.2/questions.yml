@@ -52,7 +52,7 @@ questions:
   description: "Connect MUNI storage"
   type: boolean
   group: "Storage"
-  label: External storage
+  label: MUNI storage
   show_if: "client.enable=true"
   show_subquestion_if: true
   subquestions:
