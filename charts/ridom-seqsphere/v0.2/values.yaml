@@ -9,13 +9,14 @@ maxcpu: 4
 minram: 32Gi
 maxram: 32Gi
 password: ""
-persistenthome: true
 vnc: true
 storage: 
-  enable: false
-  server: 'ha-bay.ics.muni.cz/share'
-  username: ''
-  password: ''
+  munistorage:
+    enable: false
+    server: 'ha-bay.ics.muni.cz/share'
+    username: ''
+    password: ''
+  persistenthome: true
   externalpvc:
     enable: false
     name: ""

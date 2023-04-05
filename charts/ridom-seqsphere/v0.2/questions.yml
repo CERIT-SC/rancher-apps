@@ -46,7 +46,40 @@ questions:
   label: "External PVC"                                                         
   type: pvc                                                                     
   required: false                                                               
-  show_if: "storage.externalpvc.enable=true"                                       
+  show_if: "storage.externalpvc.enable=true"
+
+- variable: storage.munistorage.enable
+  description: "Connect MUNI storage"
+  type: boolean
+  group: "Storage"
+  label: External storage
+  show_if: "client.enable=true"
+  show_subquestion_if: true
+  subquestions:
+  - variable: storage.munistorage.server
+    description: "Connect Storage as /home/user/data"
+    label: Storage hostname
+    required: true
+    options:
+     - "ha-bay.ics.muni.cz/share"
+     - "storage-brno12-cerit.metacentrum.cz/share"
+    group: "Storage"
+    type: enum
+  - variable: storage.munistorage.username
+    description: "Storage connect username"
+    label: Storage username
+    required: true
+    default: ""
+    type: string
+    group: "Storage"
+  - variable: storage.munistorage.password
+    label: Storage password
+    description: "Storage connect password"
+    default: ""
+    required: true
+    type: password
+    group: "Storage"
+
 - variable: mincpu
   description: "Minimum guaranteed CPUs"
   type: string
