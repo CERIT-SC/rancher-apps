@@ -2,7 +2,7 @@ client:
   enable: true
   image: "cerit.io/cerit/ridomclient:v0.3"
 server:
-  enable: true
+  enable: false
   image: "cerit.io/cerit/ridomserver:v0.1"
 mincpu: 1
 maxcpu: 4
