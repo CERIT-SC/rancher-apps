@@ -57,7 +57,7 @@ questions:
   show_subquestion_if: true
   subquestions:
   - variable: storage.munistorage.server
-    description: "Connect Storage as /home/user/data"
+    description: "Connect Storage as /storage-muni"
     label: Storage hostname
     required: true
     options:

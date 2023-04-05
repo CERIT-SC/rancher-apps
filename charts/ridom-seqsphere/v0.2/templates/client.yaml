@@ -73,7 +73,12 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
-{{ end }}
+{{- end }}
+{{- if eq .Values.storage.munistorage.enable true }}
+        - name: datamuni
+          persistentVolumeClaim:
+            claimName: pvc-{{ include "storage.name" . }}
+{{- end }}
       initContainers:
         - name: init-desktop
           image: {{ .Values.client.image }}
@@ -137,6 +142,10 @@ spec:
 {{- if eq .Values.storage.externalpvc.enable true }}
             - name: data
               mountPath: /storage
+{{- end }}
+{{- if eq .Values.storage.munistorage.enable true }}
+            - name: datamuni
+              mountPath: /storage-muni
 {{- end }}
   volumeClaimTemplates:
   - metadata:
