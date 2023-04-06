@@ -9,6 +9,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: ssh-{{ include "dns.name" . }}
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 2222
     name: ssh

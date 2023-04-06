@@ -25,6 +25,7 @@ spec:
   {{- end }}
   {{- if (or (eq .Values.metrics.service.type "LoadBalancer") (eq .Values.metrics.service.type "NodePort")) }}
   externalTrafficPolicy: {{ .Values.metrics.service.externalTrafficPolicy | quote }}
+  allocateLoadBalancerNodePorts: false
   {{- end }}
   {{- if eq .Values.metrics.service.type "LoadBalancer" }}
   loadBalancerSourceRanges: {{ .Values.metrics.service.loadBalancerSourceRanges }}

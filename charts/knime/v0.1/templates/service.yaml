@@ -10,6 +10,7 @@ metadata:
     metallb.universe.tf/address-pool: privmuni
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 5901
     targetPort: 5901

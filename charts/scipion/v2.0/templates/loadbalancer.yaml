@@ -13,4 +13,5 @@ spec:
     targetPort: 5901
   selector:
     app: scipion-vnc-{{ .Release.Name }}
+  allocateLoadBalancerNodePorts: false
 {{ end }}

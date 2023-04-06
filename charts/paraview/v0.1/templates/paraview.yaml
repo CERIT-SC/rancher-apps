@@ -7,6 +7,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
 {{- if .Values.access.directport.enable }}
   - port: {{ .Values.access.directport.port }}

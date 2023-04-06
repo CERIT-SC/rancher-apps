@@ -11,9 +11,11 @@ metadata:
 {{- end }}
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 5901
     targetPort: 5901
   selector:
     app: {{ .Release.Name }}
   externalTrafficPolicy: Local
+  allocateLoadBalancerNodePorts: false

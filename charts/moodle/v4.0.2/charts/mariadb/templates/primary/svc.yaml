@@ -28,6 +28,7 @@ spec:
   {{- end }}
   {{- if and (eq .Values.primary.service.type "LoadBalancer") .Values.primary.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges: {{ .Values.primary.service.loadBalancerSourceRanges }}
+  allocateLoadBalancerNodePorts: false
   {{ end }}
   {{- if (and (eq .Values.primary.service.type "LoadBalancer") (not (empty .Values.primary.service.loadBalancerIP))) }}
   loadBalancerIP: {{ .Values.primary.service.loadBalancerIP }}

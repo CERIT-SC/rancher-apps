@@ -12,6 +12,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 22
     name: ssh
@@ -35,6 +36,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 60000
     name: mosh

@@ -11,6 +11,7 @@ metadata:
     metallb.universe.tf/address-pool: privmuni
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
   - port: 2222
     name: ssh

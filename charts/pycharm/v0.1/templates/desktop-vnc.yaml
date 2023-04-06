@@ -17,6 +17,7 @@ spec:
   selector:
     app: {{ .Release.Name }}
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
     - port: 5900
       name: vnc

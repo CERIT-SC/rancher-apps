@@ -23,6 +23,7 @@ spec:
     - port: 5900
       name: vnc
       targetPort: 5900
+  allocateLoadBalancerNodePorts: false
 ---
 apiVersion: apps/v1
 kind: StatefulSet
