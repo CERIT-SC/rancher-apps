@@ -24,6 +24,7 @@ spec:
 {{- if eq .Values.vnc true }}
   type: LoadBalancer
   allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
   ports:
     - port: 5900
       name: vnc

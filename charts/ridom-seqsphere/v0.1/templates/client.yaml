@@ -24,6 +24,7 @@ spec:
       name: vnc
       targetPort: 5900
   allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
 ---
 apiVersion: apps/v1
 kind: StatefulSet

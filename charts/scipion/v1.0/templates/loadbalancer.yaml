@@ -14,4 +14,5 @@ spec:
   selector:
     app: scipion-master-{{ .Release.Name }}
   allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
 {{ end }}

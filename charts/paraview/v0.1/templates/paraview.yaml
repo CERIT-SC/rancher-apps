@@ -8,6 +8,7 @@ metadata:
 spec:
   type: LoadBalancer
   allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
   ports:
 {{- if .Values.access.directport.enable }}
   - port: {{ .Values.access.directport.port }}

@@ -18,4 +18,3 @@ spec:
   selector:
     app: {{ .Release.Name }}
   externalTrafficPolicy: Local
-  allocateLoadBalancerNodePorts: false

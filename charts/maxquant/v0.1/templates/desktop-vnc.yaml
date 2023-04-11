@@ -19,6 +19,7 @@ spec:
     app: {{ .Release.Name }}
   type: LoadBalancer
   allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
   ports:
     - port: 5900
       name: vnc
