@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    speci:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: IfNotPresent
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: VNCPASSWORD
+          valueFrom:
+           secretKeyRef:
+             key: password
+             name: {{ .Release.Name }}-vnc
+        - name: CONTAINER_TIMEZONE
+          value: {{ .Values.timezone }}
+        ports:
+        - containerPort: 5901
+        resources:
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+            ephemeral-storage: {{ .Values.ephem }}
+        volumeMounts:
+{{- if .Values.storage.enableexternal }}
+        - name: externalstorage
+          mountPath: {{ .Values.storage.external.mnt }}
+{{- end }}
+{{- if .Values.storage.enableinternal }}
+        - name: internalstorage
+          mountPath: {{ .Values.storage.internal.mnt }}
+{{- if ne .Values.storage.internal.subdir "" }}
+          subPath: {{ .Values.storage.internal.subpath }}
+{{- end }}
+{{- end }}
+        - name: dshm
+          mountPath: /dev/shm
+      volumes:
+{{- if .Values.storage.enableexternal }}
+      - name: externalstorage
+        persistentVolumeClaim:
+          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}-{{ printf "%s" .Values.storage.external.server | replace "." "-" | replace "/" "-" | replace "_" "-" | lower }}
+{{- end }}
+{{- if .Values.storage.enableinternal }}
+      - name: internalstorage
+        persistentVolumeClaim:
+{{- if and (.Values.storage.internal.usepvc) (ne .Values.storage.internal.pvc "") }}
+          claimName: {{ .Values.storage.internal.pvc }}
+{{- else }}
+          claimName: pvc-{{ .Release.Namespace }}-{{ .Release.Name }}
+{{- end }}
+{{- end }}
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: {{ .Values.shm }}

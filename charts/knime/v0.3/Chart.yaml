@@ -1,0 +1,20 @@
+apiVersion: v1
+name: knime
+#annotations:
+#  catalog.cattle.io/release-name: knime
+version: 0.3
+appVersion: 4.3.1a
+description: Knime over VNC
+icon: file://logo.svg
+keywords:
+- KNIME
+- R
+- Python
+- applications
+home: https://knime.com
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
