@@ -1,0 +1,22 @@
+image: "R 4.2.1/Ubuntu 20.04 User"
+rstudiopassword: ""
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  persistenthome: true
+  persistentopt: false
+  externalpvc:
+    enable: false
+    name: ""
+ingress:
+  whitelistip: ""
+networkpolicy: false
+ssh:
+  enable: false
+  key: ""
