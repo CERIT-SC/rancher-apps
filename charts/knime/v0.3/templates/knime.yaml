@@ -11,7 +11,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
-    speci:
+    spec:
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -26,7 +26,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+            - ALL
         env:
         - name: VNCPASSWORD
           valueFrom:
