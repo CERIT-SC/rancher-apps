@@ -244,6 +244,24 @@ spec:
               cpu: 500m
               memory: 500Mi
 
+        - name: signalling
+          image: cerit.io/desktops/signalling:v0.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+          ports:
+            - name: signalling
+              containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: signalling
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+
         - name: watchdog
           image: {{ .Values.webrtcimages.gstreamer }}
           imagePullPolicy: Always
