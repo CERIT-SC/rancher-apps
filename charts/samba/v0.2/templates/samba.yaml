@@ -29,7 +29,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+            - ALL
         resources:
           requests:
             cpu: 300m

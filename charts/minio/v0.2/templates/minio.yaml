@@ -46,7 +46,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+            - ALL
         resources:
           limits:
             cpu: 1
