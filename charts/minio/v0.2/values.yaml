@@ -1,0 +1,4 @@
+image: "cerit.io/cerit/personalminio:v0.3"
+pvc: ""
+username: "user"
+password: ""
