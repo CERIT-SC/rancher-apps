@@ -13,15 +13,27 @@ spec:
         app: scipion-master-{{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 180
+
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
       containers:
 
       - name: master
         image: hub.cerit.io/scipion/scipion-master:1.0
         imagePullPolicy: Always
+
         securityContext:
           privileged: false
           runAsUser: 1000
           runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
         ports:
         - containerPort: 5901
         - containerPort: 6001
