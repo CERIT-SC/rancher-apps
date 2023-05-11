@@ -58,7 +58,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+            - ALL
         resources:
           limits:
             cpu: 500m
@@ -118,7 +118,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+            - ALL
         ports:
         - containerPort: 8787
 {{- if eq .Values.ssh.enable true }}
