@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+  name: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-dataset-{{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadOnlyMany # RO
@@ -13,12 +13,12 @@ spec:
     requests:
       storage: 5000Gi
   storageClassName: "onedata"
-  volumeName: pv-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+  volumeName: pv-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-dataset-{{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+  name: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-project-{{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteMany # RW
@@ -26,5 +26,5 @@ spec:
     requests:
       storage: 5000Gi
   storageClassName: "onedata"
-  volumeName: pv-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+  volumeName: pv-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-project-{{ .Release.Namespace }}
 {{ end }}

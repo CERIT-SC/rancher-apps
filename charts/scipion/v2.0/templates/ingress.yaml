@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: scipion-vnc-ingress-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc-ingress
   annotations:
     #"helm.sh/resource-policy": keep
     kuberentes.io/ingress.class: "nginx"
@@ -12,15 +12,15 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
-      secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+        - "{{ .Values.instance.prefix }}.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+      secretName: {{ .Values.instance.prefix }}-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
   rules:
-  - host: "scipion.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
+  - host: "{{ .Values.instance.prefix }}.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"
     http:
       paths:
       - backend:
           service:
-            name: scipion-vnc-svc-novnc-{{ .Release.Name }}
+            name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc
             port:
               number: 5901
         pathType: ImplementationSpecific
