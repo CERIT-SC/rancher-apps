@@ -1,6 +1,6 @@
 
 instance:
-  prefix: ""
+  prefix: "scipion"
   microk8s: false
   mincpu: 2
   maxcpu: 8
