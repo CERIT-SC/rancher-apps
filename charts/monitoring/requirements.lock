@@ -1,4 +1,0 @@
-dependencies:
-- name: monitoring-personal
-  repository: https://cerit-sc.github.io/helm-charts
-  version: 0.0.13
