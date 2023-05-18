@@ -1,0 +1,6 @@
+dependencies:
+- name: monitoring-personal
+  repository: https://cerit-sc.github.io/helm-charts
+  version: 0.0.16
+digest: sha256:56712ab74cbcb13573e7c21cb4ab9a7f3bc3c7e91a752d95e8ccab661ab7f44d
+generated: "2023-05-19T01:24:17.357545+02:00"
