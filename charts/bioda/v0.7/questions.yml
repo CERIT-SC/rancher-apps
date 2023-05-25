@@ -1,0 +1,97 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Portals
+- Bio
+- infrastructure
+
+questions:
+- variable: sshtype
+  description: "Enable classic SSH service or Web based (browser) SSH."
+  label: SSH Type
+  default: ""
+  options:
+   - "Classic"
+   - "Web-based"
+   - "Mosh"
+  group: "Service"
+  type: enum
+- variable: sshkey
+  label: SSH Public key
+  description: "SSH pub key for access via proxy. Required for SSH access!"
+  default: ""
+  type: string
+  group: "Service"
+  invalid_chars: "{}"
+  show_if: "sshtype=Classic || sshtype=Mosh"
+- variable: password
+  default: ""
+  required: true
+  description: "Password for Web-based SSH. Username will be 'user'."
+  type: password
+  label: Password (please avoid chars "{" and "}")
+  group: "Service"
+  invalid_chars: "{}"
+  show_if: "sshtype=Web-based"
+
+- variable: storage.elixir.enable
+  label: Enable storege-elixir1
+  description: "Connect storage-elixir"
+  type: boolean
+  group: Storage
+- variable: storage.elixir.username
+  description: "Storage connect username (UČO)"
+  label: Storage username
+  required: true
+  default: ""
+  type: int
+  group: "Storage"
+  show_if: "storage.elixir.enable=true"
+- variable: storage.elixir.password
+  label: Storage password
+  description: "Storage connect password (secondary IS password)"
+  default: ""
+  required: true
+  type: password
+  group: "Storage"
+  invalid_chars: "{}"
+  show_if: "storage.elixir.enable=true"
+- variable: storage.pvc.enable
+  label: Additional PVC
+  description: "Connext existing PVC"
+  type: boolean
+  group: "Storage"
+- variable: storage.pvc.claim
+  description: "Choose PVC. It will be conected to /storage."
+  label: "PVC"
+  type: pvc
+  show_if: "storage.pvc.enable=true"
+  group: "Storage"
+
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "16384Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
