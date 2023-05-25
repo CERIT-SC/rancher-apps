@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scipion-controller-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-controller
 spec:
   selector:
     matchLabels:
-      app: scipion-controller-{{ .Release.Name }}
+      app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-controller
   replicas: 1
   template:
     metadata:
       labels:
-        app: scipion-controller-{{ .Release.Name }}
+        app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-controller
     spec:
       terminationGracePeriodSeconds: 180
 
@@ -41,16 +41,22 @@ spec:
           value: {{ .Release.Namespace | quote }}
         - name: INSTANCE_NAME
           value: {{ .Release.Name | quote }}
+        - name: INSTANCE_PREFIX
+          value: {{ .Values.instance.prefix | quote }}
+        - name: OD_DATASET_SPACEIDSHORT
+          value: {{ .Values.od.dataset.spaceIdShort | quote }}
+        - name: OD_PROJECT_SPACEIDSHORT
+          value: {{ .Values.od.project.spaceIdShort | quote }}
         volumeMounts:
         - name: shared
           mountPath: "/mnt/shared"
-        - name: scipion-od-dataset-ro
+        - name: od-dataset-ro
           mountPath: "/mnt/od-dataset"
-        - name: scipion-od-project-rw
+        - name: od-project-rw
           mountPath: "/mnt/od-project"
-        - name: scipion-vol-dataset-rw
+        - name: vol-dataset-rw
           mountPath: "/mnt/vol-dataset"
-        - name: scipion-vol-project-rw
+        - name: vol-project-rw
           mountPath: "/mnt/vol-project"
         resources:
           limits:
@@ -60,22 +66,22 @@ spec:
             cpu: 1
             memory: 1Gi
 
-      serviceAccountName: tool-spawner-sa-{{ .Release.Name }}
+      serviceAccountName: {{ .Values.instance.prefix }}-{{ .Release.Name }}-tool-spawner-sa
       volumes:
 
       # Onedata
       # ---------------------
 
       # Controller cloner
-      - name: scipion-od-dataset-ro
+      - name: od-dataset-ro
         persistentVolumeClaim:
-          claimName: pvc-scipion-od-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-dataset-{{ .Release.Namespace }}
           readOnly: true
 
       # Controller restore,autosave,finalsave
-      - name: scipion-od-project-rw
+      - name: od-project-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-od-project-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-od-project-{{ .Release.Namespace }}
 
       # Auto vol provisioning
       # ---------------------
@@ -83,21 +89,21 @@ spec:
       # Shared volume between Master and Controller
       - name: shared
         persistentVolumeClaim:
-          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-shared-{{ .Release.Namespace }}
 
       # Master + Controller cloner (master - tmp)
-      - name: scipion-vol-dataset-rw
+      - name: vol-dataset-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceId }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-vol-dataset-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceIdShort }}
 
 # TODO RO for RW PVC does not work
 #      # Master
-#      - name: scipion-vol-dataset-ro
+#      - name: vol-dataset-ro
 #        persistentVolumeClaim:
 #          claimName: pvc-scipion-vol-dataset-$SUBST_NAMESPACE
 #          readOnly: true
 
       # Master + Controller restore,autosave,finalsave
-      - name: scipion-vol-project-rw
+      - name: vol-project-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.project.spaceId }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-vol-project-{{ .Release.Namespace }}-{{ .Values.od.project.spaceIdShort }}
