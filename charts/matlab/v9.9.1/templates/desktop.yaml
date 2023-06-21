@@ -172,6 +172,9 @@ spec:
 {{- end }}
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -181,6 +184,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
           - name: home
             mountPath: /home/user2
@@ -212,6 +219,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
@@ -240,6 +251,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
 {{- if eq .Values.vnc false }}
           env:
             - name: NVIDIA_DRIVER_CAPABILITIES
@@ -287,6 +302,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: pulseaudio
               containerPort: 4713
@@ -303,6 +322,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: signalling
               containerPort: 8080
@@ -321,6 +344,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           command: ["/bin/bash"]
           args:
             - -ec
@@ -328,7 +355,7 @@ spec:
               echo "Waiting for host X server at ${DISPLAY}"
               until [[ -e /var/run/appconfig/xserver_ready ]]; do sleep 1; done
               echo "Host X server is ready"
-              while true; do /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh; sleep 5; done
+              while true; do /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh; sleep 2; done
           env: []
           volumeMounts:
             - name: x11
@@ -347,6 +374,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           # tty required to gather gpu stats using nvidia-smi and GPUtil python module.
           tty: true
           env:
@@ -385,6 +416,10 @@ spec:
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           env:
             - name: TURNHOST
               value: turnapi.turnapi.svc.cluster.local
