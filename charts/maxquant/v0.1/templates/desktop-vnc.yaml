@@ -96,6 +96,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
 {{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -109,6 +114,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
           - name: home
             mountPath: /home/user2
@@ -132,6 +141,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
@@ -148,6 +161,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
