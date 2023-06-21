@@ -21,6 +21,9 @@ spec:
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 {{- if .Values.install.conda }}
       initContainers:
       - name: {{ .Release.Name }}-init
@@ -37,6 +40,10 @@ spec:
           value: '/home/coder/conda'
         securityContext:
           runAsUser: 1000
+          allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
         volumeMounts:
           - name: data
             mountPath: /home/coder
@@ -51,6 +58,10 @@ spec:
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           env:
           - name: PASSWORD
             valueFrom:
