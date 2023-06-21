@@ -1,13 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tool-spawner-rb-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-tool-spawner-rb
   annotations:
     "helm.sh/resource-policy": keep
 roleRef:
   kind: Role
-  name: tool-spawner-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-tool-spawner
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
-  name: tool-spawner-sa-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-tool-spawner-sa

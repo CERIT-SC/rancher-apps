@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scipion-vnc-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc
 spec:
   selector:
     matchLabels:
-      app: scipion-vnc-{{ .Release.Name }}
+      app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc
   replicas: 1
   template:
     metadata:
       labels:
-        app: scipion-vnc-{{ .Release.Name }}
+        app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc
     spec:
       terminationGracePeriodSeconds: 180
 
@@ -42,6 +42,12 @@ spec:
           value: {{ .Release.Namespace | quote }}
         - name: INSTANCE_NAME
           value: {{ .Release.Name | quote }}
+        - name: INSTANCE_PREFIX
+          value: {{ .Values.instance.prefix | quote }}
+        - name: OD_DATASET_SPACEIDSHORT
+          value: {{ .Values.od.dataset.spaceIdShort | quote }}
+        - name: OD_PROJECT_SPACEIDSHORT
+          value: {{ .Values.od.project.spaceIdShort | quote }}
         - name: VNC_PASS
           value: {{ .Values.vnc.vncPassword | quote }}
         - name: USE_DISPLAY
@@ -59,7 +65,7 @@ spec:
 {{ end }}
         resources:
           limits:
-            cpu: 2
+            cpu: 1
             memory: 1Gi
           requests:
             cpu: 1
@@ -71,10 +77,10 @@ spec:
       # Certificate for VNC server
       - name: cert-loadbalancer-vncclient
         secret:
-          secretName: scipion-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
+          secretName: {{ .Values.instance.prefix }}-{{ .Release.Name }}-{{ .Release.Namespace }}-dyn-cloud-e-infra-cz-tls
 {{ end }}
 
       # Shared volume between vnc and Controller
       - name: shared
         persistentVolumeClaim:
-          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-shared-{{ .Release.Namespace }}

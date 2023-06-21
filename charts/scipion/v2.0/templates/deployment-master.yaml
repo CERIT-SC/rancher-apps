@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scipion-master-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-master
 spec:
   selector:
     matchLabels:
-      app: scipion-master-{{ .Release.Name }}
+      app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-master
   replicas: 1
   template:
     metadata:
       labels:
-        app: scipion-master-{{ .Release.Name }}
+        app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-master
     spec:
       terminationGracePeriodSeconds: 180
 
@@ -39,10 +39,12 @@ spec:
           value: {{ .Release.Namespace | quote }}
         - name: INSTANCE_NAME
           value: {{ .Release.Name | quote }}
-        - name: OD_DATASET_SPACEID
-          value: {{ .Values.od.dataset.spaceId | quote }}
-        - name: OD_PROJECT_SPACEID
-          value: {{ .Values.od.project.spaceId | quote }}
+        - name: INSTANCE_PREFIX
+          value: {{ .Values.instance.prefix | quote }}
+        - name: OD_DATASET_SPACEIDSHORT
+          value: {{ .Values.od.dataset.spaceIdShort | quote }}
+        - name: OD_PROJECT_SPACEIDSHORT
+          value: {{ .Values.od.project.spaceIdShort | quote }}
         - name: ROOT_PASS
           value: "abc"
         - name: USER_PASS
@@ -50,9 +52,9 @@ spec:
         volumeMounts:
         - name: shared
           mountPath: "/mnt/shared"
-        - name: scipion-vol-dataset-rw
+        - name: vol-dataset-rw
           mountPath: "/mnt/vol-dataset"
-        - name: scipion-vol-project-rw
+        - name: vol-project-rw
           mountPath: "/mnt/vol-project"
         resources:
           limits:
@@ -65,7 +67,7 @@ spec:
 #            nvidia.com/gpu: 1 # dedicated GPU
 #            cerit.io/gpu-mem: 1 # shared GPU
 
-      serviceAccountName: tool-spawner-sa-{{ .Release.Name }}
+      serviceAccountName: {{ .Values.instance.prefix }}-{{ .Release.Name }}-tool-spawner-sa
       volumes:
 
       # Onedata
@@ -78,12 +80,12 @@ spec:
       # Shared volume between Master and Controller
       - name: shared
         persistentVolumeClaim:
-          claimName: pvc-scipion-shared-{{ .Release.Name }}-{{ .Release.Namespace }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-shared-{{ .Release.Namespace }}
 
       # Master + Controller cloner (master - tmp)
-      - name: scipion-vol-dataset-rw
+      - name: vol-dataset-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-dataset-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceId }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-vol-dataset-{{ .Release.Namespace }}-{{ .Values.od.dataset.spaceIdShort }}
 
 # TODO RO for RW PVC does not work
 #      # Master
@@ -93,7 +95,7 @@ spec:
 #          readOnly: true
 
       # Master + Controller restore,autosave,trapsave
-      - name: scipion-vol-project-rw
+      - name: vol-project-rw
         persistentVolumeClaim:
-          claimName: pvc-scipion-vol-project-{{ .Release.Name }}-{{ .Release.Namespace }}-{{ .Values.od.project.spaceId }}
+          claimName: pvc-{{ .Values.instance.prefix }}-{{ .Release.Name }}-vol-project-{{ .Release.Namespace }}-{{ .Values.od.project.spaceIdShort }}
 

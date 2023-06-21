@@ -1,13 +1,14 @@
 
 instance:
+  prefix: "scipion"
   microk8s: false
-  mincpu: 1
-  maxcpu: 4
+  mincpu: 2
+  maxcpu: 8
   minram: 2048Mi
-  maxram: 4096Mi
+  maxram: 8192Mi
   keepVolumes: true
 
-master:
+vnc:
   useVncClient: false
   vncPassword: ""
 

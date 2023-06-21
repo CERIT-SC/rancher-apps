@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: scipion-controller-svc-rest-{{ .Release.Name }}
+  name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-rest
 spec:
   selector:
-    app: scipion-controller-{{ .Release.Name }}
+    app: {{ .Values.instance.prefix }}-{{ .Release.Name }}-controller
   type: ClusterIP
   ports:
-  - name: scipion-controller-port-{{ .Release.Name }}
+  - name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-rest
     port: 8000
     targetPort: 8000
