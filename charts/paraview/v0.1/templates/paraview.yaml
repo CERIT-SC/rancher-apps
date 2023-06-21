@@ -41,6 +41,11 @@ spec:
       labels:
         app: {{ .Release.Name }}
     spec:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: {{ .Release.Name }}-dataserver
         image: {{ .Values.image }}
@@ -55,6 +60,10 @@ spec:
         securityContext:                                                          
           runAsUser: 1000 
           runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         resources:
           requests:
             cpu:  {{ .Values.resources.cpu.min }}

@@ -32,6 +32,11 @@ spec:
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 5
       volumes:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: server
           image: {{ .Values.server.image }}
@@ -40,6 +45,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: home
               mountPath: /home/user
