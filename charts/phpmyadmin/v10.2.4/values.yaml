@@ -123,6 +123,9 @@ updateStrategy:
 podSecurityContext:
   enabled: true
   fsGroup: 1001
+  fsGroupChangePolicy: "OnRootMismatch"
+  seccompProfile:
+    type: RuntimeDefault
 ## phpMyAdmin containers' Security Context (only main container)
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## @param containerSecurityContext.enabled Enable phpMyAdmin containers' Security Context
@@ -133,6 +136,10 @@ containerSecurityContext:
   enabled: true
   runAsUser: 1001
   runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
 ## phpMyAdmin containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources
 ## We usually recommend not to specify default resources and to leave this as a conscious

@@ -22,11 +22,20 @@ spec:
             persistentVolumeClaim:
               claimName: pvc-{{ .Release.Name }}
 {{- end }}
+          securityContext:
+            fsGroupChangePolicy: "OnRootMismatch"
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-launcher
             securityContext:
               runAsUser: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
 {{- if .Values.storage }}
             volumeMounts:
             - name: vol1
@@ -57,11 +66,20 @@ spec:
             persistentVolumeClaim:
               claimName: pvc-{{ .Release.Name }}
 {{- end }}
+          securityContext:
+            fsGroupChangePolicy: "OnRootMismatch"
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           containers:
           - image: {{ .Values.image }}
             name: {{ .Release.Name }}-worker
             securityContext:
               runAsUser: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
 {{- if .Values.storage }}
             volumeMounts:
             - name: vol1

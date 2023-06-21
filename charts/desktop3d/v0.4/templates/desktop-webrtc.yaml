@@ -146,6 +146,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
 {{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -155,6 +160,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
           - name: home
             mountPath: /home/user2
@@ -172,6 +181,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: x11
               mountPath: /tmp/.X11-unix
@@ -194,6 +207,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           env:
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: all
@@ -235,6 +252,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: pulseaudio
               containerPort: 4713
@@ -251,6 +272,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           command: ["/bin/bash"]
           args:
             - -ec
@@ -277,6 +302,10 @@ spec:
             privileged: false
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           tty: true
           env:
             - name: DISPLAY
@@ -310,6 +339,10 @@ spec:
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           env:
             - name: TURNHOST
               value: turnapi.turnapi.svc.cluster.local

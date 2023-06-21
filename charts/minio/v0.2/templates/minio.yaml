@@ -58,6 +58,7 @@ spec:
         - name: vol-1
           mountPath: /data
       securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault

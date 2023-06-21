@@ -1,4 +1,0 @@
-image: "cerit.io/cerit/personalminio:v0.2"
-pvc: ""
-username: "user"
-password: ""

@@ -13,6 +13,7 @@ spec:
         app: {{ .Release.Name }}
     spec:
       securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault

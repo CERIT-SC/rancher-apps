@@ -1,5 +1,0 @@
-image: "cerit.io/cerit/samba:4.13.14"
-pvc: ""
-username: "user"
-password: ""
-public: false
