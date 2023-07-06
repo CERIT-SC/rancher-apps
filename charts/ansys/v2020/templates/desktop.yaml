@@ -175,6 +175,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.storage.pvc.name }}
 {{- end }}
+{{- if eq .Values.vnc false }}
+      runtimeClassName: nvidia-legacy
+{{- end }}
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true

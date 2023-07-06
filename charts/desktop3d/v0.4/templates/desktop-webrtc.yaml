@@ -146,6 +146,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.storage.externalpvc.name }}
 {{- end }}
+      runtimeClassName: nvidia-legacy
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true
