@@ -41,9 +41,9 @@ spec:
         securityContext:
           runAsUser: 1000
           allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
+          capabilities:
+            drop:
+            - ALL
         volumeMounts:
           - name: data
             mountPath: /home/coder
