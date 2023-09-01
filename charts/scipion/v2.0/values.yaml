@@ -17,8 +17,10 @@ od:
     host: ""
     token: ""
     spaceId: ""
+    spaceIdShort: ""
   project:
     host: ""
     token: ""
     spaceId: ""
+    spaceIdShort: ""
 
