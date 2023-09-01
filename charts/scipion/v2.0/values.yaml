@@ -13,11 +13,12 @@ vnc:
   vncPassword: ""
 
 od:
-  host: ""
   dataset:
+    host: ""
     token: ""
     spaceId: ""
   project:
+    host: ""
     token: ""
     spaceId: ""
 
