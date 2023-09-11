@@ -166,15 +166,10 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-home
 {{- end }}
-{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+{{- if and (ne .Values.storage.externalpvc.name "") .Values.storage.externalpvc.enable }}
         - name: data
           persistentVolumeClaim:
-            claimName: pvc-{{ include "storage.name" . }}
-{{- end }}
-{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
-        - name: pvc
-          persistentVolumeClaim:
-            claimName: {{ .Values.storage.pvc.name }}
+            claimName: {{ .Values.storage.externalpvc.name }}
 {{- end }}
 {{- if eq .Values.vnc false }}
       runtimeClassName: nvidia-legacy
@@ -286,13 +281,9 @@ spec:
             - name: home
               mountPath: /home/user
 {{- end }}
-{{- if and .Values.storage.enable (ne .Values.storage.server "") }}
+{{- if and (ne .Values.storage.externalpvc.name "") .Values.storage.externalpvc.enable }}
             - name: data
               mountPath: /storage
-{{- end }}
-{{- if and (ne .Values.storage.pvc.name "") .Values.storage.pvc.enable }}
-            - name: pvc
-              mountPath: /home/user/pvc
 {{- end }}
           resources:
             limits:
@@ -344,7 +335,7 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 500Mi            
+              memory: 500Mi
 
         - name: watchdog
           image: cerit.io/desktops/webrtc-app:1.19.1-mtufix-nv
@@ -364,7 +355,7 @@ spec:
               echo "Waiting for host X server at ${DISPLAY}"
               until [[ -e /var/run/appconfig/xserver_ready ]]; do sleep 1; done
               echo "Host X server is ready"
-              while true; do /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh; sleep 2; done
+              while true; do /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh; sleep 5; done
           env: []
           volumeMounts:
             - name: x11
