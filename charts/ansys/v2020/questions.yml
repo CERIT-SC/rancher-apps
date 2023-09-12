@@ -28,53 +28,25 @@ questions:
   type: password
   label: Desktop Password (please avoid chars "{" and "}")
   group: "Security"
-- variable: storage.persistenthome
-  description: "If true, content of /home/user directory will be preserved across desktop server install/uninstall."
-  default: true
-  required: false
-  type: boolean
-  label: Persistent home
-  group: Storage
-- variable: storage.pvc.enable
-  group: "Storage"
-  label: "PVC Storage Enable"
-  type: boolean
-  description: "Add existing persistent volume. Note: do not add ansys-home or similar name, Ansys will not start. Home PVC is attached according to the persistent home checkbox."
-- variable: storage.pvc.name
-  description: "Connect existing persistent volume (optional). It will be connected to /home/user/pvc."
-  group: "Storage"
-  label: "PVC storage"
-  type: pvc
-  required: false
-  show_if: "storage.pvc.enable=true"
-- variable: storage.enable
-  description: "Connect external storage from CERIT-SC"
-  type: boolean
-  group: "Storage"
-  label: External storage
-  show_subquestion_if: true
-  subquestions:
-  - variable: storage.server
-    description: "Connect Cerit-SC Storage as /storage"
-    label: Storage hostname
-    required: true
-    options:
-     - "storage-brno12-cerit.metacentrum.cz/share"
-     - "ha-bay.ics.muni.cz/share"
-    group: "Storage"
-    type: enum
-  - variable: storage.username
-    description: "Storage connect username"
-    label: Storage username
-    required: true
-    type: string
-    group: "Storage"
-  - variable: storage.password
-    label: Storage password
-    description: "Storage connect password"
-    required: true
-    type: password
-    group: "Storage"
+- variable: storage.persistenthome                                              
+  description: "If selected, content of /home/user directory will be preserved on new persistent volume across ANSYS install/uninstall."
+  default: true                                                                 
+  required: false                                                               
+  type: boolean                                                                 
+  label: Persistent home                                                        
+  group: Storage                                                                
+- variable: storage.pvc.enable                                               
+  group: "Storage"                                                           
+  label: "Add Existing PVC"                                                  
+  type: boolean                                                              
+  description: "Add any existing persistent volume. Note: do not add ansys-home or similar name, Ansys will not start. Home PVC is attached according to the persistent home checkbox."
+- variable: storage.pvc.name                                                 
+  description: "Choose PVC to connect (optional). It will be connected to /home/user/pvc."
+  group: "Storage"                                                           
+  label: "Existing PVC"                                                      
+  type: pvc                                                                  
+  required: false                                                            
+  show_if: "storage.pvc.enable=true"                                         
 - variable: walltime
   description: "Maximum runtime of application in hours. 24 = 1 day, 96 = 4 days. Maximum allowed is 4 days, higher values are cut to 4 days."
   type: int

@@ -1,4 +1,4 @@
-desktop: "cerit.io/desktops/ansys:v2020R1"
+desktop: "cerit.io/desktops/ansys:v2020-R1"
 mincpu: 1
 maxcpu: 4
 minram: 4096Mi
@@ -8,10 +8,6 @@ password: ""
 resolution: "1920x1080"
 vnc: true
 storage:
-  enable: false
-  server: ""
-  username: ""
-  password: ""
   pvc:
     enable: false
     name: ""
