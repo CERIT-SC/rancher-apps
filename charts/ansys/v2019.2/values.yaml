@@ -8,11 +8,7 @@ password: ""
 resolution: "1920x1080"
 vnc: true
 storage:
-  enable: false
-  server: ""
-  username: ""
-  password: ""
-  externalpvc:
+  pvc:
     enable: false
     name: ""
   persistenthome: true
