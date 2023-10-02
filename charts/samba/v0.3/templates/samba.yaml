@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: Always
+        env:
+        - name: SMBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: {{ .Release.Name }}-sambaauth
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 300m
+          limits:
+            cpu: 1
+            memory: 1024Mi
+        ports:
+        - containerPort: 1445
+        volumeMounts:
+        - name: vol-1
+          mountPath: /mnt
+{{- if ne .Values.subpath "" }}
+          subPath: {{ .Values.subpath }}
+{{- end }}
+        - name: run
+          mountPath: /run
+        - name: logs
+          mountPath: /var/log/samba
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+      - name: vol-1
+        persistentVolumeClaim:
+          claimName: {{ .Values.pvc }}
+      - name: run
+        emptyDir:
+          medium: Memory
+          sizeLimit: 100Mi
+      - name: logs
+        emptyDir:
+          sizeLimit: 1Gi
