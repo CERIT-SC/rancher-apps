@@ -42,7 +42,7 @@ spec:
         - name: vol-1
           mountPath: /mnt
 {{- if ne .Values.subpath "" }}
-          subPath: {{ .Values.subpath }}
+          subPath: {{ trimAll "/" .Values.subpath | quote }}
 {{- end }}
         - name: run
           mountPath: /run

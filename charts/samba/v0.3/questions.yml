@@ -23,7 +23,7 @@ questions:
   label: PVC
   required: true
 - variable: subpath
-  description: "Select subpath of the PVC to be exported. If empty, whole PVC will be exported"
+  description: "Select subpath of the PVC to be exported. If empty, whole PVC will be exported. It must be a relative path not starting with '/' or './'."
   group: "Server Settings"
   label: PVC Subpath
   type: string
