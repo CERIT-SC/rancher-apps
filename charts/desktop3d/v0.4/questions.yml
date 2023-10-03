@@ -19,7 +19,6 @@ questions:
     - "cerit.io/desktops/ubuntu-xfce:20.04-user"
     - "cerit.io/desktops/ubuntu-xfce:18.04-user"
     - "cerit.io/desktops/wine-gaming:v0.5"
-    - "cerit.io/desktops/witcher:2"
   group: "Image"
   type: enum
 - variable: display
