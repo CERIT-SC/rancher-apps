@@ -17,6 +17,7 @@ metadata:
 {{- if eq .Values.vnc true}}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+    metallb.universe.tf/address-pool: default
 {{- end }}
 spec:
   selector:
