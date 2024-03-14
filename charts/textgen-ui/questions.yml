@@ -1,0 +1,39 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Developement
+- LLM
+
+questions:
+- variable: hostname
+  description: App will be available at https://[hostname]-[namespace].dyn.cloud.e-infra.cz
+  label: hostname
+  type: text
+- variable: auth.username
+  description: Login username
+  label: username
+  type: text
+- variable: auth.password
+  description: Login password
+  label: password
+  type: password
+- variable: resources.limits.cpu
+  description: CPU resource limit
+  label: CPU
+  type: text
+- variable: resources.limits.memory
+  description: Memory resource limit
+  type: text
+  label: Memory
+- variable: resources.gputype
+  description: MIG or whole GPU
+  label: GPU
+  type: enum
+  options: 
+  - "nvidia.com/gpu"
+  - "nvidia.com/mig-1g.10gb"
+  - "nvidia.com/mig-2g.20gb"

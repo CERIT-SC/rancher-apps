@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  replicas: 1
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: webui
+      containers:
+      - name: text-generation-web-ui
+        command: 
+        - ./start_linux.sh
+        - --listen
+{{- if and .Values.auth.username .Values.auth.password }}
+        - --gradio-auth 
+        - '"$auth"'
+{{- end }}
+        - --api
+        image: {{ .Values.image }}
+        imagePullPolicy: Always
+{{- if and .Values.auth.username .Values.auth.password }}
+        env:
+        - name: auth
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}
+              key: auth
+{{- end }}
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+{{- if .Values.resources.gputype }}
+            {{ .Values.resources.gputype }}: 1
+{{- end }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: web
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
+        ports:
+        - containerPort: 7860
+          name: web
+        - containerPort: 5000
+          name: api
+        volumeMounts:
+        - name: models
+          mountPath: /opt/text-generation-webui/models
+  volumeClaimTemplates:
+  - metadata:
+      name: models
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 10Gi

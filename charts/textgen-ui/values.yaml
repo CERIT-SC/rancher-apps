@@ -1,0 +1,13 @@
+hostname: text-generation
+auth: 
+  username: user
+  password: kokos
+image: cerit.io/llms/text-gen-ui:2024-03-12
+resources:
+  requests: 
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1
+    memory: 8Gi
+  gputype: nvidia.com/mig-1g.10gb 
