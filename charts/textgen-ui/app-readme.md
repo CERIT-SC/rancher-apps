@@ -24,6 +24,6 @@ There are several options that needs to be filled.
 
 * **GPU:** GPU type. Selectable options: 
   
-  * **nvidia.com/gpu** (Whole GPU, according to available resources, A10/22GB, A40/40GB, A100/80GB, H100/80GB)
-  * **nvidia.com/mig-1g.10gb** (MIG part of A100 GPU, 10GB VRAM)
-  * **nvidia.com/mig-2g.20gb** (MIG part of A100 GPU, 20GB VRAM)
+  * **nvidia.com/gpu:** Whole GPU, according to available resources, A10/22GB, A40/40GB, A100/80GB, H100/80GB
+  * **nvidia.com/mig-1g.10gb:** MIG part of A100 GPU, 10GB VRAM
+  * **nvidia.com/mig-2g.20gb:** MIG part of A100 GPU, 20GB VRAM
