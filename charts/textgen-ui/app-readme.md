@@ -4,6 +4,10 @@ A Gradio web UI for Large Language Models.
 
 For more information, see [https://github.com/oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui).
 
+## NOTE
+
+**After successful install, wait few seconds before apps is up and running**
+
 ### Options
 
 There are several options that needs to be filled.
