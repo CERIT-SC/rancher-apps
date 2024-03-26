@@ -2,7 +2,7 @@ hostname: text-generation
 auth: 
   username: user
   password: kokos
-image: cerit.io/llms/text-gen-ui:2024-03-12
+image: cerit.io/llms/text-gen-ui:2024-03-26
 resources:
   requests: 
     cpu: 500m
