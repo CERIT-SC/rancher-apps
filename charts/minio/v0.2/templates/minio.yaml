@@ -59,6 +59,7 @@ spec:
           mountPath: /data
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
+        fsGroup: 1000
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
