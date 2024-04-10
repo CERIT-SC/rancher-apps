@@ -5,11 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns"
-{{- else }}
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-{{- end }}
 spec:
   tls:
     - hosts:
