@@ -1,0 +1,74 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- WEBRTC
+
+questions:
+- variable: resolution
+  description: "Desktop resolution. Can be changed via xrandr. Web page needs reload after change."
+  default: "1920x1080"
+  type: string
+  group: "Resolution"
+  label: Desktop resolution
+- variable: defhostname
+  default: true
+  description: "Set hostname to: vmd-{namespace}.dyn.cerit-sc.cz. You can specify arbitraty name in dyn.cerit-sc.cz domain setting false."
+  type: boolean
+  label: Use predefined hostname
+  group: Hostname
+  show_subquestion_if: false
+  subquestions:
+  - variable: customhostname
+    default: ".dyn.cerit-sc.cz"
+    description: "Hostname of your desktop installation. Must end with '.dyn.cerit-sc.cz' and must not already exist, e.g. vmd-username.dyn.cerit-sc.cz."
+    type: string
+    label: Application Hostname
+    group: Hostname
+    valid_chars: "a-zA-Z0-9.-"
+- variable: username
+  default: "user"
+  type: string
+  label: Desktop Username
+  description: "Username used to log into the desktop. You can use default \"user\"."
+  group: "Password Settings"
+- variable: password
+  default: ""
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password!"
+  type: password
+  label: Desktop Password
+  group: "Password Settings"
+- variable: persistenthome
+  description: "If true, content of /home/user directory will be preserved across VMD install/uninstall."
+  default: false
+  required: false
+  type: boolean
+  label: Persistent home
+- variable: mincpu
+  default: 1
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  default: 4
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  default: "4096Mi"
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  default: "16384Mi"
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
