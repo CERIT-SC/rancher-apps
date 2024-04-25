@@ -3,7 +3,7 @@ name: rstudio
 version: 1.6
 appVersion: 1.2.5042
 description: RStudio Server
-icon: file://logo.svg
+icon: file://charts/rstudio/v1.6/logo.svg
 keywords:
 - R
 - rstudio

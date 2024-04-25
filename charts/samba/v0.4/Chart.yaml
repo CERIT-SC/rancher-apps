@@ -3,7 +3,7 @@ name: samba
 version: 0.4
 appVersion: 4.15.13
 description: Samba personal server
-icon: file://logo.svg
+icon: file://charts/samba/v0.4/logo.svg
 keywords:
 - Samba
 - Windows Share

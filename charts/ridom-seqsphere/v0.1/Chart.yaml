@@ -5,7 +5,7 @@ appVersion: 8.3.0
 annotations:
   catalog.cattle.io/release-name: ridom-seqsphere
 description: Ridom Seq Sphere server and client
-icon: file://logo.png
+icon: file://charts/ridom-seqsphere/v0.1/logo.png
 keywords:
 - Ridom Seq Sphere
 - DNA

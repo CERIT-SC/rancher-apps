@@ -3,7 +3,7 @@ name: ridom-seqsphere
 version: 0.2
 appVersion: 8.3.0
 description: Ridom Seq Sphere server and client
-icon: file://logo.png
+icon: file://charts/ridom-seqsphere/v0.2/logo.png
 keywords:
 - Ridom Seq Sphere
 - DNA
