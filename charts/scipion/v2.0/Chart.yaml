@@ -3,7 +3,7 @@ name: scipion
 version: 2.0
 appVersion: "3.0.10"
 description: A Helm chart to deploy Scipion in Kubernetes
-icon: file://logo.png
+icon: file://charts/scipion/v2.0/logo.png
 keywords:
 - scipion
 - onedata

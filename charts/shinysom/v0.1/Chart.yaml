@@ -5,7 +5,7 @@ annotations:
 version: 0.1
 appVersion: 1.2.10
 description: ShinySOM
-icon: file://logo.svg
+icon: file://charts/shinysom/v0.1/logo.svg
 keywords:
 - R
 - rstudio shiny

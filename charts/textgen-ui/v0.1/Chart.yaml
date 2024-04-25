@@ -3,7 +3,7 @@ name: text-generation-webui
 version: 0.1
 appVersion: 2024-03-12
 description: A Gradio web UI for Large Language Models.
-icon: file://icon.svg
+icon: file://charts/textgen-ui/v0.1/icon.svg
 maintainers:
 - name: CERIT-SC
   email: root@cerit-sc.cz
