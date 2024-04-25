@@ -5,7 +5,7 @@ annotations:
 version: 0.2
 appVersion: 4.4.5
 description: neo4j server
-icon: file://logo.svg
+icon: file://charts/neo4j/v0.2/logo.svg
 keywords:
 - neo4j-server
 - graph data 

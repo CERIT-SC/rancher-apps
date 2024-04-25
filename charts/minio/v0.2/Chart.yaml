@@ -3,7 +3,7 @@ name: minio
 version: 0.2
 appVersion: 2023.05.04
 description: Minio personal server
-icon: file://logo.png
+icon: file://charts/minio/v0.2/logo.png
 keywords:
 - Minio
 - S3

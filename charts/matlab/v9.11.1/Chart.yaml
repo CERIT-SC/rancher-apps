@@ -3,7 +3,7 @@ name: matlab
 version: 9.11.1
 appVersion: 9.11.1
 description: Matlab 9.11
-icon: file://logo.svg
+icon: file://charts/matlab/v9.11.1/logo.svg
 keywords:
 - Remote desktop
 - Matlab 9.11

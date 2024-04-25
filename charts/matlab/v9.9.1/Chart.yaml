@@ -5,7 +5,7 @@ annotations:
 version: 9.9.1
 appVersion: 9.9.1
 description: Matlab 9.9
-icon: file://logo.svg
+icon: file://charts/matlab/v9.9.1/logo.svg
 keywords:
 - Remote desktop
 - Matlab 9.9

@@ -3,7 +3,7 @@ name: mpijob
 version: 0.1
 appVersion: 0.1
 description: 
-icon: file://logo.png
+icon: file://charts/mpijob/v0.1/logo.png
 keywords:
 - MPI
 - InfiniBand
