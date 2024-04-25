@@ -3,7 +3,7 @@ name: bibs
 version: 0.7
 appVersion: 0.7
 description: 
-icon: file://logo1.png
+icon: file://charts/bioda/v0.7/logo1.png
 keywords:
 - Bioda
 - BIBs

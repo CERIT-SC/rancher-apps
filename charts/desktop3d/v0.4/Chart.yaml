@@ -3,7 +3,7 @@ name: desktop
 version: 0.4
 appVersion: 0.4
 description: Remote Desktop
-icon: file://logo.png
+icon: file://charts/desktop3d/v0.4/logo.png
 keywords:
 - Remote desktop
 - Webrtc

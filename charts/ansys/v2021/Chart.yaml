@@ -3,7 +3,7 @@ name: ansys
 version: 2021
 appVersion: 2021R1
 description: ANSYS 2021R1
-icon: file://logo.jpg
+icon: file://charts/ansys/v2021/logo.jpg
 keywords:
 - Remote desktop
 - Ansys 2021R1

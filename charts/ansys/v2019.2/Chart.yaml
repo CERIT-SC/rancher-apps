@@ -3,7 +3,7 @@ name: ansys
 version: 2019.2
 appVersion: 2019.2
 description: ANSYS 2019.2
-icon: file://logo.jpg
+icon: file://charts/ansys/v2019.2/logo.jpg
 keywords:
 - Remote desktop
 - Ansys 2019.2

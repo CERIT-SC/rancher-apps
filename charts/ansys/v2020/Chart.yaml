@@ -3,7 +3,7 @@ name: ansys
 version: 2020
 appVersion: 2020R1
 description: ANSYS 2020R1
-icon: file://logo.jpg
+icon: file://charts/ansys/v2020/logo.jpg
 keywords:
 - Remote desktop
 - Ansys 2020R1

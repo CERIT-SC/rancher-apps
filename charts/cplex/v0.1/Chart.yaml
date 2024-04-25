@@ -3,7 +3,7 @@ name: cplex
 version: 12.10
 appVersion: 12.10
 description: IBM ILOG CPLEX Studio
-icon: file://logo.png
+icon: file://charts/cplex/v0.1/logo.png
 keywords:
 - IBM ILOG CPLEX Studi
 - Webrtt
