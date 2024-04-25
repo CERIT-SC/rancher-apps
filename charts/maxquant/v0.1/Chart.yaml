@@ -5,7 +5,7 @@ annotations:
 version: 0.1
 appVersion: 2.2.0
 description: MaxQuant
-icon: file://logo.png
+icon: file://charts/maxquant/v0.1/logo.png
 keywords:
 - Remote desktop
 - Proteomics
