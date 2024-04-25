@@ -5,7 +5,7 @@ annotations:
 version: 0.0.16
 appVersion: 0.0.4
 description: Personal Monitoring v0.0.4
-icon: file://logo.svg
+icon: file://charts/monitoring/logo.svg
 keywords:
 - Monitoring
 - Personal

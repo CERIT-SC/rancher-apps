@@ -5,7 +5,7 @@ name: owncloud
 version: 0.1
 appVersion: 2.9.2
 description: ownCloud Client
-icon: file://logo.svg
+icon: file://charts/owncloud/v0.1/logo.svg
 keywords:
 - ownCloud
 - Sync and Share
