@@ -188,10 +188,11 @@ spec:
             limits:
               cpu: {{ .Values.maxcpu }}
               memory: {{ .Values.maxram }}
-              cerit.io/gpu-mem: 1
+              nvidia.com/gpu: 1
             requests:
               cpu: {{ .Values.mincpu }}
               memory: {{ .Values.minram }}
+              nvidia.com/gpu: 1
 
         - name: pulseaudio
           image: cerit.io/desktops/pulseaudio:v0.1
@@ -214,7 +215,7 @@ spec:
               memory: 500Mi
 
         - name: web
-          image: cerit.io/desktops/webrtc-web:v0.8
+          image: cerit.io/desktops/webrtc-web:0.8
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
