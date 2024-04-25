@@ -6,7 +6,7 @@ description: VSCode Code-server
 type: application
 version: 2.6.4
 appVersion: 4.16.1
-icon: file://coderlogo.png
+icon: file://charts/code-server/v2.6.4/coderlogo.png
 keywords:
 - Coder
 - Code-server
