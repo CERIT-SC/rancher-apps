@@ -3,7 +3,7 @@ name: vmd
 version: 1.0
 appVersion: 1.9.4
 description: VMD 1.9.4
-icon: file://logo.svg
+icon: file://charts/vmd/v1.0/logo.svg
 keywords:
 - Remote desktop
 - VMD
