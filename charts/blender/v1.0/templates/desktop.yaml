@@ -149,7 +149,7 @@ spec:
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
-          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          command: ['cp', '-rn', '/home/ubuntu/.', '/home/ubuntu2']
           securityContext:
             privileged: false
             runAsUser: 1000
@@ -160,7 +160,7 @@ spec:
               - ALL
           volumeMounts:
           - name: home
-            mountPath: /home/user2
+            mountPath: /home/ubuntu2
 {{- else }}
       initContainers: []
 {{- end }}
@@ -203,7 +203,7 @@ spec:
               mountPath: /dev/shm
 {{- if .Values.persistenthome }}
             - name: home
-              mountPath: /home/user
+              mountPath: /home/ubuntu
 {{- end }}
           resources:
             limits:
