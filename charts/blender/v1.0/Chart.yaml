@@ -2,7 +2,7 @@ apiVersion: v1
 name: blender
 version: 1.0
 appVersion: 3.0.1
-description: Blender 3.0.1
+description: Blender
 icon: file://charts/blender/v1.0/logo.svg
 keywords:
 - Remote desktop
