@@ -48,6 +48,7 @@ questions:
   required: false
   type: boolean
   label: Persistent home
+  group: Storage
 - variable: mincpu
   default: 1
   description: "Minimum guaranteed CPUs"
