@@ -1,4 +1,4 @@
-image: codercom/code-server:4.23.1
+image: codercom/code-server
 password: ""
 resources:
   limits:
