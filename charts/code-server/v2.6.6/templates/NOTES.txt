@@ -1,0 +1,3 @@
+** Please be patient while the chart is being deployed **
+
+Navigate browser to: [https://{{ include "dns.name" . }}](https://{{ include "dns.name" . }})
