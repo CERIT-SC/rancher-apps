@@ -51,6 +51,9 @@ spec:
 {{- if eq .Values.image "R 4.3.1/Ubuntu 20.04" }}
         image: cerit.io/rocker/r:4.3.1
 {{- end }}
+{{- if eq .Values.image "R 4.4.0/Ubuntu 24.04" }}
+        image: cerit.io/rocker/r:4.4.0
+{{- end }}
         command:
         - /bin/sh
         - -c
@@ -102,6 +105,9 @@ spec:
 {{- end }}
 {{- if eq .Values.image "R 4.3.1/Ubuntu 20.04" }}
         image: cerit.io/rocker/r:4.3.1
+{{- end }}
+{{- if eq .Values.image "R 4.4.0/Ubuntu 24.04" }}
+        image: cerit.io/rocker/r:4.4.0
 {{- end }}
         imagePullPolicy: Always
         env:
