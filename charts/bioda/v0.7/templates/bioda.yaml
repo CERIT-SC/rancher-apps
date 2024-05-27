@@ -16,7 +16,8 @@ spec:
       nodeSelector:
         storage: local-ssd
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch 
+        fsGroupChangePolicy: OnRootMismatch
+        fsGroup: 1000
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
