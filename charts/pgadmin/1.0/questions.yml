@@ -12,7 +12,7 @@ categories:
 questions:
 - variable: email
   description: "Email for login page"
-  type: boolean
+  type: string
   label: Email
   group: "Security"
 - variable: password
