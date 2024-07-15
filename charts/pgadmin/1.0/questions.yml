@@ -1,0 +1,22 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- WEB Apps
+- Postgresql
+- Pgadmin
+- Development
+
+questions:
+- variable: email
+  description: "Email for login page"
+  type: boolean
+  label: Email
+  group: "Security"
+- variable: password
+  description: "Password for login page"
+  type: password
+  label: Password
+  group: "Security"

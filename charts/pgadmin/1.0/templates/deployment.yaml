@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: {{ .Release.Name }}
+        image: cerit.io/cloudnative-pg/pgadmin4:{{ .Chart.AppVersion }}
+        env:
+        - name: PGADMIN_LISTEN_PORT
+          value: '8080'
+        - name: PGADMIN_DISABLE_POSTFIX
+          value: 'true'
+        - name: PGADMIN_DEFAULT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: email
+              name: {{ .Release.Name }}-auth
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: {{ .Release.Name }}-auth
+        securityContext:                                                          
+          runAsUser: 5050
+          runAsGroup: 5050
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log/pgadmin
+      volumes:
+      - name: logs
+        emptyDir: {}

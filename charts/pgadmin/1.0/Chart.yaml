@@ -1,0 +1,17 @@
+apiVersion: v1
+name: pgadmin
+version: 1.0
+appVersion: 8.9
+description: PG Admin
+icon: file://charts/pgadmin/1.0/postgres-alt.svg
+keywords:
+- Postgres
+- Web Administration
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl

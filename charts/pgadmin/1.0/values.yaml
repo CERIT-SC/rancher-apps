@@ -1,0 +1,6 @@
+mincpu: 100m
+maxcpu: 1
+minram: 1Gi
+maxram: 2Gi
+email: user@host.net
+password: "kokos"
