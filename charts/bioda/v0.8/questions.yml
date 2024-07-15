@@ -43,7 +43,7 @@ questions:
   type: boolean
   group: "Storage"
 - variable: storage.pvc1.claim
-  description: "Choose PVC. It will be conected to /storage."
+  description: "Choose PVC. It will be conected to /storage1."
   label: "PVC"
   type: pvc
   show_if: "storage.pvc1.enable=true"
@@ -55,7 +55,7 @@ questions:
   type: boolean
   group: "Storage"
 - variable: storage.pvc2.claim
-  description: "Choose PVC. It will be conected to /storage."
+  description: "Choose PVC. It will be conected to /storage2."
   label: "PVC"
   type: pvc
   show_if: "storage.pvc2.enable=true"
