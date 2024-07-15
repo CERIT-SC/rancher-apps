@@ -10,3 +10,7 @@ When launching Neo4j Server app, you need to fill username and password set in t
 Application is available through web page, URL is on domain `dyn.cloud.e-infra.cz` and is like `https://neo4j-namespace.dyn.cloud.e-infra.cz/broswer`. Note: you must use URL ending with `/browser` part. 
 
 For server, enter the same URL but without the `/browser` part and with `:443` suffix, e.g., `neo4j-namespace.dyn.cloud.e-infra.cz:443` is the DB server.
+
+# Note
+
+Version 5.x is not compatible with 4.x version of database. A new PVC must be used.
