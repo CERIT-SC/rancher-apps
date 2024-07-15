@@ -1,0 +1,21 @@
+image: "cerit.io/ceitec/bioda:v1.2"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+sshtype: "Mosh"
+sshkey: "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAqDfCNpgwjVOye2b7LSLthbg4lwv9oR4mRH2C4fBnDo1fO4s/LGxXXUAgw1K4i7B7FwQMHkpslKKQXYCab4mGd08OKGusZ5BBMXbcCAnIFWG0E6s6Q5zS4Jxl0PDUEC8UoktsJmAtX8ZDQ+q32uG5cPuw70mwbBBx54Rs787DrSU= xhejtman@anubis.fi.muni.cz"
+password: ""
+
+storage:
+  elixir:
+    enable: false
+    username: ""
+    password: ""
+  pvc:
+    enable: true
+    claim: "matlab-home"
+
+global:
+  cattle:
+    clusterName: "kuba-cluster"

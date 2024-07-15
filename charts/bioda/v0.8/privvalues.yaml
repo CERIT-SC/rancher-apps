@@ -1,0 +1,21 @@
+image: "cerit.io/ceitec/bioda:v1.1"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+sshtype: "Classic"
+sshkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDoi850WNvqF+EcGyoewwL+sTVSp1NSKlAb3pVxfKddz xhejtman@anubis"
+password: ""
+
+storage:
+  elixir:
+    enable: true
+    username: "3545"
+    password: "pR0tori8n"
+  pvc:
+    enable: false
+    claim: ""
+
+global:
+  cattle:
+    clusterName: "kuba-cluster"

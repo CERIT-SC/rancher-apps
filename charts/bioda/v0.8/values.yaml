@@ -1,0 +1,16 @@
+image: "cerit.io/ceitec/bioda:v1.2"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+sshtype: "Classic"
+sshkey: ""
+password: ""
+
+storage:
+  pvc1:
+    enable: false
+    claim: ""
+  pvc2:
+    enable: false
+    claim: ""
