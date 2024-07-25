@@ -5,6 +5,9 @@ metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: 6000m
+    nginx.org/client-max-body-size: 6000m
+    nginx.ingress.kubernetes.io/custom-http-errors: "509"
 spec:
   ingressClassName: nginx
   tls:
