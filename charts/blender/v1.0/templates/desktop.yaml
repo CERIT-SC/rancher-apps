@@ -209,7 +209,7 @@ spec:
             limits:
               cpu: {{ .Values.maxcpu }}
               memory: {{ .Values.maxram }}
-{{- if eq .Values.gpu "Full" }}
+{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
 {{- else }}
               cerit.io/gpu-mem: 1
@@ -217,7 +217,7 @@ spec:
             requests:
               cpu: {{ .Values.mincpu }}
               memory: {{ .Values.minram }}
-{{- if eq .Values.gpu "Full" }}
+{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
 {{- else }}
               cerit.io/gpu-mem: 1
