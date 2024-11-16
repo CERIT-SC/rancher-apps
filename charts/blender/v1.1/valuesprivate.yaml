@@ -1,0 +1,11 @@
+desktop: "cerit.io/desktops/vmd:1.9.4a57"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+defhostname: true
+customhostname: ""
+username: "user"
+password: "kokos"
+persistenthome: false
+resolution: "1920x1080"
