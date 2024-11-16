@@ -145,6 +145,17 @@ spec:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: NotIn
+                values:
+                - NVIDIA-H100-NVL
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-H100-PCIe
 {{- if .Values.persistenthome }}
       initContainers:
         - name: init-desktop
