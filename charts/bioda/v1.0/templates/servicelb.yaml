@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ssh
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
+    metallb.universe.tf/address-pool: privmuni
+    metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
+spec:
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  ports:
+  - port: 22
+    name: ssh
+    targetPort: 22
+  selector:
+    app: {{ .Release.Name }}
+  externalTrafficPolicy: Local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mosh
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mosh-{{ include "dns.name" . }}
+    metallb.universe.tf/address-pool: privmuni
+    metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
+spec:
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  ports:
+  - port: 60000
+    name: mosh
+    targetPort: 60000
+    protocol: UDP
+  selector:
+    app: {{ .Release.Name }}
+  externalTrafficPolicy: Local

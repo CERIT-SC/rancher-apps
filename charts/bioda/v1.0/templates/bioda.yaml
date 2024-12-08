@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      nodeSelector:
+        storage: local-ssd
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        fsGroup: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}:v{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
+        securityContext:                                                          
+          runAsUser: 1000 
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: 2222
+        - containerPort: 60000
+          protocol: UDP
+        resources:
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+        volumeMounts:
+        - name: home
+          mountPath: /home/ubuntu
+{{- if .Values.storage.optpvc.enable }}
+        - name: opt
+          mountPath: /opt
+{{- end }}
+        - name: sshkey
+          mountPath: /var/tmp/authorized_keys
+          subPath: authorized_keys 
+{{- if .Values.storage.pvc1.enable }}
+        - name: pvc1
+          mountPath: /storage1
+{{- end }}
+{{- if .Values.storage.pvc2.enable }}
+        - name: pvc2
+          mountPath: /storage2
+{{- end }}
+      volumes:
+{{- if .Values.storage.optpvc.enable }}
+      - name: opt
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.optpvc.name }}
+{{- end }}
+      - name: sshkey
+        secret:
+          secretName: sshkey-{{ .Release.Name }}
+{{- if .Values.storage.pvc1.enable }}
+      - name: pvc1
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc1.claim }}
+{{- end }}
+{{- if .Values.storage.pvc2.enable }}
+      - name: pvc2
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc2.claim }}
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
