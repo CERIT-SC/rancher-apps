@@ -1,0 +1,218 @@
+{{- if eq .Values.display "VNC"}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-password
+type: Opaque
+data:
+   password: {{ .Values.password | b64enc | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+    metallb.universe.tf/address-pool: default
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
+  ports:
+    - port: 5900
+      name: vnc
+      targetPort: 5900
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}-dyn-cloud-e-infra-cz
+  annotations:
+    "helm.sh/resource-policy": "keep"
+spec:
+  secretName: {{ .Release.Namespace }}-{{ .Release.Name }}-dyn-cloud-e-infra-cz
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod-dns
+  dnsNames:
+  - "{{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz"
+  usages:
+  - digital signature
+  - key encipherment
+{{- if .Values.storage.persistenthome }}
+{{- if lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( printf "%s-home" .Release.Name) }}
+---
+{{- else }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-home
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+{{- end }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      automountServiceAccountToken: false
+
+      terminationGracePeriodSeconds: 5
+      volumes:
+        ###
+        # shared x11 socket volume
+        ###
+        - name: x11
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # Shared config volume
+        ###
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        - name: vnccert
+          secret:
+            secretName: {{ .Release.Namespace }}-{{ .Release.Name }}-dyn-cloud-e-infra-cz 
+        ###
+        # shared memory mount
+        # used to bypass default container runtime of 64MB
+        ###
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+{{- if .Values.storage.persistenthome }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-home
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+{{- if .Values.storage.persistenthome }}
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.desktop }}
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+          - name: home
+            mountPath: /home/user2
+{{- else }}
+      initContainers: []
+{{- end }}
+      containers:
+        - name: vncserver
+          image: cerit.io/desktops/vncserver:v1.1
+          args:
+          - -X509Key
+          - /etc/ssl/tls.key
+          - -X509Cert
+          - /etc/ssl/tls.crt
+          env:
+          - name: VNCPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: {{ .Release.Name }}-password
+          ports:
+           - name: vnc
+             containerPort: 5900
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+            - name: vnccert
+              mountPath: /etc/ssl
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+        - name: desktop
+          image: {{ .Values.desktop }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+            - name: dshm
+              mountPath: /dev/shm
+{{- if .Values.storage.persistenthome }}
+            - name: home
+              mountPath: /home/user
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+            - name: data
+              mountPath: /storage
+{{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+{{- end }}

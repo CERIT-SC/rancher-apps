@@ -1,0 +1,23 @@
+desktop: "cerit.io/desktops/ubuntu-xfce:22.04-user"
+webrtcimages:
+  xserver: cerit.io/desktops/xserver:v0.3
+  pulseaudio: cerit.io/desktops/pulseaudio:v0.1
+  gstreamer: cerit.io/desktops/webrtc-app:1.20.1-nv
+  web: cerit.io/desktops/webrtc-web:0.6
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+username: "user"
+password: ""
+resolution: "1920x1080"
+display: VNC
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  externalpvc:
+    enable: false
+    name: ""
+  persistenthome: true

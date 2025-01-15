@@ -1,0 +1,361 @@
+{{- if eq .Values.display "WEBRTC"}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-password
+type: Opaque
+data:
+   auth: {{ htpasswd .Values.username .Values.password | b64enc }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    # Port 80 is the default port routed by the pod broker.
+    - port: 80
+      name: web
+      targetPort: 8090
+    - port: 8080
+      name: signalling
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-signalling
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/webrtc/signalling"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ .Release.Name }}-password
+    nginx.ingress.kubernetes.io/auth-realm: "Use 'desktop' username and choosen password"
+spec:
+  tls:
+    - hosts:
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 80
+{{- if .Values.storage.persistenthome }}
+{{- if lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( printf "%s-home" .Release.Name) }}
+---
+{{- else }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-home
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+{{- end }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 5
+      volumes:
+        ###
+        # shared x11 socket volume
+        ###
+        - name: x11
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # Shared config volume
+        ###
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # shared memory mount
+        # used to bypass default container runtime of 64MB
+        ###
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+{{- if .Values.storage.persistenthome }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-home
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
+      runtimeClassName: nvidia-legacy
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+{{- if .Values.storage.persistenthome }}
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.desktop }}
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+          - name: home
+            mountPath: /home/user2
+{{- else }}
+      initContainers: []
+{{- end }}
+      containers:
+        - name: xserver
+          image: {{ .Values.webrtcimages.xserver }}
+          env:
+          - name: NVIDIA_DRIVER_CAPABILITIES
+            value: all
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "kill $(pidof Xorg tail bash)"]
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 500Mi
+              cerit.io/gpu-mem: 1
+
+        - name: desktop
+          image: {{ .Values.desktop }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          env:
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: PULSE_SERVER
+              value: "127.0.0.1:4713"
+            - name: RESOLUTION
+              value: {{ .Values.resolution }}
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+            - name: dshm
+              mountPath: /dev/shm
+{{- if .Values.storage.persistenthome }}
+            - name: home
+              mountPath: /home/user
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+            - name: data
+              mountPath: /storage
+{{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+              cerit.io/gpu-mem: 10
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+              cerit.io/gpu-mem: 10
+
+        - name: pulseaudio
+          image: {{ .Values.webrtcimages.pulseaudio }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          ports:
+            - name: pulseaudio
+              containerPort: 4713
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+
+        - name: watchdog
+          image: {{ .Values.webrtcimages.gstreamer }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          command: ["/bin/bash"]
+          args:
+            - -ec
+            - |
+              echo "Waiting for host X server at ${DISPLAY}"
+              until [[ -e /var/run/appconfig/xserver_ready ]]; do sleep 1; done
+              echo "Host X server is ready"
+              exec /usr/bin/python3 /opt/app/xserver_watchdog.py --on_timeout=/opt/app/watchdog.sh
+          env: []
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig 
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+
+        - name: webrtc
+          image: {{ .Values.webrtcimages.gstreamer }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          tty: true
+          env:
+            - name: DISPLAY
+              value: ":0"
+            - name: "PULSE_SERVER"
+              value: "127.0.0.1:4713"
+            - name: WEBRTC_ENABLE_RESIZE
+              value: "false"
+            - name: COTURN_WEB_URI
+              value: "http://turnapi.turnapi.svc.cluster.local/"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: EXTRA_FLAGS
+              value: "--encoder nvfbch264enc"
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 500Mi
+              cerit.io/gpu-mem: 1
+
+        - name: web
+          image: {{ .Values.webrtcimages.web }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          env:
+            - name: TURNHOST
+              value: turnapi.turnapi.svc.cluster.local
+          ports:
+           - name: web
+             containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+          resources:
+            limits:
+              cpu: 500m
+              memory: 400Mi
+{{- end }}
