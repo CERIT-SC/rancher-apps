@@ -1,0 +1,11 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Please be patient while the chart is being deployed **
+
+{{- if eq .Values.display "WEBRTC" }}
+Navigate browser to: https://{{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+{{- else }}
+Navigate VNC viewer to: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz:5900
+{{- end }}
