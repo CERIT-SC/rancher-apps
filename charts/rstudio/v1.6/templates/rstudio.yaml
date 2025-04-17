@@ -55,7 +55,7 @@ spec:
         image: cerit.io/rocker/r:4.4.0
 {{- end }}
 {{- if eq .Values.image "R 4.4.3/Ubuntu 24.04 User" }}
-         image: cerit.io/rocker/r:4.4.3-user
+        image: cerit.io/rocker/r:4.4.3-user
 {{- end }}
         command:
         - /bin/sh
