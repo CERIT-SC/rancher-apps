@@ -137,6 +137,16 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+{{- if .Values.storage.persistenthome }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-home
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
 {{- if eq .Values.gpu "Part" }}
       runtimeClassName: nvidia-legacy 
 {{- end }}
@@ -156,7 +166,7 @@ spec:
                 - NVIDIA-H100-NVL
                 - NVIDIA-A100-80GB-PCIe
                 - NVIDIA-H100-PCIe
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
@@ -212,9 +222,13 @@ spec:
           volumeMounts:
             - name: dshm
               mountPath: /dev/shm
-{{- if .Values.persistenthome }}
+{{- if .Values.storage.persistenthome }}
             - name: home
               mountPath: /home/ubuntu
+{{- end }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+            - name: data
+              mountPath: /storage
 {{- end }}
           resources:
             limits:
@@ -275,15 +289,4 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-{{- if .Values.persistenthome }}
-  volumeClaimTemplates:
-  - metadata:
-      name: home
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: "nfs-csi"
-      resources:
-        requests:
-          storage: 1Gi
-{{ end }}
 {{- end }}

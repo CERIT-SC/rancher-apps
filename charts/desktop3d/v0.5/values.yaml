@@ -7,6 +7,14 @@ defhostname: true
 customhostname: ""
 username: ""
 password: ""
-persistenthome: true
 resolution: "1920x1080"
 gpu: Whole
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  externalpvc:
+    enable: false
+    name: ""
+  persistenthome: true
