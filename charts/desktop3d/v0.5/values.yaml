@@ -9,6 +9,7 @@ username: ""
 password: ""
 resolution: "1920x1080"
 gpu: Whole
+display: VNC
 storage:
   enable: false
   server: ""
