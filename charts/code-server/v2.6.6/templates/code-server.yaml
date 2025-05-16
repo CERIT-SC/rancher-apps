@@ -32,10 +32,8 @@ spec:
         command:
         - /bin/bash
         - -c
-        - "if [ ! -d ${CONDA_DIR} ]; then curl -L ${CONDA_MIRROR}/Mambaforge-Linux-x86_64.sh --output Mambaforge-Linux-x86_64.sh && /bin/bash Mambaforge-Linux-x86_64.sh -f -b -p ${CONDA_DIR} && rm Mambaforge-Linux-x86_64.sh && /home/coder/conda/bin/conda init; else echo 'Conda already installed'; fi"
+        - "if [ ! -d ${CONDA_DIR} ]; then curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh --output Miniforge3-Linux-x86_64.sh && /bin/bash Miniforge3-Linux-x86_64.sh -f -b -p ${CONDA_DIR} && rm Miniforge3-Linux-x86_64.sh && /home/coder/conda/bin/conda init; else echo 'Conda already installed'; fi"
         env:
-        - name: CONDA_MIRROR
-          value: 'https://github.com/conda-forge/miniforge/releases/latest/download'
         - name: CONDA_DIR
           value: '/home/coder/conda'
         securityContext:
@@ -69,8 +67,6 @@ spec:
                 name: {{ .Release.Name }}
                 key: password
 {{- if .Values.install.conda }}
-          - name: CONDA_MIRROR
-            value: 'https://github.com/conda-forge/miniforge/releases/latest/download'
           - name: CONDA_DIR
             value: '/home/coder/conda'
           - name: LD_LIBRARY_PATH
