@@ -183,6 +183,9 @@ spec:
               cpu: 1
               memory: 500Mi
         - name: desktop
+          command:
+          - dumb-init
+          - /entrypoint-vnc.sh
           image: {{ .Values.desktop }}
           imagePullPolicy: Always
           securityContext:
