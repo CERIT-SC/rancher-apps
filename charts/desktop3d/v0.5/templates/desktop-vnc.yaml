@@ -7,13 +7,46 @@ type: Opaque
 data:
    password: {{ .Values.password | b64enc | quote }}
 ---
+{{- if ne .Values.limitips "" }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Release.Name }}   
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    {{- $cidrs := splitList "," .Values.limitips }}
+    {{- range $cidr := $cidrs }}
+    {{- $trimmed := $cidr | trim }}
+    {{- if not (contains "/" $trimmed) }}
+    - ipBlock:
+        cidr: {{ printf "%s/32" $trimmed }}
+    {{- else }}
+    - ipBlock:
+        cidr: {{ $trimmed }}
+    {{- end }}
+    {{- end }}
+    ports:
+    - protocol: TCP
+      port: 5900
+---
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
-    #metallb.universe.tf/address-pool: default
+{{- if .Values.netexternal }}
+    metallb.universe.tf/address-pool: default
+{{- else }}
+    metallb.universe.tf/address-pool: privmuni
+{{- end }}
 spec:
   selector:
     app: {{ .Release.Name }}

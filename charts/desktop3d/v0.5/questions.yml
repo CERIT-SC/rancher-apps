@@ -47,6 +47,20 @@ questions:
   type: password
   label: Desktop Password (please avoid chars "{" and "}")
   group: "Security"
+- variable: netexternal
+  required: false
+  type: boolean
+  label: Assign external IP address
+  description: External addresses are accessible outside of Masaryk University network
+  default: false
+  group: Connection
+- variable: limitip
+  required: false
+  type: string
+  label: Limit connection from IPs
+  description: "Limit connection from listed IPs only. Enter comma separated CIDRs, e.g., '147.251.0.0/16,1.2.3.4/32'. It must always be a CIDR, single IP set as /32 CIDR."
+  default: ""
+  group: Connection
 - variable: storage.persistenthome                                              
   description: "If selected, content of /home/user directory will be preserved on new persistent volume across desktop install/uninstall."
   default: true                                                                 

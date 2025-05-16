@@ -10,6 +10,8 @@ password: ""
 resolution: "1920x1080"
 gpu: Whole
 display: VNC
+netexternal: false
+limitip: ""
 storage:
   enable: false
   server: ""
