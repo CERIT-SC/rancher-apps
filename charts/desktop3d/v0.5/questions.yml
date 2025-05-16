@@ -15,10 +15,7 @@ questions:
   default: ""
   required: true
   options:
-    - "cerit.io/desktops/ubuntu-xfce:22.04-user"
-    - "cerit.io/desktops/ubuntu-xfce:20.04-user"
-    - "cerit.io/desktops/ubuntu-xfce:18.04-user"
-    - "cerit.io/desktops/wine-gaming:v0.5"
+    - "cerit.io/desktops/ubuntu-xfce:24.04-user"
   group: "Image"
   type: enum
 - variable: display
@@ -29,6 +26,15 @@ questions:
   label: Display Method
   group: Display
   description: "Use either VNC client or WebRTC."
+- variable: gpu
+  description: "Select GPU type"
+  label: GPU
+  options:
+  - Whole
+  - Part
+  group: "Display"
+  type: enum
+  show_if: "display=WEBRTC"
 - variable: username
   type: string
   label: Desktop Username

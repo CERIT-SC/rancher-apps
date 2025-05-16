@@ -1,0 +1,23 @@
+desktop: "cerit.io/desktops/witcher:2"
+webrtcimages:
+  xserver: cerit.io/desktops/xserver:v0.3
+  pulseaudio: cerit.io/desktops/pulseaudio:v0.1
+  gstreamer: cerit.io/desktops/webrtc-app:1.20.1-nv
+  web: cerit.io/desktops/webrtc-web:0.6
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+username: "user"
+password: "kokos"
+resolution: "1920x1080"
+display: WEBRTC
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  externalpvc:
+    enable: false
+    name: ""
+  persistenthome: true
