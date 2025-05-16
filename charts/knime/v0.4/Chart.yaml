@@ -2,7 +2,7 @@ apiVersion: v1
 name: knime
 #annotations:
 #  catalog.cattle.io/release-name: knime
-version: 0.3
+version: 0.4
 appVersion: 4.3.1a
 description: Knime over VNC
 icon: file://charts/knime/v0.3/logo.svg
