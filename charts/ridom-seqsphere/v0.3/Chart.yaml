@@ -1,0 +1,18 @@
+apiVersion: v1
+name: ridom-seqsphere
+version: 0.3
+appVersion: 10.5.3
+description: Ridom Seq Sphere server and client
+icon: file://charts/ridom-seqsphere/v0.2/logo.png
+keywords:
+- Ridom Seq Sphere
+- DNA
+- Genomics 
+- applications
+home: https://www.ridom.de/seqsphere/index.shtml
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl

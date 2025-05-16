@@ -1,0 +1,178 @@
+{{- if eq .Values.client.enable true }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-password
+type: Opaque
+data:
+   password: {{ .Values.password | b64enc | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-vnc
+  annotations:
+    purelb.io/service-group: privmuni
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+    metallb.universe.tf/address-pool: privmuni
+spec:
+  selector:
+    app: {{ .Release.Name }}-client
+  type: LoadBalancer
+  ports:
+    - port: 5900
+      name: vnc
+      targetPort: 5900
+  allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-client
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-client
+  serviceName: {{ .Release.Name }}-client
+  replicas: 1
+  volumeClaimTemplates: []
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}-client
+    spec:
+      # Disable service account used for accessing the kubernetes API/
+      automountServiceAccountToken: false
+
+      # Terminate pod after 10 seconds of receiving SIGTERM
+      terminationGracePeriodSeconds: 5
+      volumes:
+        ###
+        # shared x11 socket volume
+        ###
+        - name: x11
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # Shared config volume
+        ###
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        ###
+        # shared memory mount
+        # used to bypass default container runtime of 64MB
+        ###
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+{{- if eq .Values.storage.externalpvc.enable true }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
+{{- if eq .Values.storage.munistorage.enable true }}
+        - name: datamuni
+          persistentVolumeClaim:
+            claimName: pvc-{{ include "storage.name" . }}
+{{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.client.image }}
+          command: ['cp', '-rn', '/home/user/.', '/home/user2']
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+          - name: home
+            mountPath: /home/user2
+      containers:
+        - name: vncserver
+          image: cerit.io/desktops/vncserver:v1.0
+          env:
+          - name: VNCPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: {{ .Release.Name }}-password
+          ports:
+           - name: vnc
+             containerPort: 5900
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+        - name: client
+          image: {{ .Values.client.image }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+          volumeMounts:
+            - name: x11
+              mountPath: /tmp/.X11-unix
+            - name: config
+              mountPath: /var/run/appconfig
+            - name: dshm
+              mountPath: /dev/shm
+            - name: home
+              mountPath: /home/user
+{{- if eq .Values.storage.externalpvc.enable true }}
+            - name: data
+              mountPath: /storage
+{{- end }}
+{{- if eq .Values.storage.munistorage.enable true }}
+            - name: datamuni
+              mountPath: /storage-muni
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+{{- end }}
