@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: 600m
+    nginx.org/client-max-body-size: 600m
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ include "dns.name" . }}
+      secretName: {{ include "secret.name" . }}
+  rules:
+  - host: {{ include "dns.name" . }}
+    http:
+      paths:
+      - backend:
+          service: 
+            name: {{ .Release.Name }}
+            port:
+              number: 8080
+        pathType: ImplementationSpecific

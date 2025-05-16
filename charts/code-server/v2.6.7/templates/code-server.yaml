@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+{{- if .Values.install.conda }}
+      initContainers:
+      - name: {{ .Release.Name }}-init
+        image: {{ .Values.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/bash
+        - -c
+        - "if [ ! -d ${CONDA_DIR} ]; then curl -L ${CONDA_MIRROR}/Mambaforge-Linux-x86_64.sh --output Mambaforge-Linux-x86_64.sh && /bin/bash Mambaforge-Linux-x86_64.sh -f -b -p ${CONDA_DIR} && rm Mambaforge-Linux-x86_64.sh && /home/coder/conda/bin/conda init; else echo 'Conda already installed'; fi"
+        env:
+        - name: CONDA_MIRROR
+          value: 'https://github.com/conda-forge/miniforge/releases/latest/download'
+        - name: CONDA_DIR
+          value: '/home/coder/conda'
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+          - name: data
+            mountPath: /home/coder
+        resources:
+          limits: 
+            cpu: "1"
+            memory: 2Gi
+{{- end }}
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          env:
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}
+                key: password
+{{- if .Values.install.conda }}
+          - name: CONDA_MIRROR
+            value: 'https://github.com/conda-forge/miniforge/releases/latest/download'
+          - name: CONDA_DIR
+            value: '/home/coder/conda'
+          - name: LD_LIBRARY_PATH
+            value: '/home/coder/conda/lib'
+{{- end }}
+          volumeMounts:
+          - name: data
+            mountPath: /home/coder
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+          - name: metahome
+            mountPath: /storage
+{{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
+      volumes:
+      - name: metahome
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.externalpvc.name }}
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+
