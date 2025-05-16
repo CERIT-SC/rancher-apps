@@ -55,7 +55,7 @@ questions:
   default: false
   group: Connection
   show_if: "display=VNC"
-- variable: limitip
+- variable: limitips
   required: false
   type: string
   label: Limit connection from IPs

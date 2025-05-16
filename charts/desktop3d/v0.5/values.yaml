@@ -11,7 +11,7 @@ resolution: "1920x1080"
 gpu: Whole
 display: VNC
 netexternal: false
-limitip: ""
+limitips: ""
 storage:
   enable: false
   server: ""
