@@ -54,6 +54,7 @@ questions:
   description: External addresses are accessible outside of Masaryk University network
   default: false
   group: Connection
+  show_if: "display=VNC"
 - variable: limitip
   required: false
   type: string
@@ -61,6 +62,7 @@ questions:
   description: "Limit connection from listed IPs only. Enter comma separated CIDRs, e.g., '147.251.0.0/16,1.2.3.4/32'. It must always be a CIDR, single IP set as /32 CIDR."
   default: ""
   group: Connection
+  show_if: "display=VNC"
 - variable: storage.persistenthome                                              
   description: "If selected, content of /home/user directory will be preserved on new persistent volume across desktop install/uninstall."
   default: true                                                                 

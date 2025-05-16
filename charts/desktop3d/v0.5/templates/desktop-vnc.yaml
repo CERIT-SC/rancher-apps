@@ -7,7 +7,6 @@ type: Opaque
 data:
    password: {{ .Values.password | b64enc | quote }}
 ---
-{{- if ne .Values.limitips "" }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -19,7 +18,11 @@ spec:
   policyTypes:
   - Ingress
   ingress:
-  - from:
+  - ports:
+    - protocol: TCP
+      port: 5900
+    {{- if ne .Values.limitips "" }}
+    from:
     {{- $cidrs := splitList "," .Values.limitips }}
     {{- range $cidr := $cidrs }}
     {{- $trimmed := $cidr | trim }}
@@ -31,11 +34,8 @@ spec:
         cidr: {{ $trimmed }}
     {{- end }}
     {{- end }}
-    ports:
-    - protocol: TCP
-      port: 5900
+    {{- end }}
 ---
-{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
