@@ -1,4 +1,24 @@
 {{- if eq .Values.server.enable true }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Release.Name }}-server
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 8064
+    from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Release.Name }}
+---
 apiVersion: v1
 kind: Service
 metadata:
