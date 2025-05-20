@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+  annotations:
+{{- if eq .Values.public false }}
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+    metallb.universe.tf/address-pool: default
+{{- else }}
+    metallb.universe.tf/address-pool: privmuni
+{{- end }}
+{{- end }}
+{{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.trusted.einfra.cz
+{{- else }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
+{{- end }}
+spec:
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
+  ports:
+  - port: 445
+    targetPort: 1445
+    name: smb
+  selector:
+    app: {{ .Release.Name }}
