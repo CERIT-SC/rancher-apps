@@ -1,0 +1,26 @@
+apiVersion: v2
+name: langflow
+description: Tool for building and deploying AI-powered agents and workflows.
+type: application
+version: 1.0
+appVersion: 1.4.2
+keywords:
+- AI
+- LLMs
+- AI Agents
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 20.7.0
+- name: chromadb
+  version: 0.1.23
+  repository: https://github.com/amikos-tech/chromadb-chart
+  condition: installChroma

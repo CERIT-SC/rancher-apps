@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        fsGroup: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: data-pvc
+          persistentVolumeClaim:
+            claimName: pvc-{{ .Release.Name }}-data
+      containers:
+        - name: langflow
+          image: {{ .Values.image }}:{{ .Chart.AppVersion }}
+          env:
+          - name: LANGFLOW_CONFIG_DIR
+            value: /app/langflow
+          - name: LANGFLOW_DATABASE_URL
+            value: postgresql://langflow:langflow@langflow-rw:5432/langflow
+          - name: LANGFLOW_DATABASE_CONNECTION_RETRY
+            value: 'true'
+          - name: LANGFLOW_HOST
+            value: '0.0.0.0'
+          - name: LANGFLOW_PORT
+            value: '7860'
+          - name: LANGFLOW_OPEN_BROWSER
+            value: 'false'
+          - name: LANGFLOW_CACHE_TYPE
+            value: 'redis'
+          - name: LANGFLOW_REDIS_HOST
+            value: {{ .Release.Name }}-redis-master
+          - name: LANGFLOW_AUTO_LOGIN
+            value: 'false'
+          - name: LANGFLOW_SUPERUSER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-credentials
+                key: user
+          - name: LANGFLOW_SUPERUSER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-credentials
+                key: password
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 16Gi
+          volumeMounts:
+            - mountPath: /app/langflow
+              name: data-pvc

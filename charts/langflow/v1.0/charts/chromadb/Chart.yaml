@@ -1,0 +1,20 @@
+apiVersion: v2
+name: chromadb
+maintainers:
+  - name: Amikos Tech
+    email: opensource@amikos.tech
+    url: https://amikos.tech
+home: "https://github.com/amikos-tech/chromadb-chart"
+sources:
+  - "https://github.com/amikos-tech/chromadb-chart"
+description: A Helm chart for Chroma DB vector store
+icon: https://github.com/chroma-core/docs/blob/0b58523496c3e6d07aac39f066f73378ed926750/static/img/chroma.png
+keywords:
+  - chromadb
+  - vectordb
+  - vectorstore
+  - ai/ml
+type: application
+
+version: 0.1.23
+appVersion: "0.6.3"

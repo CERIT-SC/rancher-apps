@@ -1,0 +1,60 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.db.name }}
+spec:
+  instances: {{ .Values.db.instances }}
+
+  imageName: 'ghcr.io/cloudnative-pg/postgresql:{{ .Values.db.version }}'
+
+  primaryUpdateStrategy: unsupervised
+
+  bootstrap:
+    initdb:
+      database: {{ .Values.db.name }}
+      encoding: UTF8
+      localeCType: C
+      localeCollate: C
+      owner: {{ .Values.db.owner }}
+      postInitTemplateSQL:
+        - create extension vector
+      secret:
+        name: {{ .Values.db.name }}-db-app
+  replicationSlots:
+    highAvailability:
+      enabled: false
+
+  monitoring:
+    enablePodMonitor: true
+
+  postgresql:
+    parameters:
+      max_locks_per_transaction: "100"
+      max_connections: "200"
+
+  resources:
+    requests:
+      memory: {{ .Values.db.resources.requests.memory }}
+      cpu: {{ .Values.db.resources.requests.cpu }}
+    limits:
+      memory: {{ .Values.db.resources.limits.memory }}
+      cpu: {{ .Values.db.resources.limits.cpu }}
+
+  storage:
+    size: {{ .Values.db.storage.size }}
+    storageClass: {{ .Values.db.storage.storageClass }}
+
+{{- if .Values.db.backup.enable }}
+  backup:
+    barmanObjectStore:
+      destinationPath: {{ .Values.db.backup.path }}
+      endpointURL: {{ .Values.db.backup.url }}
+      s3Credentials:
+        accessKeyId:
+          name: {{ .Release.Name}}-s3-creds
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: {{ .Release.Name}}-s3-creds
+          key: ACCESS_SECRET_KEY
+    retentionPolicy: "30d"
+{{- end }}
