@@ -43,9 +43,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Namespace }}-{{ .Release.Name }}.dyn.cloud.e-infra.cz
 {{- if .Values.netexternal }}
-    metallb.universe.tf/address-pool: default
+    metallb.io/address-pool: default
 {{- else }}
-    metallb.universe.tf/address-pool: privmuni
+    metallb.io/address-pool: privmuni
 {{- end }}
 spec:
   selector:

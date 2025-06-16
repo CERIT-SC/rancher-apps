@@ -7,9 +7,9 @@ metadata:
   annotations:
 {{- if eq .Values.public false }}
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-    metallb.universe.tf/address-pool: default
+    metallb.io/address-pool: default
 {{- else }}
-    metallb.universe.tf/address-pool: privmuni
+    metallb.io/address-pool: privmuni
 {{- end }}
 {{- end }}
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}

@@ -7,9 +7,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ include "dns.name" . }}
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-    metallb.universe.tf/address-pool: default
+    metallb.io/address-pool: default
 {{- else }}
-    metallb.universe.tf/address-pool: privmuni
+    metallb.io/address-pool: privmuni
 {{- end }}
     metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
 spec:
@@ -32,9 +32,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: mosh-{{ include "dns.name" . }}
 {{- if eq .Values.global.cattle.clusterName "kubas-cluster" }}
-    metallb.universe.tf/address-pool: default
+    metallb.io/address-pool: default
 {{- else }}
-    metallb.universe.tf/address-pool: privmuni
+    metallb.io/address-pool: privmuni
 {{- end }}
     metallb.universe.tf/allow-shared-ip: {{ .Release.Name }}-ssh
 spec:
