@@ -100,4 +100,4 @@ spec:
           app: {{ .Release.Name }}
     - podSelector:
         matchLabels:
-          cnpg.io/cluster: langflow
+          cnpg.io/cluster: {{ .Values.db.name }}
