@@ -1,0 +1,33 @@
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  labels:
+    app: {{ .Release.Name }}-dragonfly
+  name: {{ .Release.Name }}-dragonfly
+spec:
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: {{ .Values.dragonfly.userId }}
+    runAsUser: {{ .Values.dragonfly.userId }}
+  imagePullPolicy: Always
+  podSecurityContext:
+    fsGroup: {{ .Values.dragonfly.userId }}
+    fsGroupChangePolicy: OnRootMismatch
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  replicas: {{ .Values.dragonfly.replicas }}
+  resources: {{ toYaml .Values.dragonfly.resources | nindent 4 }}
+  snapshot:
+    cron: 00 * * * *
+    persistentVolumeClaimSpec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.dragonfly.storageLimit }}
+      storageClassName: {{ .Values.dragonfly.storageClass }}

@@ -1,0 +1,16 @@
+{{- $root := . }}
+{{- $filesByDir := (include "langflow.filesByDir" . | fromYaml) }}
+
+{{- range $dir, $files := $filesByDir }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $root.Release.Name }}-{{ $dir }}-config
+data:
+{{- range $path, $_ := $files }}
+  {{ base $path }}: |
+{{ $root.Files.Get $path | nindent 4 }}
+{{- end }}
+{{- end }}
+

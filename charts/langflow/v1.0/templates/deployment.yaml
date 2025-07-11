@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/components-cm.yaml") . | sha256sum }}
     spec:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
@@ -24,12 +26,20 @@ spec:
         - name: data-pvc
           persistentVolumeClaim:
             claimName: pvc-{{ .Release.Name }}-data
+{{- $filesByDir := (include "langflow.filesByDir" . | fromYaml) }}
+{{- range $dir, $_ := $filesByDir }}
+        - name: {{ $dir }}-config
+          configMap:
+            name: {{ $.Release.Name }}-{{ $dir }}-config
+{{- end }}
       containers:
         - name: langflow
           image: {{ .Values.image }}:{{ .Chart.AppVersion }}
           env:
           - name: LANGFLOW_CONFIG_DIR
-            value: /app/langflow
+            value: /app/data/langflow-cfg
+          - name: LANGFLOW_COMPONENTS_PATH
+            value: /components
           - name: LANGFLOW_DATABASE_URL
             value: postgresql://langflow:langflow@langflow-rw:5432/langflow
           - name: LANGFLOW_DATABASE_CONNECTION_RETRY
@@ -43,9 +53,13 @@ spec:
           - name: LANGFLOW_CACHE_TYPE
             value: 'redis'
           - name: LANGFLOW_REDIS_HOST
-            value: {{ .Release.Name }}-redis-master
+            value: {{ .Release.Name }}-dragonfly
           - name: LANGFLOW_AUTO_LOGIN
             value: 'false'
+          - name: DO_NOT_TRACK
+            value: 'true'
+          - name: LANGFLOW_LOG_LEVEL
+            value: "DEBUG"
           - name: LANGFLOW_SUPERUSER
             valueFrom:
               secretKeyRef:
@@ -70,5 +84,10 @@ spec:
               cpu: 4
               memory: 16Gi
           volumeMounts:
-            - mountPath: /app/langflow
+            - mountPath: /app/data
               name: data-pvc
+{{- $filesByDir := (include "langflow.filesByDir" . | fromYaml) }}
+{{- range $dir, $_ := $filesByDir }}
+            - name: {{ $dir }}-config
+              mountPath: /components/{{ $dir }}
+{{- end }}

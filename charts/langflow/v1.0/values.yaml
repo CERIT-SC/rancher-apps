@@ -1,10 +1,10 @@
 image: langflowai/langflow
 host: ''
-user: ''
+user: 'admin'
 password: ''
 installChroma: true
 db:
-  instances: 2
+  instances: 1
   name: langflow
   owner: langflow
   password: langflow
@@ -21,35 +21,18 @@ db:
     storageClass: zfs-csi
   backup:
     enable: false
-redis:
-  auth:
-    enabled: false
-  architecture: standalone
-  tls:
-    enabled: false
-  networkPolicy:
-    enabled: false
-  master:
-    resources:
-      limits:
-        cpu: 2
-        memory: 16Gi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-    persistence:
-      enabled: false
-    podSecurityContext:
-      enabled: true
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-    containerSecurityContext:
-      enabled: true
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-        - ALL
+dragonfly:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 2
+      memory: 16Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  storageClass: zfs-csi
+  storageLimit: 5Gi
+  userId: 999
 chromadb:
   chromadb:
     dataVolumeSize: "100Gi"
