@@ -1,3 +1,4 @@
+{{- $hostTemplate := printf "%s-%s.dyn.cloud.e-infra.cz" .Release.Name .Release.Namespace }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -12,10 +13,22 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+{{- if ne .Values.host "" }}
         - {{ .Values.host }}
+{{- else }}
+        - {{ $hostTemplate }}
+{{- end }}
+{{- if ne .Values.host "" }}
       secretName: {{ .Values.host | replace "." "-" }}-tls
+{{- else }}
+      secretName: {{ $hostTemplate | replace "." "-" }}-tls
+{{- end }}      
   rules:
+{{- if ne .Values.host "" }}
     - host: {{ .Values.host }}
+{{- else }}
+    - host: {{ $hostTemplate }}
+{{- end }}
       http:
         paths:
           - path: /

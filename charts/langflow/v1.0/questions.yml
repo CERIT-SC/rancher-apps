@@ -10,11 +10,10 @@ categories:
 
 questions:
 - variable: host
-  description: "Expose langflow at url. E.g., langflow-namespace.dyn.cloud.e-infra.cz"
+  description: "Expose langflow at url, or leave empty for automatic URL."
   label: Host
   type: string
   group: Connection
-  required: true
 - variable: user
   description: "Initial username"
   required: true
