@@ -17,7 +17,7 @@ dependencies:
 description: phpMyAdmin client
 engine: gotpl
 home: https://github.com/bitnami/charts/tree/master/bitnami/phpmyadmin
-icon: https://bitnami.com/assets/stacks/phpmyadmin/img/phpmyadmin-stack-220x234.png
+icon: file://charts/phpmyadmin/v10.2.4/phpmyadmin-stack-220x234.png 
 keywords:
   - mariadb
   - mysql
