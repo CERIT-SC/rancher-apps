@@ -11,10 +11,10 @@ db:
   version: '16.8'
   resources:
     requests:
-      cpu: 1
+      cpu: 100m
       memory: "4096Mi"
     limits:
-      cpu: 4
+      cpu: 1
       memory: "4096Mi"
   storage:
     size: 10Gi
@@ -25,8 +25,8 @@ dragonfly:
   replicas: 1
   resources:
     limits:
-      cpu: 2
-      memory: 16Gi
+      cpu: 1
+      memory: 2Gi
     requests:
       cpu: 100m
       memory: 256Mi

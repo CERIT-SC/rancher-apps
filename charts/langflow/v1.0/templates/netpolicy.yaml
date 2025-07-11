@@ -62,7 +62,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: dragonfly
+      app.kubernetes.io/name: {{ .Release.Name }}-dragonfly
   policyTypes:
   - Ingress
   ingress:
