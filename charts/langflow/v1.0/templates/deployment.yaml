@@ -58,8 +58,6 @@ spec:
             value: 'false'
           - name: DO_NOT_TRACK
             value: 'true'
-          - name: LANGFLOW_LOG_LEVEL
-            value: "DEBUG"
           - name: LANGFLOW_SUPERUSER
             valueFrom:
               secretKeyRef:
