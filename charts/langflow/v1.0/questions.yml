@@ -10,7 +10,7 @@ categories:
 
 questions:
 - variable: host
-  description: "Expose langflow at url"
+  description: "Expose langflow at url. E.g., langflow-namespace.dyn.cloud.e-infra.cz"
   label: Host
   type: string
   group: Connection
