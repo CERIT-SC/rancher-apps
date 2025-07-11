@@ -24,5 +24,5 @@ questions:
 - variable: password
   description: "Initial password"
   required: true
-  type: string
+  type: password
   group: Connection
