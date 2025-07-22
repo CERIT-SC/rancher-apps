@@ -72,8 +72,6 @@ spec:
           volumeMounts:
             - name: home
               mountPath: /home/user
-            - name: db
-              mountPath: /home/user/.seqsphere-server
           ports:
           - containerPort: 8064
           resources:
@@ -92,12 +90,4 @@ spec:
       resources:
         requests:
           storage: 1Gi
-  - metadata:
-      name: db
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: "nfs-csi"
-      resources:
-        requests:
-          storage: 2048Gi
 {{- end }}
