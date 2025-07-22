@@ -1,0 +1,22 @@
+client:
+  enable: true
+  image: "cerit.io/cerit/ridomclient:v11.0.2-cz"
+server:
+  enable: false
+  image: "cerit.io/cerit/ridomserver:v11.0.1"
+mincpu: 1
+maxcpu: 4
+minram: 32Gi
+maxram: 32Gi
+password: ""
+vnc: true
+storage: 
+  munistorage:
+    enable: false
+    server: 'ha-bay.ics.muni.cz/share'
+    username: ''
+    password: ''
+  persistenthome: true
+  externalpvc:
+    enable: false
+    name: ""
