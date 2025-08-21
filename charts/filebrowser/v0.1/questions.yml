@@ -1,0 +1,33 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Web File Browser
+
+questions:
+- variable: storage.pvc
+  description: "PVC name"
+  required: true
+  type: pvc
+  label: "Use existing PVC"
+  group: "Basic"
+- variable: password
+  description: "Access password, minimum 8 characters."
+  required: true
+  type: password
+  label: "Set access password. Username is: admin"
+  group: "Basic"
+- variable: runasuser
+  description: "Run as user UID, if files are owned by different UID than 1000."
+  required: false
+  type: integer
+  label: "Numeric UID"
+  group: "Advanced"
+- variable: url
+  description: "Expose using this URL"
+  required: false
+  type: string
+  label: "URL"
+  group: "Advanced"

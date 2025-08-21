@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        fsGroup: {{ .Values.runasuser }}
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: IfNotPresent
+        args:
+        - '--password'
+        - '{{ trimPrefix ":" (htpasswd "" .Values.password) }}'
+        securityContext:                                                          
+          runAsUser: {{ .Values.runasuser }} 
+          runAsGroup: {{ .Values.runasuser }}
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: {{ .Values.mincpu }}
+            memory: {{ .Values.minram }}
+          limits:
+            cpu: {{ .Values.maxcpu }}
+            memory: {{ .Values.maxram }}
+        volumeMounts:
+        - name: pvc
+          mountPath: /srv
+        - name: db
+          mountPath: /database
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.pvc }}
+      - name: db
+        emptyDir: {}
+      - name: config
+        emptyDir: {}
+

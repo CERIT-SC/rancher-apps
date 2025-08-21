@@ -1,0 +1,10 @@
+image: "filebrowser/filebrowser:v2.42.5"
+url: ""
+password: ""
+storage:
+  pvc: ''
+mincpu: 100m
+maxcpu: 1
+minram: 1Gi
+maxram: 2Gi
+runasuser: 1000
