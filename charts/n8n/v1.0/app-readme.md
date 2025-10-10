@@ -14,5 +14,5 @@ Privacy-focused: self-host n8n for privacy and security.
 
 - Create new credentials for OpenAI. 
 - Set URL to: https://vllm.ai.e-infra.cz/v1 
-- set API key to `empty`. 
+- Set API key to `empty`. 
 - When using OpenAI models from this instance, models are not shown in the list, select `By ID` and set model name such as: `gpt-oss-120b`.
