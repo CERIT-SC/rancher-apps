@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {{ toYaml .Values.annotations | nindent 4 }}
+  labels:
+{{ include "wave-labels.chart" . | indent 4 }}
+  name: {{ template "wave-fullname" . }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+{{ include "wave-labels.chart" . | indent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+{{ include "wave-labels.chart" . | indent 8 }}
+{{- with .Values.podLabels }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ template "wave-fullname" . }}
+          args: ["--namespaces", "{{ .Release.Namespace }}"]
+          {{- if gt (.Values.replicas | int64) 1 }}
+            - --leader-election=true
+            - --leader-election-id={{ template "wave-fullname" . }}
+            - --leader-election-namespace={{ .Release.Namespace }}
+          {{- end }}
+          {{- if .Values.syncPeriod }}
+            - --sync-period={{ .Values.syncPeriod }}
+          {{- end }}
+          {{- if .Values.webhooks.enabled }}
+            - --enable-webhooks=true
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.webhooks.enabled }}
+            - mountPath: /tmp/k8s-webhook-server/serving-certs
+              name: cert
+              readOnly: true
+          {{- end }} 
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "wave-fullname" .) }}
+      nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
+      affinity: {{ toYaml .Values.affinity | nindent 8 }}
+      tolerations: {{ toYaml .Values.tolerations | nindent 8 }}
+      volumes:
+      {{- if .Values.webhooks.enabled }}
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: {{ template "wave-fullname" . }}-webhook-server-cert
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      topologySpreadConstraints: {{ toYaml .Values.topologySpreadConstraints | nindent 8 }}

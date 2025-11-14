@@ -1,0 +1,10 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+- Development
+- Kubernetes
+
+questions: []
