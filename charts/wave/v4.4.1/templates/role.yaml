@@ -38,7 +38,13 @@ rules:
       - patch
       - watch
   - verbs:
-      - '*'
+      - list
+      - get
+      - update
+      - patch
+      - watch
+      - create
+      - delete
     apiGroups:
       - coordination.k8s.io
     resources:
