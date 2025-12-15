@@ -3,7 +3,7 @@ name: blender
 version: 1.2
 appVersion: 4.4.3
 description: Blender
-icon: file://charts/blender/v1.1/logo.svg
+icon: file://charts/blender/v1.2/logo.svg
 keywords:
 - Remote desktop
 - Blender
