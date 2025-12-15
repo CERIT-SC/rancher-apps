@@ -1,0 +1,21 @@
+desktop: "cerit.io/desktops/pycharm:2024.3.5-user"
+mincpu: 1
+maxcpu: 4
+minram: 4096Mi
+maxram: 16384Mi
+username: "user"
+password: "kokos"
+defhostname: true
+customhostname: ""
+resolution: "1920x1080"
+display: VNC
+gpu: Whole
+storage:
+  enable: false
+  server: ""
+  username: ""
+  password: ""
+  externalpvc:
+    enable: false
+    name: ""
+  persistenthome: true
