@@ -1,0 +1,18 @@
+host: ''
+db:
+  instances: 1
+  name: n8n
+  owner: n8n
+  version: '16.8'
+  resources:
+    requests:
+      cpu: 100m
+      memory: "4096Mi"
+    limits:
+      cpu: 1
+      memory: "4096Mi"
+  storage:
+    size: 10Gi
+    storageClass: zfs-csi
+  backup:
+    enable: false
