@@ -1,0 +1,287 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: desktoppassword
+type: Opaque
+data:
+   auth: {{ htpasswd .Values.username .Values.password | b64enc }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    # Port 80 is the default port routed by the pod broker.
+    - port: 8090
+      name: web
+      targetPort: 8090
+    - port: 8080
+      name: signalling
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-signalling
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+{{- if eq .Values.defhostname true }}
+    - hosts:
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+{{- else }}
+    - hosts:
+        - {{ .Values.customhostname }}
+      secretName: {{ printf "%s-tls" .Values.customhostname | replace "." "-"  }}
+  rules:
+  - host: {{ .Values.customhostname }}
+{{- end }}
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/turn"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
+        - pathType: Prefix
+          path: "/ws"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
+        - pathType: ImplementationSpecific
+          path: "/.*/signalling/"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: desktoppassword
+spec:
+  ingressClassName: nginx
+  tls:
+{{- if eq .Values.defhostname true }}
+    - hosts:
+        - {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+      secretName: {{ printf "%s-%s-dyn-cloud-e-infra-cz-tls" .Release.Name .Release.Namespace  }}
+  rules:
+  - host: {{ .Release.Name }}-{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+{{- else }}
+    - hosts:
+        - {{ .Values.customhostname }}
+      secretName: {{ printf "%s-tls" .Values.customhostname | replace "." "-"  }}
+  rules:
+  - host: {{ .Values.customhostname }}
+{{- end }}
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: {{ .Release.Name }}
+              port:
+                number: 8090
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  replicas: 1
+  volumeClaimTemplates: []
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      # Disable service account used for accessing the kubernetes API/
+      automountServiceAccountToken: false
+
+      # Terminate pod after 10 seconds of receiving SIGTERM
+      terminationGracePeriodSeconds: 5
+      volumes:
+        ###
+        # shared memory mount
+        # used to bypass default container runtime of 64MB
+        ###
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+{{- if eq .Values.gpu "Part" }}
+      runtimeClassName: nvidia-legacy 
+{{- end }}
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: NotIn
+                values:
+                - NVIDIA-H100-NVL
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-H100-PCIe
+{{- if .Values.persistenthome }}
+      initContainers:
+        - name: init-desktop
+          image: {{ .Values.desktop }}
+          command: ['cp', '-rn', '/home/ubuntu/.', '/home/ubuntu2']
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+          - name: home
+            mountPath: /home/ubuntu2
+{{- else }}
+      initContainers: []
+{{- end }}
+      containers:
+        - name: desktop
+          image: {{ .Values.desktop }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          env:
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+            - name: PULSE_SERVER
+              value: "127.0.0.1:4713"
+            - name: RESOLUTION
+              value: {{ .Values.resolution }}
+            - name: DISPLAY
+              value: ":0"
+            - name: SELKIES_ENABLE_RESIZE
+              value: "false"
+            - name: EXTRA_FLAGS
+              value: "--encoder nvfbch264enc"
+            - name: COTURN_USER
+              value: webrtc
+            - name: COTURN_WEB
+              value: 'http://coturn-web.turnapi.svc.cluster.local'
+          ports:
+           - name: signalling
+             containerPort: 8080
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+{{- if .Values.persistenthome }}
+            - name: home
+              mountPath: /home/ubuntu
+{{- end }}
+          resources:
+            limits:
+              cpu: {{ .Values.maxcpu }}
+              memory: {{ .Values.maxram }}
+{{- if eq .Values.gpu "Whole" }}
+              nvidia.com/gpu: 1
+{{- else }}
+              cerit.io/gpu-mem: 1
+{{- end }}
+            requests:
+              cpu: {{ .Values.mincpu }}
+              memory: {{ .Values.minram }}
+{{- if eq .Values.gpu "Whole" }}
+              nvidia.com/gpu: 1
+{{- else }}
+              cerit.io/gpu-mem: 1
+{{- end }}
+
+        - name: pulseaudio
+          image: cerit.io/desktops/pulseaudio:v0.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          ports:
+            - name: pulseaudio
+              containerPort: 4713
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+
+        - name: web
+          image: cerit.io/desktops/webrtc-web:0.9
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          ports:
+           - name: web
+             containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+{{- if .Values.persistenthome }}
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+{{ end }}
