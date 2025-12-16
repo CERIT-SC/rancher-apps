@@ -180,15 +180,13 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - kub-c10.priv.cerit-sc.cz
-      tolerations:
-      - effect: NoSchedule
-        key: node.kubernetes.io/unschedulable
-        operator: Exists
+            - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: NotIn
+                values:
+                - NVIDIA-H100-NVL
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-H100-PCIe
 {{- if .Values.storage.persistenthome }}
       initContainers:
         - name: init-desktop
@@ -260,7 +258,7 @@ spec:
 {{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
 {{- else }}
-              cerit.io/gpu-mem: 1
+              nvidia.com/gpu-mem: 1
 {{- end }}
             requests:
               cpu: {{ .Values.mincpu }}
@@ -268,7 +266,7 @@ spec:
 {{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
 {{- else }}
-              cerit.io/gpu-mem: 1
+              nvidia.com/gpu-mem: 1
 {{- end }}
 
         - name: pulseaudio
