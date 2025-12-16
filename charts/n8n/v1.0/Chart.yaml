@@ -1,4 +1,7 @@
 apiVersion: v2
+annotations:
+  catalog.cattle.io/kube-version: '>=1.21-0'
+  catalog.cattle.io/release-name: ""
 name: n8n
 description: Flexible AI workflow automation for technical teams.
 type: application
