@@ -135,10 +135,7 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-            sizeLimit: 1Gi
-{{- if eq .Values.gpu "Part" }}
-      runtimeClassName: nvidia-legacy 
-{{- end }}
+            sizeLimit: 4Gi
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true
@@ -159,6 +156,7 @@ spec:
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
+          imagePullPolicy: Always
           command: ['cp', '-rn', '/home/ubuntu/.', '/home/ubuntu2']
           securityContext:
             privileged: false
@@ -177,7 +175,7 @@ spec:
       containers:
         - name: desktop
           image: {{ .Values.desktop }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           securityContext:
             privileged: false
             runAsUser: 1000
@@ -189,8 +187,6 @@ spec:
           env:
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: all
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: all
             - name: PULSE_SERVER
               value: "127.0.0.1:4713"
             - name: RESOLUTION
@@ -198,7 +194,7 @@ spec:
             - name: DISPLAY
               value: ":0"
             - name: SELKIES_ENABLE_RESIZE
-              value: "false"
+              value: "true"
             - name: EXTRA_FLAGS
               value: "--encoder nvfbch264enc"
             - name: COTURN_USER
