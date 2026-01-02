@@ -1,4 +1,3 @@
-{{- if eq .Values.display "WEBRTC"}}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -6,29 +5,6 @@ metadata:
 type: Opaque
 data:
    auth: {{ htpasswd .Values.username .Values.password | b64enc }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Release.Name }}-network-policy
-spec:
-  podSelector:
-    matchLabels:
-      app: {{ .Release.Name }}
-  policyTypes:
-  - Ingress
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-    ports:
-    - protocol: TCP
-      port: 8090
-    - protocol: TCP 
-      port: 8080
-    - protocol: TCP # cert manager acme challenge
-      port: 8089
 ---
 apiVersion: v1
 kind: Service
@@ -160,40 +136,17 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-{{- if .Values.storage.persistenthome }}
-        - name: home
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-home
-{{- end }}
-{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ .Values.storage.externalpvc.name }}
-{{- end }}
-{{- if eq .Values.gpu "Part" }}
-      runtimeClassName: nvidia-legacy 
-{{- end }}
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: nvidia.com/gpu.product
-                operator: NotIn
-                values:
-                - NVIDIA-H100-NVL
-                - NVIDIA-A100-80GB-PCIe
-                - NVIDIA-H100-PCIe
-{{- if .Values.storage.persistenthome }}
+{{- if .Values.persistenthome }}
       initContainers:
         - name: init-desktop
           image: {{ .Values.desktop }}
-          command: ['/bin/bash', '-c', 'cp -rn /home/ubuntu/. /home/ubuntu2; true']
+          imagePullPolicy: Always
+          command: ['cp', '-rn', '/home/ubuntu/.', '/home/user2']
           securityContext:
             privileged: false
             runAsUser: 1000
@@ -204,7 +157,7 @@ spec:
               - ALL
           volumeMounts:
           - name: home
-            mountPath: /home/ubuntu2
+            mountPath: /home/user2
 {{- else }}
       initContainers: []
 {{- end }}
@@ -223,16 +176,14 @@ spec:
           env:
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: all
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: all
             - name: PULSE_SERVER
               value: "127.0.0.1:4713"
             - name: RESOLUTION
               value: {{ .Values.resolution }}
             - name: DISPLAY
               value: ":0"
-            - name: SELKIES_ENABLE_RESIZE
-              value: "false"
+            - name: WEBRTC_ENABLE_RESIZE
+              value: "true"
             - name: EXTRA_FLAGS
               value: "--encoder nvfbch264enc"
             - name: COTURN_USER
@@ -245,31 +196,19 @@ spec:
           volumeMounts:
             - name: dshm
               mountPath: /dev/shm
-{{- if .Values.storage.persistenthome }}
+{{- if .Values.persistenthome }}
             - name: home
               mountPath: /home/ubuntu
-{{- end }}
-{{- if and .Values.storage.externalpvc.enable (ne .Values.storage.externalpvc.name "") }}
-            - name: data
-              mountPath: /storage
 {{- end }}
           resources:
             limits:
               cpu: {{ .Values.maxcpu }}
               memory: {{ .Values.maxram }}
-{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
-{{- else }}
-              nvidia.com/gpu-mem: 1
-{{- end }}
             requests:
               cpu: {{ .Values.mincpu }}
               memory: {{ .Values.minram }}
-{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
-{{- else }}
-              nvidia.com/gpu-mem: 1
-{{- end }}
 
         - name: pulseaudio
           image: cerit.io/desktops/pulseaudio:v0.1
@@ -292,7 +231,7 @@ spec:
               memory: 500Mi
 
         - name: web
-          image: cerit.io/desktops/webrtc-web:0.9
+          image: cerit.io/desktops/webrtc-web:0.10
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
@@ -312,4 +251,14 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-{{- end }}
+{{- if .Values.persistenthome }}
+  volumeClaimTemplates:
+  - metadata:
+      name: home
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "nfs-csi"
+      resources:
+        requests:
+          storage: 1Gi
+{{ end }}

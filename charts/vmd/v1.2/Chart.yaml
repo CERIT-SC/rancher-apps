@@ -1,0 +1,19 @@
+apiVersion: v1
+name: vmd
+version: 1.2
+appVersion: 2.0.0a8
+description: VMD 2.0.0a8
+icon: file://charts/vmd/v1.1/logo.svg
+keywords:
+- Remote desktop
+- VMD
+- Webrtc
+- 3D Acceleration
+- applications
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
