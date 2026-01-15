@@ -3,7 +3,7 @@ name: n8n
 description: Flexible AI workflow automation for technical teams.
 type: application
 version: 1.1
-appVersion: 2.3.0
+appVersion: 2.3.5
 icon: file://charts/n8n/v1.1/n8n-logo.svg
 keywords:
 - AI
