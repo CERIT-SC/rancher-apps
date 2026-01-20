@@ -21,14 +21,3 @@ questions:
   required: true
   label: "Admin password"
   description: "Password for the admin user, required to manage the application."
-- variable: persistence.enabled
-  type: boolean
-  required: true
-  default: true
-  label: "Persistent data"
-  description: "When Grafana is uninstalled, the PVC with all data will be retained (recommended)."
-- variable: persistence.volumeName
-  type: string
-  required: false
-  label: "Use existing PVC"
-  description: "The specified existing PVC (containing old Grafana data) will be used instead of creating a new one."
