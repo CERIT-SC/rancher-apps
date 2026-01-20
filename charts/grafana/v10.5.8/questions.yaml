@@ -1,0 +1,36 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Monitoring
+- Grafana
+- Metrics
+
+questions:
+- variable: ingress.hostPrefix
+  type: string
+  required: true
+  default: grafana
+  label: "URL prefix"
+  description: "Prefix used for the URL in format: \"<prefix>.<your_namespace>.dyn.cloud.e-infra.cz\"."
+- variable: persistence.enabled
+  type: boolean
+  required: true
+  default: true
+  label: "Persistent data"
+  description: "When uninstalling the Grafana, the PVC with all data will be retained. (recommended)"
+  group: Data
+- variable: persistence.volumeName
+  type: string
+  required: false
+  label: "Use existing PVC"
+  description: "Specified existing PVC (with old Grafana data) will be used instead of creating a new one."
+  group: Data
+- variable: adminPassword
+  type: password
+  required: true
+  label: "Admin password"
+  description: "Password for admin user, that is required to manage the application."
+  group: Data
