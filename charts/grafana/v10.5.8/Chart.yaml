@@ -9,7 +9,8 @@ apiVersion: v2
 appVersion: 12.3.1
 description: The leading tool for querying and visualizing time series and metrics.
 home: https://grafana.com
-icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+#icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+icon: file://charts/grafana/v10.5.8/logo.svg
 keywords:
 - monitoring
 - metric
