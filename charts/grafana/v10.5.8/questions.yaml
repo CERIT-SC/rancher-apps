@@ -15,20 +15,20 @@ questions:
   required: true
   default: grafana
   label: "URL prefix"
-  description: "Prefix used for the URL in format: \"<prefix>.<your_namespace>.dyn.cloud.e-infra.cz\"."
+  description: "Prefix used for the URL in the format: \"<prefix>.<your_namespace>.dyn.cloud.e-infra.cz\"."
+- variable: adminPassword
+  type: password
+  required: true
+  label: "Admin password"
+  description: "Password for the admin user, required to manage the application."
 - variable: persistence.enabled
   type: boolean
   required: true
   default: true
   label: "Persistent data"
-  description: "When uninstalling the Grafana, the PVC with all data will be retained. (recommended)"
+  description: "When Grafana is uninstalled, the PVC with all data will be retained (recommended)."
 - variable: persistence.volumeName
   type: string
   required: false
   label: "Use existing PVC"
-  description: "Specified existing PVC (with old Grafana data) will be used instead of creating a new one."
-- variable: adminPassword
-  type: password
-  required: true
-  label: "Admin password"
-  description: "Password for admin user, that is required to manage the application."
+  description: "The specified existing PVC (containing old Grafana data) will be used instead of creating a new one."
