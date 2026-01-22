@@ -1,0 +1,48 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Monitoring
+- Grafana
+- Charts
+- Graphs
+
+questions:
+- variable: ingress.hostPrefix
+  type: string
+  required: true
+  default: grafana
+  label: "URL prefix"
+  description: "Prefix used for the URL in the format: \"<prefix>.<your_namespace>.dyn.cloud.e-infra.cz\"."
+- variable: adminPassword
+  type: password
+  required: true
+  label: "Admin password"
+  description: "Password for the admin user, required to manage the application."
+
+- variable: resources.requests.cpu
+  default: 100m
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: resources.limits.cpu
+  default: 200m
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: resources.requests.memory
+  default: 128Mi
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: resources.limits.memory
+  default: 265Mi
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
