@@ -1,0 +1,46 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Monitoring
+- Loki
+- Logs
+
+questions:
+#- variable: loki.tenants.name
+#  type: string
+#  required: true
+#  label: HTTP Basic Auth username
+#- variable: loki.tenants.password
+#  type: password
+#  required: true
+#  label: HTTP Basic Auth password
+
+#- variable: loki.tenants
+#  label: "User credentials (YAML list)"
+#  description: |
+#    Paste a YAML list of tenant objects. Example:
+#    - name: alice
+#      password: secret1
+#    - name: bob
+#      password: secret2
+#  type: multiline
+#  required: true
+#  default: |
+#    - name: loki
+#      password: securepassword
+
+
+#- variable: loki.auth_enabled
+#  type: boolean
+#  default: false
+#  label: "Multi-Tenancy"
+#  description: "Enables multi-tenancy. Requests REQUIRE headers with `X-Scope-OrgID`. ID is used to distinguish tenants."
+#
+#- variable: networkPolicy.enabled
+#  type: boolean
+#  default: false
+
+
