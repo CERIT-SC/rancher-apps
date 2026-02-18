@@ -1,0 +1,13 @@
+
+flow:
+  # Labels to match the application you want to watch. E.g.:
+  #matchLabels:
+  #  app: my-application
+  matchLabels: {}
+
+output:
+  flushIntervalSeconds: 10
+  # Loki enpoint to push the logs. Please enter also the protocol. E.g.:
+  #lokiEndpoint: http://loki-gateway.my-namespace.svc.cluster.local:80
+  #lokiEndpoint: http://loki:3100
+  lokiEndpoint:

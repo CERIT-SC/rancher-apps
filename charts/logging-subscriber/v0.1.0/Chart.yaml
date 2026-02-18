@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 0.1.0
+description: Logging Operator components to gather logs from the specified application.
+icon: file://charts/logging-subscriber/v0.1.0/logo.svg
+keywords:
+- monitoring
+- logs
+name: logging-subscriber
+type: application
+version: 0.1.0

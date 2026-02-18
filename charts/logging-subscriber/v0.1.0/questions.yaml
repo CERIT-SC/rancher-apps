@@ -1,0 +1,26 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Monitoring
+- LogginOperator
+- Logs
+
+questions:
+- variable: flow.matchLabels
+  type: string
+  required: true
+  label: "Match Pod Labels"
+  description: "Enter labels to match the application Pods you need to watch. E.g.: `app: my-application`"
+- variable: output.lokiEndpoint
+  type: string
+  required: true
+  label: "Grafana Loki Endpoint"
+  description: "Enter Grafana Loki Endpoint to push the logs (including protocol). E.g.: `http://loki-gateway:80` or `http://loki-gateway.<namespace_with_loki>.svc.cluster.local:3100`."
+- variable: output.flushIntervalSeconds
+  type: int
+  required: false
+  label: "Flush Interval (seconds)"
+  description: "Flush interval in seconds."
