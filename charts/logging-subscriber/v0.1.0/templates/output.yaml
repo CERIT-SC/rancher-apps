@@ -1,0 +1,11 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: Output
+metadata:
+  name: {{ template "name.full" . }}-output
+spec:
+  loggingRef: rancher-logging-root
+  loki:
+    buffer:
+      flush_interval: "{{ .Values.output.flushIntervalSeconds }}s"
+      tags: '[]'
+    url: {{ .Values.output.lokiEndpoint | quote }}

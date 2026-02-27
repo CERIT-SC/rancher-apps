@@ -1,0 +1,18 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: Flow
+metadata:
+  name: {{ template "name.full" . }}-flow
+spec:
+  filters:
+  - parser:
+      parse:
+        type: none
+      reserve_data: true
+  globalOutputRefs: []
+  localOutputRefs:
+  - {{ template "name.full" . }}-output
+  loggingRef: rancher-logging-root
+  match:
+  - select:
+      labels:
+{{- toYaml .Values.flow.matchLabels | nindent 8 }}
