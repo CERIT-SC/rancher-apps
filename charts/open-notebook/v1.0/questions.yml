@@ -13,7 +13,7 @@ questions:
   description: "Application URL for Open Notebook API access. If not set, defaults to https://open-notebook.{namespace}.dyn.cloud.e-infra.cz"
   default: ""
   type: string
-  group: "Application Settings"
+  group: "Access Settings"
   label: Application URL
   required: false
 - variable: app.password
@@ -22,7 +22,7 @@ questions:
   required: true
   type: password
   label: Admin Password
-  group: "Application Settings"
+  group: "Access Settings"
 - variable: llm.apiKey
   description: "API key for the LLM provider. You can get API keys from OpenAI, Anthropic, Groq, or other supported providers."
   default: ""
@@ -36,10 +36,3 @@ questions:
   type: string
   label: LLM Base URL
   group: "AI Provider Settings"
-- variable: ingress.host
-  description: "Custom hostname for the application. If not set, defaults to open-notebook.{namespace}.dyn.cloud.e-infra.cz"
-  default: ""
-  type: string
-  label: Custom Hostname
-  group: "Ingress Settings"
-  required: false
