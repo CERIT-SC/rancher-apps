@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "open-notebook.fullname" . }}
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: open-notebook
+spec:
+  ports:
+    - port: {{ .Values.service.openNotebook.uiPort }}
+      targetPort: 8502
+      name: ui
+    - port: {{ .Values.service.openNotebook.apiPort }}
+      targetPort: 5055
+      name: api
+  selector:
+    {{- include "open-notebook.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: open-notebook
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "open-notebook.fullname" . }}
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: open-notebook
+spec:
+  replicas: {{ .Values.replicas.openNotebook }}
+  selector:
+    matchLabels:
+      {{- include "open-notebook.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: open-notebook
+  template:
+    metadata:
+      labels:
+        {{- include "open-notebook.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: open-notebook
+    spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+        seccompProfile:
+          type: {{ .Values.securityContext.seccompProfile.type }}
+        fsGroupChangePolicy: {{ .Values.securityContext.fsGroupChangePolicy }}
+      containers:
+        - name: open-notebook
+          image: "{{ .Values.images.openNotebook.repository }}:{{ .Values.images.openNotebook.tag }}"
+          imagePullPolicy: {{ .Values.images.openNotebook.pullPolicy }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 8502
+              name: ui
+            - containerPort: 5055
+              name: api
+          envFrom:
+            - secretRef:
+                name: {{ include "open-notebook.fullname" . }}-env
+            - secretRef:
+                name: {{ include "open-notebook.fullname" . }}-encryption-key
+          volumeMounts:
+            - name: open-notebook-data
+              mountPath: /app/data
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8502
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8502
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources.openNotebook | nindent 12 }}
+      volumes:
+        - name: open-notebook-data
+          persistentVolumeClaim:
+            claimName: {{ include "open-notebook.fullname" . }}-data
+      initContainers:
+        - name: wait-for-surrealdb
+          image: "{{ .Values.images.initContainer.repository }}:{{ .Values.images.initContainer.tag }}"
+          resources:
+            {{- toYaml .Values.resources.initContainer | nindent 12 }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z {{ include "open-notebook.fullname" . }}-surrealdb 8000; do
+                echo "Waiting for surrealdb..."
+                sleep 2
+              done
+---
+{{- if .Values.persistence.openNotebook.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "open-notebook.fullname" . }}-data
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.openNotebook.accessMode }}
+  storageClassName: {{ .Values.persistence.openNotebook.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.openNotebook.size }}
+{{- end }}

@@ -1,0 +1,108 @@
+# Default values for open-notebook.
+
+# Application configuration
+app:
+  # Open Notebook application URL (used for API_URL)
+  # If not set, defaults to https://open-notebook.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+  url: ""
+  # Admin password for Open Notebook
+  password: ""
+
+# OpenAI compatible LLM configuration
+llm:
+  baseUrl: "https://llm.ai.e-infra.cz/v1"
+  apiKey: ""
+
+# SurrealDB configuration
+surrealdb:
+  user: "root"
+  password: "root"
+  namespace: "open_notebook"
+  database: "staging"
+
+# Image configurations
+images:
+  openNotebook:
+    repository: cerit.io/ai/open-notebook
+    tag: "v1.8.0"
+    pullPolicy: Always
+  surrealdb:
+    repository: surrealdb/surrealdb
+    tag: "v2"
+    pullPolicy: Always
+  initContainer:
+    repository: busybox
+    tag: "1.36"
+
+# Replica counts
+replicas:
+  openNotebook: 1
+  surrealdb: 1
+
+# Resource configurations
+resources:
+  openNotebook:
+    limits:
+      cpu: 1
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  surrealdb:
+    limits:
+      cpu: 1
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  initContainer:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+# Persistent Volume Claims
+persistence:
+  openNotebook:
+    enabled: true
+    storageClass: "nfs-csi"
+    accessMode: "ReadWriteMany"
+    size: 5Gi
+  surrealdb:
+    enabled: true
+    storageClass: "nfs-csi"
+    accessMode: "ReadWriteMany"
+    size: 10Gi
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+  # If not set, defaults to open-notebook.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+  host: ""
+  tls:
+    enabled: true
+    # If not set, secretName will be auto-generated from host name
+    secretName: ""
+
+# Service configurations
+service:
+  openNotebook:
+    uiPort: 8502
+    apiPort: 5055
+  surrealdb:
+    port: 8000
+
+# Security context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  seccompProfile:
+    type: RuntimeDefault

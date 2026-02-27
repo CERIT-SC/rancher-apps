@@ -1,0 +1,45 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- AI/ML
+- Productivity
+- Research
+
+questions:
+- variable: app.url
+  description: "Application URL for Open Notebook API access. If not set, defaults to https://open-notebook.{namespace}.dyn.cloud.e-infra.cz"
+  default: ""
+  type: string
+  group: "Application Settings"
+  label: Application URL
+  required: false
+- variable: app.password
+  description: "Admin password for Open Notebook. This password is used to secure your Open Notebook instance."
+  default: "changeme"
+  required: true
+  type: password
+  label: Admin Password
+  group: "Application Settings"
+- variable: llm.apiKey
+  description: "API key for the LLM provider. You can get API keys from OpenAI, Anthropic, Groq, or other supported providers."
+  default: ""
+  required: false
+  type: password
+  label: LLM API Key
+  group: "AI Provider Settings"
+- variable: llm.baseUrl
+  description: "Base URL for OpenAI-compatible LLM API. Use default for CERIT-SC's LLM service or provide your own."
+  default: "https://llm.ai.e-infra.cz/v1"
+  type: string
+  label: LLM Base URL
+  group: "AI Provider Settings"
+- variable: ingress.host
+  description: "Custom hostname for the application. If not set, defaults to open-notebook.{namespace}.dyn.cloud.e-infra.cz"
+  default: ""
+  type: string
+  label: Custom Hostname
+  group: "Ingress Settings"
+  required: false

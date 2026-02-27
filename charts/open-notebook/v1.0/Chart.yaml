@@ -1,0 +1,20 @@
+apiVersion: v2
+name: open-notebook
+description: "An open source, privacy-focused alternative to Google's Notebook LM. Multi-model AI research tool with support for 16+ providers."
+type: application
+version: 1.0
+appVersion: "1.8.0"
+icon: file://charts/open-notebook/v1.0/logo.svg
+keywords:
+- AI
+- LLM
+- Notebook LM
+- Research
+- Privacy
+- Multi-model
+home: https://www.open-notebook.ai
+sources:
+- https://github.com/lfnovo/open-notebook
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz

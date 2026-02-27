@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "open-notebook.fullname" . }}-surrealdb
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: surrealdb
+spec:
+  ports:
+    - port: {{ .Values.service.surrealdb.port }}
+      targetPort: 8000
+      name: http
+  selector:
+    {{- include "open-notebook.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: surrealdb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "open-notebook.fullname" . }}-surrealdb
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: surrealdb
+spec:
+  serviceName: {{ include "open-notebook.fullname" . }}-surrealdb
+  replicas: {{ .Values.replicas.surrealdb }}
+  selector:
+    matchLabels:
+      {{- include "open-notebook.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: surrealdb
+  template:
+    metadata:
+      labels:
+        {{- include "open-notebook.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: surrealdb
+    spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+        seccompProfile:
+          type: {{ .Values.securityContext.seccompProfile.type }}
+        fsGroupChangePolicy: {{ .Values.securityContext.fsGroupChangePolicy }}
+      containers:
+        - name: surrealdb
+          image: "{{ .Values.images.surrealdb.repository }}:{{ .Values.images.surrealdb.tag }}"
+          imagePullPolicy: {{ .Values.images.surrealdb.pullPolicy }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - secretRef:
+                name: {{ include "open-notebook.fullname" . }}-env
+          env:
+            - name: SURREAL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "open-notebook.fullname" . }}-surrealdb-credentials
+                  key: username
+            - name: SURREAL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "open-notebook.fullname" . }}-surrealdb-credentials
+                  key: password
+          resources:
+            {{- toYaml .Values.resources.surrealdb | nindent 12 }}
+          volumeMounts:
+            - name: surrealdb-data
+              mountPath: /mydata
+          args:
+            - start
+            - --log
+            - info
+            - --user
+            - $(SURREAL_USER)
+            - --pass
+            - $(SURREAL_PASS)
+            - rocksdb:/mydata/mydatabase.db
+      volumes:
+        - name: surrealdb-data
+          persistentVolumeClaim:
+            claimName: {{ include "open-notebook.fullname" . }}-surrealdb-data
+---
+{{- if .Values.persistence.surrealdb.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "open-notebook.fullname" . }}-surrealdb-data
+  labels:
+    {{- include "open-notebook.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.surrealdb.accessMode }}
+  storageClassName: {{ .Values.persistence.surrealdb.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.surrealdb.size }}
+{{- end }}
