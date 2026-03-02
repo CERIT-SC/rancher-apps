@@ -15,4 +15,4 @@ spec:
   match:
   - select:
       labels:
-{{- toYaml .Values.flow.matchLabels | nindent 8 }}
+{{- include .Values.flow.matchLabels | nindent 8 }}

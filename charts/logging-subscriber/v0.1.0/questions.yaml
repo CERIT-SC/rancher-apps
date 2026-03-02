@@ -10,7 +10,7 @@ categories:
 
 questions:
 - variable: flow.matchLabels
-  type: string
+  type: labels
   required: true
   label: "Match Pod Labels"
   description: "Enter labels to match the application Pods you need to watch. E.g.: `app: my-application`"
