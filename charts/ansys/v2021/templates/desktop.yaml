@@ -220,7 +220,7 @@ spec:
              containerPort: 5900
 {{- else }}
         - name: xserver
-          image: cerit.io/desktops/xserver:v0.3
+          image: cerit.io/desktops/xserver:v0.4
           env:
           - name: NVIDIA_DRIVER_CAPABILITIES
             value: all
