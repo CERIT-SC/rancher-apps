@@ -219,20 +219,11 @@ spec:
             limits:
               cpu: {{ .Values.maxcpu }}
               memory: {{ .Values.maxram }}
-{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
-{{- else }}
-              cerit.io/gpu-mem: 1
-{{- end }}
             requests:
               cpu: {{ .Values.mincpu }}
               memory: {{ .Values.minram }}
-{{- if eq .Values.gpu "Whole" }}
               nvidia.com/gpu: 1
-{{- else }}
-              cerit.io/gpu-mem: 1
-{{- end }}
-
         - name: pulseaudio
           image: cerit.io/desktops/pulseaudio:v0.1
           imagePullPolicy: IfNotPresent
