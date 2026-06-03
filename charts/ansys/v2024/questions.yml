@@ -73,11 +73,3 @@ questions:
   type: string
   label: Max RAM
   group: "Resources"
-- variable: gpu
-  description: "Select GPU type"
-  label: GPU
-  options:
-  - Whole
-  - Part
-  group: "Resources"
-  type: enum
