@@ -1,0 +1,73 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.5.0
+
+categories:
+  - Data Specification
+  - Data Modeling
+  - Development
+
+questions:
+  - variable: host
+    default: "dataspecer"
+    description: "Prefix for the application hostname. The full URL will be: <host>.<namespace>.dyn.cloud.e-infra.cz. Use a unique prefix to avoid collisions."
+    type: string
+    label: Hostname Prefix
+    required: true
+    group: "Access Settings"
+    invalid_chars: "{}"
+
+  - variable: basicAuth.user
+    default: ""
+    required: true
+    description: "Username for basic authentication to the Dataspecer web interface."
+    type: string
+    label: Web Username
+    group: "Authentication"
+    invalid_chars: "{}"
+
+  - variable: basicAuth.password
+    default: ""
+    required: true
+    description: "Password for basic authentication. Must be at least 8 characters. Avoid trivial passwords."
+    type: password
+    label: Web Password
+    group: "Authentication"
+    min_length: 8
+    invalid_chars: "{}"
+
+  - variable: persistence.size
+    default: "1Gi"
+    description: "Size of the persistent volume for the SQLite database. Data is preserved across restarts."
+    type: string
+    label: Database Storage Size
+    group: "Storage"
+
+  - variable: resources.requests.cpu
+    default: "100m"
+    description: "Minimum guaranteed CPU for the Dataspecer pod."
+    type: string
+    label: Min CPU
+    group: "Resources"
+
+  - variable: resources.requests.memory
+    default: "256Mi"
+    description: "Minimum guaranteed memory for the Dataspecer pod."
+    type: string
+    label: Min RAM
+    group: "Resources"
+
+  - variable: resources.limits.cpu
+    default: "1"
+    description: "Maximum allowed CPU for the Dataspecer pod."
+    type: string
+    label: Max CPU
+    group: "Resources"
+
+  - variable: resources.limits.memory
+    default: "512Mi"
+    description: "Maximum allowed memory for the Dataspecer pod."
+    type: string
+    label: Max RAM
+    group: "Resources"

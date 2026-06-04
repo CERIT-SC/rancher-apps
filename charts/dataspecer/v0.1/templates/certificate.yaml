@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "dataspecer.fullname" . }}-tls
+  labels:
+    {{- include "dataspecer.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "dataspecer.fullname" . }}-tls
+  issuerRef:
+    name: letsencrypt-gateway
+    kind: ClusterIssuer
+  dnsNames:
+    - {{ .Values.host }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz

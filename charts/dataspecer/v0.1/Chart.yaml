@@ -1,0 +1,25 @@
+apiVersion: v2
+name: dataspecer
+description: Dataspecer — a set of tools for effortless management and creation of data specifications. This instance provides a conceptual-model editor, a data-specification editor, and a manager, all protected behind basic authentication.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - Data Specification
+  - Data Modeling
+  - Conceptual Model
+  - OpenAPI
+  - SHACL
+  - JSON
+  - XML
+  - CSV
+  - SPARQL
+  - RDF
+home: https://dataspecer.com
+icon: file://charts/dataspecer/v0.1/icon.svg
+sources:
+  - https://github.com/dataspecer/dataspecer
+maintainers:
+  - name: Dataspecer Team
+    email: info@dataspecer.com
+engine: gotpl

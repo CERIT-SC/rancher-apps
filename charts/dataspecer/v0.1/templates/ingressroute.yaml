@@ -1,0 +1,43 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "dataspecer.fullname" . }}
+  annotations:
+    external-dns.alpha.kubernetes.io/target: kuba-lb.cloud.e-infra.cz
+    kubernetes.io/ingress.class: traefik
+  labels:
+    {{- include "dataspecer.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.host }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz`)
+      kind: Rule
+      services:
+        - name: {{ include "dataspecer.fullname" . }}
+          port: {{ .Values.service.port }}
+      middlewares:
+        - name: {{ include "dataspecer.fullname" . }}-basic-auth
+  tls:
+    secretName: {{ include "dataspecer.fullname" . }}-tls
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "dataspecer.fullname" . }}-redirect
+  annotations:
+    external-dns.alpha.kubernetes.io/target: kuba-lb.cloud.e-infra.cz
+    kubernetes.io/ingress.class: traefik
+  labels:
+    {{- include "dataspecer.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`{{ .Values.host }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz`)
+      kind: Rule
+      services:
+        - name: {{ include "dataspecer.fullname" . }}
+          port: {{ .Values.service.port }}
+      middlewares:
+        - name: {{ include "dataspecer.fullname" . }}-redirect-https

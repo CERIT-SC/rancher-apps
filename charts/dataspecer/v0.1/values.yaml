@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: cerit.io/ai-karel/dataspecer
+  pullPolicy: IfNotPresent
+  digest: sha256:7132996a3c6014d73aa85115ea7f75cfb8e0400fad52c9bbe1914dd9b1ad8da2
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+host: dataspecer
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+basicAuth:
+  user: ""
+  password: ""

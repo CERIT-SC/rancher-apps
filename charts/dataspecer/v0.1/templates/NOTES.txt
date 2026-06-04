@@ -1,0 +1,5 @@
+Dataspecer has been deployed.
+
+URL:      https://{{ .Values.host }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz
+Username: {{ .Values.basicAuth.user }}
+Password: {{ .Values.basicAuth.password }}

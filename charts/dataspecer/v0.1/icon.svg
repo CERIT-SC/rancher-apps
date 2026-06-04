@@ -1,0 +1,49 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="faceTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="faceLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="faceRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: Isometric Data Cube -->
+  <g transform="translate(90, 45) scale(0.55)">
+    <!-- Faces -->
+    <path d="M256 60 L386 135 L256 210 L126 135 Z" fill="url(#faceTop)"/>
+    <path d="M126 135 L256 210 L256 360 L126 285 Z" fill="url(#faceLeft)"/>
+    <path d="M256 210 L386 135 L386 285 L256 360 Z" fill="url(#faceRight)"/>
+    
+    <!-- Wireframe / Connections -->
+    <g stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+      <polyline points="256,60 126,135 126,285 256,360 386,285 386,135 256,60"/>
+      <line x1="126" y1="135" x2="256" y2="210"/>
+      <line x1="256" y1="210" x2="386" y2="135"/>
+      <line x1="256" y1="210" x2="256" y2="360"/>
+    </g>
+    
+    <!-- Data Nodes -->
+    <circle cx="256" cy="60" r="14" fill="white"/>
+    <circle cx="126" cy="135" r="14" fill="white"/>
+    <circle cx="386" cy="135" r="14" fill="white"/>
+    <circle cx="256" cy="210" r="18" fill="white"/>
+    <circle cx="126" cy="285" r="14" fill="white"/>
+    <circle cx="386" cy="285" r="14" fill="white"/>
+    <circle cx="256" cy="360" r="14" fill="white"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="320" y="190" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="120" font-weight="800" fill="#0f172a" letter-spacing="-2">
+    DataSpecer
+  </text>
+  <text x="325" y="230" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#64748b" letter-spacing="4">
+    DATA SPECIFICATION TOOLS
+  </text>
+</svg>
