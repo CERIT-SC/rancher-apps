@@ -101,6 +101,7 @@ spec:
           volumeMounts:
             - name: mongo-data
               mountPath: /data/db
+              subPath: mongo-db
             - name: mongo-tmp
               mountPath: /tmp
             - name: mongo-init
