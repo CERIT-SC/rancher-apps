@@ -20,8 +20,6 @@ images:
 # --- Overleaf application settings ------------------------------------------
 overleaf:
   appName: "Overleaf Community Edition Plus"
-  adminEmail: ""
-  inviteTokenSecret: ""
   emailConfirmationDisabled: "true"
   enabledLinkedFileTypes: "project_file,project_output_file,zotero"
 
