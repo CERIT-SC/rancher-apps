@@ -5,3 +5,5 @@ type: application
 version: 0.1.0
 appVersion: "v6.1.0"
 icon: file://charts/overleaf-cep/0.1.0/overleaf-icon.svg
+annotations:
+  catalog.cattle.io/display-name: "Overleaf CE Plus"

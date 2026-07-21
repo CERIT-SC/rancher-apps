@@ -5,7 +5,7 @@ host: overleaf
 # --- Images ------------------------------------------------------------------
 images:
   sharelatex:
-    repository: cerit.io/rancher-apps/overleaf-cep:
+    repository: cerit.io/rancher-apps/overleaf-cep
     tag: v6.1.0
     pullPolicy: Always
   mongo:

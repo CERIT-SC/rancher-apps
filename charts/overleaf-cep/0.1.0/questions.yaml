@@ -1,5 +1,4 @@
 questions:
-  # --- General settings ---
   - variable: host
     label: "Hostname"
     description: "Short name (no dot) expands to <host>-<namespace>.dyn.cloud.e-infra.cz. Use an FQDN (with dots) for a custom domain."
