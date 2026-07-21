@@ -1,0 +1,265 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: overleaf
+  labels:
+    app.kubernetes.io/name: overleaf
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: overleaf
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: overleaf
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroup: 33
+      shareProcessNamespace: true
+
+      volumes:
+        - name: entrypoint
+          configMap:
+            name: overleaf-entrypoint
+            defaultMode: 0755
+        - name: mongo-init
+          configMap:
+            name: overleaf-mongo-init
+            defaultMode: 0755
+        - name: overleaf-secrets-vol
+          secret:
+            secretName: overleaf-secrets
+            defaultMode: 0400
+        - name: container-env
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-conf
+          emptyDir: {}
+        - name: nginx-body
+          emptyDir: {}
+        - name: mongo-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: overleaf-data
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: mongo-tmp
+          emptyDir: {}
+        - name: redis-data
+          emptyDir: {}
+
+      initContainers:
+        # --- init: initiate mongo replica set (run once after mongod starts) ---
+        # We can't run this as an initContainer because mongod must already be
+        # listening. Instead the sharelatex container runs it via an init wrapper
+        # below (after waiting for mongo). This init container just pre-creates
+        # the container_environment files from the Secret so the entrypoint can
+        # source them.
+
+      containers:
+        # ===================================================================
+        # MongoDB sidecar — runs as uid 999 (mongodb), non-root
+        # ===================================================================
+        - name: mongo
+          image: {{ include "overleaf.image" .Values.images.mongo | quote }}
+          imagePullPolicy: {{ .Values.images.mongo.pullPolicy }}
+          command: ["mongod"]
+          args:
+            - --replSet
+            - overleaf
+            - --bind_ip
+            - 127.0.0.1
+            - --port
+            - "27017"
+            - --dbpath
+            - /data/db
+          ports:
+            - name: mongo
+              containerPort: 27017
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            {{- toYaml .Values.resources.mongo | nindent 12 }}
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+            - name: mongo-tmp
+              mountPath: /tmp
+            - name: mongo-init
+              mountPath: /docker-entrypoint-initdb.d
+
+        # ===================================================================
+        # Redis sidecar — runs as uid 999 (redis), non-root
+        # ===================================================================
+        - name: redis
+          image: {{ include "overleaf.image" .Values.images.redis | quote }}
+          imagePullPolicy: {{ .Values.images.redis.pullPolicy }}
+          command: ["redis-server"]
+          args: ["--bind", "127.0.0.1", "--port", "6379", "--save", "", "--appendonly", "no"]
+          ports:
+            - name: redis
+              containerPort: 6379
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            {{- toYaml .Values.resources.redis | nindent 12 }}
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+
+        # ===================================================================
+        # Overleaf (sharelatex) — runs as uid 33 (www-data), non-root
+        # Uses a ConfigMap-injected entrypoint that replaces phusion my_init.
+        # ===================================================================
+        - name: sharelatex
+          image: {{ include "overleaf.image" .Values.images.sharelatex | quote }}
+          imagePullPolicy: {{ .Values.images.sharelatex.pullPolicy }}
+          command: ["/bin/bash", "/entrypoint/entrypoint.sh"]
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: OVERLEAF_APP_NAME
+              value: {{ .Values.overleaf.appName | quote }}
+            - name: OVERLEAF_MONGO_URL
+              value: "mongodb://127.0.0.1:27017/sharelatex"
+            - name: OVERLEAF_REDIS_HOST
+              value: "127.0.0.1"
+            - name: REDIS_HOST
+              value: "127.0.0.1"
+            - name: OVERLEAF_SITE_URL
+              value: "https://{{ include "overleaf.host" . }}"
+            - name: OVERLEAF_ADMIN_EMAIL
+              value: {{ .Values.overleaf.adminEmail | quote }}
+            - name: OVERLEAF_NAV_TITLE
+              value: {{ .Values.overleaf.appName | quote }}
+            - name: EMAIL_CONFIRMATION_DISABLED
+              value: {{ .Values.overleaf.emailConfirmationDisabled | quote }}
+            - name: ENABLED_LINKED_FILE_TYPES
+              value: {{ .Values.overleaf.enabledLinkedFileTypes | quote }}
+            - name: ENABLE_CONVERSIONS
+              value: "true"
+            - name: WEB_API_USER
+              value: "overleaf"
+            - name: ADMIN_PRIVILEGE_AVAILABLE
+              value: "true"
+            - name: OVERLEAF_CONFIG
+              value: "/etc/overleaf/settings.js"
+            - name: OVERLEAF_ALLOW_PUBLIC_ACCESS
+              value: "false"
+            - name: OVERLEAF_EMAIL_FROM_ADDRESS
+              value: {{ .Values.overleaf.email.fromAddress | quote }}
+            - name: OVERLEAF_EMAIL_DRIVER
+              value: {{ .Values.overleaf.email.driver | quote }}
+            - name: OVERLEAF_EMAIL_SMTP_HOST
+              value: {{ .Values.overleaf.email.smtpHost | quote }}
+            - name: OVERLEAF_EMAIL_SMTP_PORT
+              value: {{ .Values.overleaf.email.smtpPort | quote }}
+            - name: OVERLEAF_EMAIL_SMTP_SECURE
+              value: {{ .Values.overleaf.email.smtpSecure | quote }}
+            - name: OVERLEAF_EMAIL_SMTP_IGNORE_TLS
+              value: {{ .Values.overleaf.email.smtpIgnoreTLS | quote }}
+            - name: NODE_ENV
+              value: "production"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: OVERLEAF_INVITE_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: OVERLEAF_INVITE_TOKEN_SECRET
+            - name: CRYPTO_RANDOM
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: CRYPTO_RANDOM
+            - name: WEB_API_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: WEB_API_PASSWORD
+            - name: STAGING_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: STAGING_PASSWORD
+            - name: V1_HISTORY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: V1_HISTORY_PASSWORD
+            - name: OT_JWT_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: OT_JWT_AUTH_KEY
+            - name: GITHUB_TOKEN_CIPHER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: overleaf-secrets
+                  key: GITHUB_TOKEN_CIPHER_PASSWORD
+          securityContext:
+            runAsUser: 33
+            runAsGroup: 33
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            {{- toYaml .Values.resources.sharelatex | nindent 12 }}
+          volumeMounts:
+            - name: entrypoint
+              mountPath: /entrypoint
+            - name: mongo-init
+              mountPath: /overleaf/bin/mongo-init
+            - name: overleaf-secrets-vol
+              mountPath: /etc/container_environment
+              readOnly: true
+            - name: nginx-run
+              mountPath: /run
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-conf
+              mountPath: /nginx-conf
+            - name: nginx-body
+              mountPath: /var/lib/nginx
+            {{- if .Values.persistence.enabled }}
+            - name: mongo-data
+              mountPath: /var/lib/overleaf
+              subPath: overleaf-data
+            {{- end }}
+          startupProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 30
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 5

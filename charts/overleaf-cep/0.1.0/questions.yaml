@@ -1,0 +1,23 @@
+questions:
+  # --- General settings ---
+  - variable: host
+    label: "Hostname"
+    description: "Short name (no dot) expands to <host>-<namespace>.dyn.cloud.e-infra.cz. Use an FQDN (with dots) for a custom domain."
+    type: hostname
+    group: "General"
+    required: true
+    default: "overleaf"
+
+  - variable: overleaf.initialUserEmail
+    label: "Initial Admin User Email"
+    description: "On first start, create this user as admin and send an activation email. Leave empty to skip."
+    type: string
+    group: "Initial User"
+    default: ""
+
+  # --- Persistence ---
+  - variable: persistence.enabled
+    label: "Enable Persistent Storage"
+    type: boolean
+    group: "Persistence"
+    default: true

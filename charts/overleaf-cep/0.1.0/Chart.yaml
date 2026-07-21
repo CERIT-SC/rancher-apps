@@ -1,0 +1,10 @@
+apiVersion: v2
+name: overleaf-cep
+description: Overleaf Community Edition Plus — monolithic sharelatex container with references, linked-url-proxy, Zotero support, MongoDB and Redis sidecars
+type: application
+version: 0.1.0
+appVersion: "v6.1.0"
+icon: file://charts/overleaf-cep/0.1.0/overleaf-icon.svg
+annotations:
+  catalog.cattle.io/display-name: "Overleaf CE Plus"
+  catalog.cattle.io/release-name: overleaf

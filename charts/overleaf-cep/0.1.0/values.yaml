@@ -1,0 +1,60 @@
+# --- External hostname for the HTTPRoute -------------------------------------
+# Short host (no dot) -> expands to <host>-<namespace>.dyn.cloud.e-infra.cz
+host: overleaf
+
+# --- Images ------------------------------------------------------------------
+images:
+  sharelatex:
+    repository: cerit.io/rancher-apps/overleaf-cep:
+    tag: v6.1.0
+    pullPolicy: Always
+  mongo:
+    repository: mongo
+    digest: sha256:ffa440e8d62533e24a67696ae1bbb46e610ebb3167d65abd122b496ae06d28e6
+    pullPolicy: IfNotPresent
+  redis:
+    repository: redis
+    digest: sha256:e608fb94319e1aa53cecadbb051faa36d5c495f1142b99ca6673b41c2b428c0a
+    pullPolicy: IfNotPresent
+
+# --- Overleaf application settings ------------------------------------------
+overleaf:
+  appName: "Overleaf Community Edition Plus"
+  adminEmail: ""
+  inviteTokenSecret: ""
+  emailConfirmationDisabled: "true"
+  enabledLinkedFileTypes: "project_file,project_output_file,zotero"
+
+  # --- Email / SMTP -----------------------------------------------------------
+  # Uses relay.muni.cz:25 (no auth, plain SMTP).
+  email:
+    fromAddress: "root@cerit-sc.cz"
+    driver: "smtp"
+    smtpHost: "relay.muni.cz"
+    smtpPort: "25"
+    smtpSecure: "false"
+    smtpIgnoreTLS: "true"
+
+  # --- Initial admin user -----------------------------------------------------
+  # On first start, create this user as an admin and send an activation email
+  # with a password-set link. Leave empty to skip.
+  initialUserEmail: ""
+
+# --- Resource requests/limits per container ----------------------------------
+resources:
+  sharelatex:
+    requests: { cpu: "200m", memory: "512Mi" }
+    limits:   { cpu: "2",    memory: "2Gi" }
+  mongo:
+    requests: { cpu: "100m", memory: "256Mi" }
+    limits:   { cpu: "1",    memory: "1Gi" }
+  redis:
+    requests: { cpu: "50m",  memory: "64Mi" }
+    limits:   { cpu: "1", memory: "256Mi" }
+
+# --- Persistence -------------------------------------------------------------
+persistence:
+  enabled: true
+  storageClass: "rook-cephfs"
+  size: 100Gi
+  accessMode: ReadWriteMany

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: overleaf-mongo-init
+  labels:
+    app.kubernetes.io/name: overleaf
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  # Initiates the MongoDB replica set (Overleaf requires a replset for transactions).
+  # Mirrors bin/shared/mongodb-init-replica-set.js, using localhost since mongo
+  # runs as a sidecar in the same pod.
+  init-replica-set.js: |
+    rs.initiate({ _id: 'overleaf', members: [{ _id: 0, host: '127.0.0.1:27017' }] })

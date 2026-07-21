@@ -1,0 +1,24 @@
+Overleaf Community Edition Plus is deployed.
+
+  URL:  https://{{ include "overleaf.host" . }}/
+
+The application takes ~1-2 minutes to start (MongoDB replset init + migrations
++ all node microservices). Check readiness with:
+
+  kubectl rollout status deployment/overleaf
+
+Pod logs (sharelatex container):
+
+  kubectl logs deploy/overleaf -c sharelatex
+
+This chart runs Overleaf CEP as a monolithic pod (sharelatex + MongoDB + Redis
+sidecars) using a custom CEP build (references, linked-url-proxy, Zotero),
+made non-root via kubelet runAsUser overrides to satisfy the cluster's
+CIS/"restricted" PodSecurity profile.
+
+Registration is disabled (403 on /register). Create users via:
+
+  kubectl exec deploy/overleaf -c sharelatex -- bash -c \
+    'cd /overleaf/services/web && node modules/server-ce-scripts/scripts/create-user.mjs --admin --email=you@example.com'
+
+Or invite them in the UI.
