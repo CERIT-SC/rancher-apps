@@ -1,0 +1,14 @@
+{{- $hostTemplate := printf "%s-%s.dyn.cloud.e-infra.cz" .Release.Name .Release.Namespace }}
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Please be patient while the chart is being deployed **
+
+{{- if ne .Values.host "" }}
+Navigate browser to: https://{{ .Values.host }}
+{{- else }}
+Navigate browser to: https://{{ $hostTemplate }}
+{{- end }}
+
+If you encounter an installation error, make sure you have selected a unique host (ideally one that includes your namespace) and that you have entered a password.
