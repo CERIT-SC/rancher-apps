@@ -44,11 +44,11 @@ spec:
                   name: {{ include "matrix-hermes.fullname" . }}
                   key: OPENAI_API_KEY
             - name: MATRIX_FREE_RESPONSE_ROOMS
-              value: {{ .Values.matrixRoom }}
+              value: {{ .Values.matrixRoom | quote }}
             - name: MATRIX_ALLOWED_ROOMS
-              value: {{ .Values.matrixRoom }}
+              value: {{ .Values.matrixRoom | quote }}
             - name: MATRIX_HOME_ROOM
-              value: {{ .Values.matrixRoom }} 
+              value: {{ .Values.matrixRoom | quote }} 
           envFrom:
             - secretRef:
                 name: {{ include "matrix-hermes.fullname" . }}-env
