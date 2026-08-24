@@ -20,6 +20,20 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
+      initContainers:
+        - name: populate-data
+          image: "cerit.io/ai/hermes:{{ .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command: ["/bin/sh", "-c", "cp -a --update=none /opt/data/. /mnt/data/"]
+          volumeMounts:
+            - name: data
+              mountPath: /mnt/data
       containers:
         - name: hermes
           image: "cerit.io/ai/hermes:{{ .Chart.AppVersion }}"
@@ -54,9 +68,14 @@ spec:
                 name: {{ include "matrix-hermes.fullname" . }}-env
                 optional: true
           volumeMounts:
-            - name: data
+            - name: home
               mountPath: /home/ubuntu
+            - name: data
+              mountPath: /opt/data
       volumes:
-        - name: data
+        - name: home
           persistentVolumeClaim:
             claimName: {{ include "matrix-hermes.fullname" . }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "matrix-hermes.fullname" . }}-data

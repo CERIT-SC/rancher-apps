@@ -7,3 +7,4 @@ k8sApiAccess: none
 
 persistence:
   size: 200Gi
+  dataSize: 100Gi

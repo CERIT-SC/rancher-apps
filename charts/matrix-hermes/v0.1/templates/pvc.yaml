@@ -11,3 +11,17 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}-data
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+spec:
+  storageClassName: rook-cephfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.dataSize }}
