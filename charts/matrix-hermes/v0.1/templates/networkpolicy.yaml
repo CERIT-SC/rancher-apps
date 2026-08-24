@@ -12,6 +12,22 @@ spec:
   policyTypes:
     - Egress
   egress:
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: rke2-traefik-kube-system
+              app.kubernetes.io/name: rke2-traefik
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: TCP
+          port: 8443
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0
