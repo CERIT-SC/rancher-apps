@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "matrix-hermes.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-hermes.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "matrix-hermes.fullname" . }}
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: hermes
+          image: "cerit.io/ai/hermes:{{ .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+            limits:
+              cpu: "4"
+              memory: 16Gi
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-hermes.fullname" . }}
+                  key: OPENAI_API_KEY
+            - name: MATRIX_FREE_RESPONSE_ROOMS
+              value: {{ .Values.matrixRoom }}
+            - name: MATRIX_ALLOWED_ROOMS
+              value: {{ .Values.matrixRoom }}
+            - name: MATRIX_HOME_ROOM
+              value: {{ .Values.matrixRoom }} 
+          envFrom:
+            - secretRef:
+                name: {{ include "matrix-hermes.fullname" . }}-env
+                optional: true
+          volumeMounts:
+            - name: data
+              mountPath: /home/ubuntu
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "matrix-hermes.fullname" . }}

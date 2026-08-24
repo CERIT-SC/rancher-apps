@@ -1,0 +1,6 @@
+image: "cerit.io/os/samba:4.19.5"
+pvc: ""
+username: "user"
+password: ""
+public: false
+subpath: ""

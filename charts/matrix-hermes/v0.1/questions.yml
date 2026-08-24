@@ -1,0 +1,37 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- Matrix
+- Hermes
+- AI
+
+questions:
+- variable: openaiApiKey
+  default: false
+  type: password
+  label: OpenAI API KEY
+  group: Environment
+  description: "Enter your OpenAI API key for https://llm.ai.e-infra.cz service"
+- variable: matrixEnv
+  label: "Matrix configuration"
+  description: "Copy&Paste Matrix configuration from https://app.matrix.cloud.e-infra.cz/"
+  type: multiline
+  required: false
+  group: Environment
+- variable: k8sApiAccess
+  label: "Kubernetes API access"
+  description: >-
+      none = no API access at all (token not mounted).
+      readonly = get/list/watch on resources in this namespace.
+      fullaccess = full control over resources in this namespace.
+  type: enum
+  default: "none"
+  required: true
+  group: "Permissions"
+  options:
+    - "none"
+    - "readonly"
+    - "fullaccess"
