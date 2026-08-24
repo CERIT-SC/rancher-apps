@@ -19,7 +19,13 @@ questions:
   label: "Matrix configuration"
   description: "Copy&Paste Matrix configuration from https://app.matrix.cloud.e-infra.cz/"
   type: multiline
-  required: false
+  required: true
+  group: Environment
+- variable: matrixRoom
+  label: "Matrix room"
+  description: "ID if the matrix room created for the agent, similar to !KYOhcyN:matrix.cloud.e-infra.cz"
+  type: string
+  required: true
   group: Environment
 - variable: k8sApiAccess
   label: "Kubernetes API access"
