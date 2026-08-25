@@ -30,7 +30,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-          command: ["/bin/sh", "-c", "cp -a --update=none /opt/data/. /mnt/data/"]
+          command: ["/bin/sh", "-c", "cp -r --update=none /opt/data/. /mnt/data/"]
           volumeMounts:
             - name: data
               mountPath: /mnt/data
