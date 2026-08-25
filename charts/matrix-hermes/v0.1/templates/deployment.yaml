@@ -15,6 +15,7 @@ spec:
         {{- include "matrix-hermes.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "matrix-hermes.fullname" . }}
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         fsGroup: 1000
