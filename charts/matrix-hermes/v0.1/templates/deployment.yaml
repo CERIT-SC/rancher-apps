@@ -15,7 +15,9 @@ spec:
         {{- include "matrix-hermes.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "matrix-hermes.fullname" . }}
+{{- if ne .Values.k8sApiAccess "none" }}
       automountServiceAccountToken: true
+{{- end }}
       securityContext:
         runAsNonRoot: true
         fsGroup: 1000
