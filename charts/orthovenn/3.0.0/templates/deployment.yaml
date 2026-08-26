@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orthovenn.fullname" . }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "orthovenn.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "orthovenn.labels" . | nindent 8 }}
+        {{- include "orthovenn.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if not .Values.db.auth.existingSecret }}
+        checksum/db-secret: {{ include "orthovenn.db.password" . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "orthovenn.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: mysql
+          image: {{ include "orthovenn.image" .Values.db.image }}
+          imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "orthovenn.db.secretName" . }}
+                  key: {{ .Values.db.auth.secretKey }}
+            {{- with .Values.db.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          securityContext:
+            {{- toYaml .Values.db.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.db.resources | nindent 12 }}
+          ports:
+            - name: mysql
+              containerPort: {{ .Values.db.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: mysql
+              mountPath: /var/lib/mysql
+        - name: api
+          image: {{ include "orthovenn.image" .Values.api.image }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          {{- with .Values.api.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.api.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.api.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.api.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.api.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: home
+              mountPath: /home/orthovenn3/result
+              subPath: result
+            - name: home
+              mountPath: /home/orthovenn3/work
+              subPath: work
+        - name: web
+          image: {{ include "orthovenn.image" .Values.web.image }}
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          env:
+            - name: API_URL
+              value: {{ .Values.web.apiUrl | default (printf "http://127.0.0.1:%v" .Values.api.port) | quote }}
+            {{- with .Values.web.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          securityContext:
+            {{- toYaml .Values.web.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          ports:
+            - name: web
+              containerPort: {{ .Values.web.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: home
+              mountPath: /data/orthovenn3/api/result
+              subPath: result
+            - name: run
+              mountPath: /var/run
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: mysql
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.db.existingClaim | default (printf "%s-db" (include "orthovenn.fullname" .)) }}
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.home.existingClaim | default (printf "%s-home" (include "orthovenn.fullname" .)) }}
+        - name: run
+          emptyDir: {}

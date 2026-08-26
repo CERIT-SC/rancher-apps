@@ -1,0 +1,70 @@
+# Rancher install form. Values not listed here keep their values.yaml defaults
+# and can be changed from the YAML view of the form.
+#
+# The application URL is not an input; it is derived from the release name, the
+# namespace and the cluster as
+# https://<release-name>-<namespace>.dyn.cloud.e-infra.cz.
+questions:
+  - variable: basicAuth.username
+    label: Login name
+    description: >-
+      OrthoVenn has no accounts of its own, so the whole site is put behind HTTP
+      basic auth. Everyone who should reach it uses this one login.
+    type: string
+    default: orthovenn
+    required: true
+    group: Access
+
+  - variable: basicAuth.password
+    label: Password
+    description: Password for the login above. Pick a strong one - the site is public.
+    type: password
+    required: true
+    min_length: 8
+    group: Access
+
+
+  - variable: persistence.home.size
+    label: Data volume size
+    description: >-
+      Space for uploaded genomes, intermediate work files and analysis results.
+    type: string
+    default: 10Gi
+    required: true
+    group: Storage
+
+  - variable: api.resources.requests.cpu
+    label: CPU reserved
+    description: >-
+      CPU cores reserved for the analysis container.
+    type: string
+    default: "2"
+    required: true
+    group: Analysis resources
+
+  - variable: api.resources.limits.cpu
+    label: CPU limit
+    description: >-
+      Hard ceiling on CPU.
+    type: string
+    default: "4"
+    required: true
+    group: Analysis resources
+
+  - variable: api.resources.requests.memory
+    label: Memory reserved
+    description: >-
+      Memory reserved for the analysis container.
+    type: string
+    default: 8Gi
+    required: true
+    group: Analysis resources
+
+  - variable: api.resources.limits.memory
+    label: Memory limit
+    description: >-
+      Hard ceiling on memory. The container is killed when it exceeds this.
+    type: string
+    default: 16Gi
+    required: true
+    group: Analysis resources

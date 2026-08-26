@@ -1,0 +1,52 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as release {{ .Release.Name }}.
+
+{{- if .Values.ingressRoute.enabled }}
+
+Application URL:
+
+  {{ if .Values.ingressRoute.tls.enabled }}https{{ else }}http{{ end }}://{{ include "orthovenn.host" . }}
+
+The route is served by Traefik on entry point(s) {{ join ", " .Values.ingressRoute.entryPoints }}:
+
+  kubectl get ingressroute {{ include "orthovenn.fullname" . }}
+{{- if .Values.certificate.create }}
+  kubectl get certificate {{ include "orthovenn.fullname" . }}
+{{- end }}
+
+{{- if .Values.basicAuth.enabled }}
+
+The site is behind HTTP basic auth.
+{{- if .Values.basicAuth.existingSecret }}
+The credentials come from the existing Secret "{{ .Values.basicAuth.existingSecret }}".
+{{- else }}
+
+  Basic auth credentials (store these somewhere safe):
+    username: {{ include "orthovenn.basicAuth.username" . }}
+    password: {{ include "orthovenn.basicAuth.password" . }}
+{{- end }}
+{{- end }}
+{{- else }}
+
+The IngressRoute is disabled, so the application is not exposed outside the
+cluster. Reach the frontend with a port-forward:
+
+  kubectl port-forward svc/{{ include "orthovenn.fullname" . }}-web 8080:{{ .Values.service.web.port }}
+{{- end }}
+
+Database:
+
+{{- if .Values.db.auth.existingSecret }}
+  The MySQL root password is taken from the existing Secret "{{ .Values.db.auth.existingSecret }}".
+{{- else if .Values.db.auth.password }}
+  The MySQL root password was taken from .Values.db.auth.password. It has to match
+  the DSN baked into the API image (see README.md).
+{{- else }}
+  A random MySQL root password was generated. Note that the API image expects a
+  fixed password - see README.md. Read the generated one with:
+
+    kubectl get secret {{ include "orthovenn.db.secretName" . }} \
+      -o jsonpath='{.data.{{ .Values.db.auth.secretKey }}}' | base64 -d
+{{- end }}
+
+Secrets and PersistentVolumeClaims marked with helm.sh/resource-policy: keep
+survive `helm uninstall` and must be deleted by hand for a clean slate.

@@ -1,0 +1,27 @@
+{{- if and .Values.ingressRoute.enabled .Values.basicAuth.enabled }}
+{{- if not .Values.basicAuth.existingSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "orthovenn.basicAuth.secretName" . }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  users: {{ include "orthovenn.basicAuth.users" . | quote }}
+---
+{{- end }}
+apiVersion: {{ .Values.ingressRoute.apiVersion }}
+kind: Middleware
+metadata:
+  name: {{ printf "%s-basic-auth" (include "orthovenn.fullname" .) }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+spec:
+  basicAuth:
+    secret: {{ include "orthovenn.basicAuth.secretName" . }}
+    removeHeader: {{ .Values.basicAuth.removeHeader }}
+    {{- with .Values.basicAuth.realm }}
+    realm: {{ . | quote }}
+    {{- end }}
+{{- end }}

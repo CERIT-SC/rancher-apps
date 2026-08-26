@@ -1,0 +1,89 @@
+{{- if .Values.ingressRoute.enabled }}
+apiVersion: {{ .Values.ingressRoute.apiVersion }}
+kind: IngressRoute
+metadata:
+  name: {{ include "orthovenn.fullname" . }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+    {{- with .Values.ingressRoute.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.ingressRoute.annotations .Values.ingressRoute.externalDnsTarget }}
+  annotations:
+    {{- with .Values.ingressRoute.externalDnsTarget }}
+    external-dns.alpha.kubernetes.io/target: {{ . | quote }}
+    {{- end }}
+    {{- with .Values.ingressRoute.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.ingressRoute.entryPoints | nindent 4 }}
+  routes:
+    - kind: Rule
+      match: {{ .Values.ingressRoute.match | default (printf "Host(`%s`)" (include "orthovenn.host" .)) | quote }}
+      {{- with .Values.ingressRoute.priority }}
+      priority: {{ . }}
+      {{- end }}
+      {{- $middlewares := include "orthovenn.ingressRoute.middlewares" . }}
+      {{- if $middlewares | trim }}
+      middlewares:
+        {{- $middlewares | trim | nindent 8 }}
+      {{- end }}
+      services:
+        - kind: Service
+          name: {{ printf "%s-web" (include "orthovenn.fullname" .) }}
+          port: {{ .Values.service.web.port }}
+  {{- if .Values.ingressRoute.tls.enabled }}
+  tls:
+    {{- if .Values.ingressRoute.tls.certResolver }}
+    certResolver: {{ .Values.ingressRoute.tls.certResolver }}
+    {{- with .Values.ingressRoute.tls.domains }}
+    domains:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- else }}
+    secretName: {{ include "orthovenn.tlsSecretName" . }}
+    {{- end }}
+    {{- with .Values.ingressRoute.tls.options }}
+    options:
+      name: {{ .name }}
+      {{- with .namespace }}
+      namespace: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- if .Values.ingressRoute.httpRedirect.enabled }}
+---
+apiVersion: {{ .Values.ingressRoute.apiVersion }}
+kind: Middleware
+metadata:
+  name: {{ printf "%s-https-redirect" (include "orthovenn.fullname" .) }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: {{ .Values.ingressRoute.httpRedirect.permanent }}
+---
+apiVersion: {{ .Values.ingressRoute.apiVersion }}
+kind: IngressRoute
+metadata:
+  name: {{ printf "%s-https-redirect" (include "orthovenn.fullname" .) }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.ingressRoute.httpRedirect.entryPoints | nindent 4 }}
+  routes:
+    - kind: Rule
+      match: {{ .Values.ingressRoute.match | default (printf "Host(`%s`)" (include "orthovenn.host" .)) | quote }}
+      middlewares:
+        - name: {{ printf "%s-https-redirect" (include "orthovenn.fullname" .) }}
+      services:
+        - kind: Service
+          name: {{ printf "%s-web" (include "orthovenn.fullname" .) }}
+          port: {{ .Values.service.web.port }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,36 @@
+{{- range $name := list "db" "home" }}
+{{- $pvc := index $.Values.persistence $name }}
+{{- if and $pvc.enabled (not $pvc.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-%s" (include "orthovenn.fullname" $) $name }}
+  labels:
+    {{- include "orthovenn.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+  {{- if or $pvc.retain $pvc.annotations }}
+  annotations:
+    {{- with $pvc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if $pvc.retain }}
+    helm.sh/resource-policy: keep
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml $pvc.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ $pvc.size | quote }}
+  {{- $sc := $pvc.storageClass | default $.Values.persistence.storageClass }}
+  {{- if $sc }}
+  {{- if eq "-" $sc }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ $sc | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
