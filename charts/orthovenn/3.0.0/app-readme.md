@@ -1,9 +1,9 @@
 # OrthoVenn 3
 
 [OrthoVenn](https://orthovenn.bioinfotoolkits.net/) compares whole-genome
-orthologous clusters across up to twelve species: it identifies and annotates
-orthologous gene clusters, draws the Venn diagram of their overlaps, and reports
-GO enrichment for the sets you pick out of it.
+orthologous clusters: it identifies and annotates orthologous gene clusters,
+draws the Venn diagram of their overlaps, and reports GO enrichment for the
+sets you pick out of it.
 
 The web frontend, the API and its MySQL database run as three containers of one
 pod, sharing two `ReadWriteMany` volumes.
