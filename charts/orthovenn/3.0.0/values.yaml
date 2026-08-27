@@ -1,0 +1,300 @@
+# Default values for orthovenn.
+# Values exposed in the Rancher install form are listed in questions.yaml.
+
+# Injected by Rancher. `cattle.clusterName` selects the DNS domain the
+# application is published under; see the `dns.name` helper in
+# templates/_helpers.tpl.
+global:
+  cattle:
+    clusterName: ""
+
+# Public hostname. Empty generates
+# `<release>-<namespace>.dyn.cloud[.trusted].e-infra.cz`. A value set here is
+# used verbatim and has to be pointed at the cluster load balancer separately.
+host: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+# - name: my-registry-credentials
+
+serviceAccount:
+  create: true
+  # Defaults to the release fullname when created.
+  name: ""
+  annotations: {}
+  # Not required by the application.
+  automountServiceAccountToken: false
+
+# The containers of a single pod share ReadWriteMany volumes; the application
+# does not support scaling out.
+replicaCount: 1
+
+# `Recreate` because MySQL and the API write to shared ReadWriteMany volumes: a
+# rolling update would briefly run two MySQL instances against the same data
+# directory.
+strategy:
+  type: Recreate
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 100
+  fsGroupChangePolicy: OnRootMismatch
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+terminationGracePeriodSeconds: 30
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+priorityClassName: ""
+
+################################################################################
+# MySQL database container
+################################################################################
+db:
+  image:
+    repository: lufang0411/orthovenn3-mysql
+    # Empty resolves to the registry default (`latest`).
+    tag: ""
+    # Takes precedence over `tag`.
+    digest: ""
+    pullPolicy: IfNotPresent
+
+  auth:
+    # The API image hardcodes its DSN
+    # (mysql+pymysql://root:123456Aa@orthovenn3-mysql:3306/orthovenn3 in
+    # /home/orthovenn3/src/db/database_init.py) and takes no database
+    # environment variables. Any other value makes the api container fail with
+    # `(1045, "Access denied for user 'root'@...")`. Leaving it empty generates a
+    # random password on first install and reads it back from the Secret on
+    # upgrades.
+    password: "123456Aa"
+    existingSecret: ""
+    secretKey: password
+    # Keep the chart-managed Secret on uninstall, so the password of a retained
+    # database volume is not lost.
+    retain: false
+
+  port: 3306
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 2Gi
+
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+  extraEnv: []
+
+################################################################################
+# API container
+################################################################################
+api:
+  image:
+    repository: cerit.io/cerit/orthovenn3-api
+    tag: "2025-03-10"
+    digest: ""
+    pullPolicy: IfNotPresent
+
+  command:
+    - /docker-entrypoint.sh
+  args: []
+
+  port: 8102
+
+  resources:
+    requests:
+      cpu: 2
+      memory: 8Gi
+    limits:
+      cpu: 4
+      memory: 16Gi
+
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 100
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+  extraEnv: []
+
+################################################################################
+# Web frontend container
+################################################################################
+web:
+  image:
+    repository: cerit.io/cerit/orthovenn3-front
+    tag: ""
+    digest: ""
+    pullPolicy: Always
+
+  port: 80
+  # Defaults to the API container on `http://127.0.0.1:<api.port>`.
+  apiUrl: ""
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 2Gi
+
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 100
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+  extraEnv: []
+
+################################################################################
+# Services
+################################################################################
+service:
+  web:
+    type: ClusterIP
+    port: 80
+    annotations: {}
+  db:
+    type: ClusterIP
+    port: 3306
+    annotations: {}
+    # The API image has the hostname `orthovenn3-mysql` hardcoded in its DSN, so
+    # the Service name cannot follow the release name. One release per namespace
+    # follows from this.
+    nameOverride: "orthovenn3-mysql"
+
+################################################################################
+# Storage
+################################################################################
+persistence:
+  # StorageClass for both volumes; `""` uses the cluster default. Overridden by
+  # the per-volume `storageClass` below.
+  storageClass: ""
+  db:
+    enabled: true
+    existingClaim: ""
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+    # `"-"` disables dynamic provisioning.
+    storageClass: ""
+    annotations: {}
+    # Keep the PVC on uninstall.
+    retain: true
+  home:
+    enabled: true
+    existingClaim: ""
+    accessModes:
+      - ReadWriteMany
+    size: 10Gi
+    storageClass: ""
+    annotations: {}
+    retain: true
+
+################################################################################
+# Ingress via Traefik IngressRoute
+################################################################################
+ingressRoute:
+  enabled: true
+  # Use `traefik.containo.us/v1alpha1` on Traefik older than v2.10.
+  apiVersion: traefik.io/v1alpha1
+  entryPoints:
+    - websecure
+  # Defaults to ``Host(`<host>`)``.
+  match: ""
+  # Empty leaves Traefik's default (longest rule wins).
+  priority: ""
+  # Published as `external-dns.alpha.kubernetes.io/target`. The generated
+  # `*.dyn.cloud[.trusted].e-infra.cz` names are served by the cluster wildcard
+  # record, so external-dns is not involved. Set it when publishing under a
+  # `host` that external-dns has to create a record for, e.g.
+  # `kuba-lb.cloud.e-infra.cz`.
+  externalDnsTarget: ""
+  # The ingress class is required on this cluster for Traefik to pick the route
+  # up.
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels: {}
+  # Attached after the basic-auth middleware, e.g.
+  # - name: my-middleware
+  #   namespace: traefik
+  middlewares: []
+  tls:
+    enabled: true
+    # Defaults to the host with dots replaced by dashes, which is what
+    # `certificate.create` populates.
+    secretName: ""
+    # Traefik certificate resolver, for ACME configured in Traefik itself. Takes
+    # precedence over `secretName`.
+    certResolver: ""
+    domains: []
+    # TLSOption reference, e.g. `{name: mytlsoption}`.
+    options: {}
+  httpRedirect:
+    # Add a second IngressRoute redirecting plain HTTP to HTTPS.
+    enabled: true
+    entryPoints:
+      - web
+    # Use a 301 instead of a 302.
+    permanent: true
+
+# HTTP basic authentication in front of the application (Traefik middleware).
+# The application has no authentication of its own.
+basicAuth:
+  enabled: true
+  # Required while `enabled`; the render fails on blank credentials rather than
+  # exposing the application.
+  username: ""
+  password: ""
+  # Secret with a `users` key in htpasswd format, used instead of the
+  # chart-managed one.
+  existingSecret: ""
+  realm: OrthoVenn
+  removeHeader: true
+
+# cert-manager does not watch Traefik IngressRoutes, so the certificate for
+# `host` is requested explicitly.
+certificate:
+  create: true
+  issuerRef:
+    kind: ClusterIssuer
+    # ClusterIssuer used for IngressRoute certificates on this cluster.
+    name: letsencrypt-gateway
+    group: cert-manager.io
+
+################################################################################
+# NetworkPolicy
+################################################################################
+networkPolicy:
+  # The cluster is effectively default-deny; without this policy Traefik cannot
+  # reach the frontend.
+  enabled: true
+  # Namespace Traefik and cert-manager run in.
+  ingressNamespace: kube-system
+  # ACME HTTP-01 challenge port. Certificates do not issue without it.
+  acmeChallengePort: 8089
+  extraIngress: []

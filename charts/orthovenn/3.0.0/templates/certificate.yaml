@@ -1,0 +1,20 @@
+{{- if and .Values.ingressRoute.enabled .Values.certificate.create }}
+{{/*
+cert-manager does not watch Traefik IngressRoutes, so the certificate is
+requested explicitly. The IngressRoute references the Secret it produces.
+*/}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "orthovenn.fullname" . }}
+  labels:
+    {{- include "orthovenn.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "orthovenn.tlsSecretName" . }}
+  dnsNames:
+    - {{ include "orthovenn.host" . | quote }}
+  issuerRef:
+    kind: {{ .Values.certificate.issuerRef.kind }}
+    name: {{ .Values.certificate.issuerRef.name }}
+    group: {{ .Values.certificate.issuerRef.group }}
+{{- end }}

@@ -1,0 +1,29 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as release {{ .Release.Name }}.
+
+{{- if .Values.ingressRoute.enabled }}
+
+Application URL:
+
+  {{ if .Values.ingressRoute.tls.enabled }}https{{ else }}http{{ end }}://{{ include "orthovenn.host" . }}
+
+The route is served by Traefik on entry point(s) {{ join ", " .Values.ingressRoute.entryPoints }}:
+
+  kubectl get ingressroute {{ include "orthovenn.fullname" . }}
+{{- if .Values.certificate.create }}
+  kubectl get certificate {{ include "orthovenn.fullname" . }}
+{{- end }}
+
+{{- if .Values.basicAuth.enabled }}
+
+The site is behind HTTP basic auth.
+{{- end }}
+{{- else }}
+
+The IngressRoute is disabled, so the application is not exposed outside the
+cluster. Reach the frontend with a port-forward:
+
+  kubectl port-forward svc/{{ include "orthovenn.fullname" . }}-web 8080:{{ .Values.service.web.port }}
+{{- end }}
+
+PersistentVolumeClaims marked with helm.sh/resource-policy: keep
+survive `helm uninstall` and must be deleted by hand for a clean slate.

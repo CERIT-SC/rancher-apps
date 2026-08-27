@@ -1,0 +1,17 @@
+# Patterns to ignore when building packages.
+.DS_Store
+# Git
+.git/
+.gitignore
+# CI
+.github/
+# IDEs / editors
+.idea/
+.vscode/
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+# Local overrides
+values.local.yaml

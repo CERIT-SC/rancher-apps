@@ -1,0 +1,18 @@
+apiVersion: v2
+name: orthovenn
+description: OrthoVenn - comparative analysis of whole-genome orthologous clusters
+type: application
+version: 3.0.0
+appVersion: "3"
+kubeVersion: ">=1.26.0-0"
+keywords:
+  - orthovenn
+  - bioinformatics
+  - genomics
+maintainers:
+  - name: CERIT-SC
+    email: root@cerit-sc.cz
+annotations:
+  catalog.cattle.io/display-name: OrthoVenn 3
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/kube-version: ">=1.26.0-0"
