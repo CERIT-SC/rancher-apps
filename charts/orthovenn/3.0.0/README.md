@@ -1,7 +1,7 @@
 # OrthoVenn 3
 
-[OrthoVenn 3](https://orthovenn.bioinfotoolkits.net/) compares the genomes of up
-to twelve species. It finds the groups of genes they have in common, draws the
+[OrthoVenn 3](https://orthovenn.bioinfotoolkits.net/) compares the genomes, finds
+the groups of genes they have in common, draws the
 Venn diagram of the overlaps, and tells you which biological functions are
 over-represented in whichever part of the diagram you click on.
 
