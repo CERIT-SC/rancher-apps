@@ -5,6 +5,10 @@ metadata:
 spec:
   instances: {{ .Values.db.instances }}
 
+  managed:
+    services:
+      disabledDefaultServices: ["r", "ro"]
+
   imageName: 'ghcr.io/cloudnative-pg/postgresql:{{ .Values.db.version }}'
 
   primaryUpdateStrategy: unsupervised
