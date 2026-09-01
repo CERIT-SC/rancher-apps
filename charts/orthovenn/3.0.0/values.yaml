@@ -233,7 +233,7 @@ ingressRoute:
   # record, so external-dns is not involved. Set it when publishing under a
   # `host` that external-dns has to create a record for, e.g.
   # `kuba-lb.cloud.e-infra.cz`.
-  externalDnsTarget: ""
+  externalDnsTarget: "kuba-lb.cloud.e-infra.cz"
   # The ingress class is required on this cluster for Traefik to pick the route
   # up.
   annotations:
