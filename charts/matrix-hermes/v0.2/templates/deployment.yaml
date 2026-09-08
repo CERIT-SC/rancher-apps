@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "matrix-hermes.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-hermes.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "matrix-hermes.fullname" . }}
+{{- if ne .Values.k8sApiAccess "none" }}
+      automountServiceAccountToken: true
+{{- end }}
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: populate-data
+          image: "cerit.io/ai/hermes:{{ .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command: ["/bin/sh", "-c", "cp -R --update=none /opt/data/. /mnt/data/"]
+          volumeMounts:
+            - name: data
+              mountPath: /mnt/data
+      containers:
+        - name: hermes
+          image: "cerit.io/ai/hermes:{{ .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+            limits:
+              cpu: "4"
+              memory: 16Gi
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-hermes.fullname" . }}
+                  key: OPENAI_API_KEY
+            - name: MATRIX_FREE_RESPONSE_ROOMS
+              value: {{ .Values.matrixRoom | quote }}
+            - name: MATRIX_ALLOWED_ROOMS
+              value: {{ .Values.matrixRoom | quote }}
+            - name: MATRIX_HOME_ROOM
+              value: {{ .Values.matrixRoom | quote }} 
+          envFrom:
+            - secretRef:
+                name: {{ include "matrix-hermes.fullname" . }}-env
+                optional: true
+          volumeMounts:
+            - name: home
+              mountPath: /home/ubuntu
+            - name: data
+              mountPath: /opt/data
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            claimName: {{ include "matrix-hermes.fullname" . }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "matrix-hermes.fullname" . }}-data

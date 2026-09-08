@@ -1,0 +1,51 @@
+{{- if eq .Values.k8sApiAccess "none" }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}-deny-k8s-api
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "matrix-hermes.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: rke2-traefik-kube-system
+              app.kubernetes.io/name: rke2-traefik
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: TCP
+          port: 8443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: comfyui
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: vllm-ns
+      ports:
+        - protocol: TCP
+          port: 8188
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.42.0.0/16
+              - 10.43.0.0/16
+        - ipBlock:
+            cidr: ::/0
+            except:
+              - 2001:718:801:42cb:8::/80
+{{- end }}

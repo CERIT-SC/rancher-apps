@@ -1,0 +1,52 @@
+{{- if eq .Values.k8sApiAccess "readonly" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}-readonly
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "persistentvolumeclaims", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}-readonly
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "matrix-hermes.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "matrix-hermes.fullname" . }}-readonly
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- if eq .Values.k8sApiAccess "fullaccess" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "matrix-hermes.fullname" . }}-fullaccess
+  labels:
+    {{- include "matrix-hermes.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "matrix-hermes.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: rt-w5w59
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- if not (has .Values.k8sApiAccess (list "none" "readonly" "fullaccess")) }}
+{{- fail "invalid k8sApiAccess value, must be one of: none, readonly, fullaccess" }}
+{{- end }}

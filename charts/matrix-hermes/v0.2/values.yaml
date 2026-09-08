@@ -1,0 +1,10 @@
+openaiApiKey: ""
+matrixEnv: ""
+matrixRoom: ""
+
+# k8sApiAccess: none | readonly | fullaccess
+k8sApiAccess: none
+
+persistence:
+  size: 200Gi
+  dataSize: 100Gi
