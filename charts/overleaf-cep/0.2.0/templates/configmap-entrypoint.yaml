@@ -1,0 +1,210 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: overleaf-entrypoint
+  labels:
+    app.kubernetes.io/name: overleaf
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  # Non-root entrypoint for the sharelatex container.
+  # Replaces phusion my_init + runit. Runs as uid 33 (www-data).
+  # Mirrors server-ce/init_scripts/ + server-ce/runit/* in order.
+  entrypoint.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    # --- Load container_environment secrets from the Secret mount ---
+    CE=/etc/container_environment
+    for f in "$CE"/*; do
+      [ -f "$f" ] || continue
+      name=$(basename "$f")
+      export "$name=$(cat "$f")"
+    done
+
+    # --- nginx config from template (envsubst) ---
+    # /etc/nginx/ is root-owned and read-only at runtime; render configs into a
+    # writable emptyDir (/nginx-conf) and start nginx with -c pointing there.
+    export NGINX_KEEPALIVE_TIMEOUT="${NGINX_KEEPALIVE_TIMEOUT:-65}"
+    export NGINX_WORKER_CONNECTIONS="${NGINX_WORKER_CONNECTIONS:-768}"
+    export NGINX_WORKER_PROCESSES="${NGINX_WORKER_PROCESSES:-4}"
+    export MAX_UPLOAD_SIZE="${MAX_UPLOAD_SIZE:-100}"
+    mkdir -p /nginx-conf/sites-enabled /nginx-conf/conf.d
+    envsubst '${NGINX_KEEPALIVE_TIMEOUT} ${NGINX_WORKER_CONNECTIONS} ${NGINX_WORKER_PROCESSES} ${MAX_UPLOAD_SIZE}' \
+      < /etc/nginx/templates/nginx.conf.template \
+      > /nginx-conf/nginx.conf
+    # Remove 'user www-data;' directive — we run as uid 33
+    sed -i 's/^user www-data;//' /nginx-conf/nginx.conf
+    # Patch include paths to use our writable /nginx-conf dir instead of
+    # the root-owned /etc/nginx/
+    sed -i 's|/etc/nginx/sites-enabled/|/nginx-conf/sites-enabled/|g' /nginx-conf/nginx.conf
+    sed -i 's|/etc/nginx/conf.d/|/nginx-conf/conf.d/|g' /nginx-conf/nginx.conf
+    # Copy mime.types (needed by nginx.conf include)
+    cp /etc/nginx/mime.types /nginx-conf/mime.types 2>/dev/null || true
+    sed -i 's|/etc/nginx/mime.types|/nginx-conf/mime.types|g' /nginx-conf/nginx.conf
+    # CEP moved overleaf.conf to overleaf.conf.template (needs envsubst for
+    # GIT_BRIDGE_HOST etc.). Render it into our writable sites-enabled dir.
+    export GIT_BRIDGE_HOST="${GIT_BRIDGE_HOST:-git-bridge}"
+    export GIT_BRIDGE_PORT="${GIT_BRIDGE_PORT:-8000}"
+    export GIT_BRIDGE_REPOSTORE_MAX_FILE_SIZE="${GIT_BRIDGE_REPOSTORE_MAX_FILE_SIZE:-52428800}"
+    envsubst '${GIT_BRIDGE_HOST} ${GIT_BRIDGE_PORT} ${GIT_BRIDGE_REPOSTORE_MAX_FILE_SIZE}' \
+      < /etc/nginx/templates/overleaf.conf.template \
+      | sed 's/listen         80;/listen         8080 default_server;/' \
+      | sed 's|127.0.0.1:8080|127.0.0.1:8081|g' \
+      > /nginx-conf/sites-enabled/overleaf.conf
+    # clsi-nginx on 8081 (separate from overleaf on 8080 — both can't share 8080
+    # or overleaf's proxy_pass to clsi-nginx creates a loop / 502)
+    sed 's/listen 8080;/listen 8081;/' /etc/nginx/sites-enabled/clsi-nginx.conf \
+      > /nginx-conf/sites-enabled/clsi-nginx.conf
+    # Block self-registration: return 403 for /register so only pre-created
+    # users (via create-user.mjs CLI) can log in.
+    sed -i '/server_name    _;/a\    location /register { return 403; }' /nginx-conf/sites-enabled/overleaf.conf
+    nginx -t -c /nginx-conf/nginx.conf
+
+    # --- Ensure writable runtime dirs exist on the PVC-backed path ---
+    mkdir -p /var/lib/overleaf/data/compiles \
+             /var/lib/overleaf/data/output \
+             /var/lib/overleaf/data/cache \
+             /var/lib/overleaf/data/template_files \
+             /var/lib/overleaf/data/history \
+             /var/lib/overleaf/tmp/projectHistories \
+             /var/lib/overleaf/tmp/dumpFolder \
+             /var/lib/overleaf/tmp/uploads \
+             /var/log/overleaf \
+             /var/log/nginx \
+             /run 2>/dev/null || true
+
+    # --- Wait for MongoDB ---
+    echo "Waiting for MongoDB ..."
+    for i in $(seq 1 60); do
+      if node -e "require('net').connect(27017,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))" 2>/dev/null; then
+        echo "MongoDB is up"
+        break
+      fi
+      sleep 2
+    done
+
+    # --- Initiate MongoDB replica set (idempotent) ---
+    # Overleaf requires a replset for transactions. The sharelatex container has
+    # no mongosh, so use node + the mongodb driver at /overleaf/node_modules.
+    echo "Initiating MongoDB replica set ..."
+    node -e '
+      const { MongoClient } = require("/overleaf/node_modules/mongodb");
+      (async () => {
+        const c = new MongoClient("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=5000");
+        await c.connect();
+        const admin = c.db("admin");
+        let initiated = false;
+        try {
+          await admin.command({ replSetGetStatus: 1 });
+          console.log("replica set already initiated");
+          initiated = true;
+        } catch (e) {
+          console.log("initiating replica set ...");
+          await admin.command({ replSetInitiate: { _id: "overleaf", members: [{ _id: 0, host: "127.0.0.1:27017" }] } });
+          initiated = true;
+        }
+        // Wait for the member to become primary
+        for (let i = 0; i < 60; i++) {
+          try {
+            const hello = await admin.command({ hello: 1 });
+            if (hello.isWritablePrimary) { console.log("MongoDB is primary"); await c.close(); return; }
+          } catch (e) {}
+          console.log("waiting for MongoDB to become primary ...");
+          await new Promise(r => setTimeout(r, 2000));
+        }
+        console.error("MongoDB did not become primary in time");
+        await c.close();
+        process.exit(1);
+      })().catch(e => { console.error("replset init failed:", e.message); process.exit(1); });
+    ' || { echo "ERROR: could not initiate replica set"; exit 1; }
+
+    # --- Wait for Redis ---
+    echo "Waiting for Redis ..."
+    for i in $(seq 1 30); do
+      if node -e "require('net').connect(6379,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))" 2>/dev/null; then
+        echo "Redis is up"
+        break
+      fi
+      sleep 2
+    done
+
+    # --- Run web migrations (idempotent) ---
+    echo "Running migrations for server-ce"
+    cd /overleaf/tools/migrations
+    MONGO_SOCKET_TIMEOUT=0 /overleaf/node_modules/.bin/east migrate -t server-ce || echo "WARNING: migrations reported non-zero, continuing"
+
+    # --- Start all node microservices as www-data (uid 33) ---
+    source /etc/overleaf/env.sh
+
+    # Start a node microservice: cd into its directory first so that
+    # @overleaf/settings finds config/settings.defaults.js (relative to CWD).
+    start_svc () {
+      local name="$1"; shift
+      local app="$1"
+      local dir=$(dirname "$app")
+      echo "starting $name"
+      (cd "$dir" && exec "$@" >> "/var/log/overleaf/${name}.log" 2>&1) &
+    }
+
+    # nginx (listens on 8080) — daemon off means nginx stays in foreground,
+    # so run it in the background to let the entrypoint continue.
+    nginx -c /nginx-conf/nginx.conf &
+
+    # web (frontend) on port 4000, bound to loopback
+    export LISTEN_ADDRESS=127.0.0.1
+    export ENABLED_SERVICES="web"
+    export WEB_PORT="4000"
+    start_svc web /usr/bin/node /overleaf/services/web/app.mjs
+
+    # web-api (api mode) on port 3000 (default), bound to 0.0.0.0
+    # Do NOT set WEB_PORT here — it defaults to 3000, distinct from web's 4000.
+    export LISTEN_ADDRESS=0.0.0.0
+    export ENABLED_SERVICES="api"
+    export METRICS_APP_NAME="web-api"
+    unset WEB_PORT
+    start_svc web-api /usr/bin/node /overleaf/services/web/app.mjs
+    unset ENABLED_SERVICES METRICS_APP_NAME
+    export LISTEN_ADDRESS=127.0.0.1
+    export WEB_PORT="4000"
+
+    start_svc chat            /usr/bin/node /overleaf/services/chat/app.js
+    start_svc clsi            /usr/bin/node /overleaf/services/clsi/app.js
+    start_svc docstore        /usr/bin/node /overleaf/services/docstore/app.js
+    start_svc document-updater /usr/bin/node /overleaf/services/document-updater/app.js
+    start_svc filestore      /usr/bin/node /overleaf/services/filestore/app.js
+    export NODE_CONFIG_DIR=/overleaf/services/history-v1/config
+    start_svc history-v1      /usr/bin/node /overleaf/services/history-v1/app.js
+    unset NODE_CONFIG_DIR
+    start_svc linked-url-proxy /usr/bin/node /overleaf/services/linked-url-proxy/app.mjs
+    start_svc notifications   /usr/bin/node /overleaf/services/notifications/app.ts
+    start_svc project-history /usr/bin/node /overleaf/services/project-history/app.js
+    start_svc real-time       /usr/bin/node /overleaf/services/real-time/app.js
+    start_svc references      /usr/bin/node /overleaf/services/references/app.js
+
+    echo "Overleaf startup complete. Supervising processes."
+
+    # --- Create initial admin user (idempotent, sends activation email) ----
+    INITIAL_USER_EMAIL="{{ .Values.overleaf.initialUserEmail }}"
+    if [ -n "$INITIAL_USER_EMAIL" ]; then
+      (
+        echo "Waiting for web service before creating initial user $INITIAL_USER_EMAIL ..."
+        for i in $(seq 1 60); do
+          if curl -fsS -o /dev/null http://127.0.0.1:4000/login 2>/dev/null; then
+            echo "Web service ready, creating initial user..."
+            break
+          fi
+          sleep 5
+        done
+        cd /overleaf/services/web
+        node modules/server-ce-scripts/scripts/create-user.mjs --admin --email="$INITIAL_USER_EMAIL" 2>&1 \
+          || echo "WARNING: initial user creation failed (may already exist)"
+      ) &
+    fi
+
+    while true; do
+      if ! kill -0 $(cat /run/nginx.pid 2>/dev/null || echo 0) 2>/dev/null; then
+        echo "ERROR: nginx died"
+        exit 1
+      fi
+      sleep 10
+    done
