@@ -40,19 +40,19 @@ extraDeploy: []
 
 ## @section phpMyAdmin parameters
 
-## Bitnami WordPress image version
-## ref: https://hub.docker.com/r/bitnami/phpmyadmin/tags/
+## Official phpMyAdmin image (apache variant; runs as www-data uid 33 with the
+## ConfigMap-mounted Apache config from templates/apache-configmap.yaml)
+## ref: https://hub.docker.com/_/phpmyadmin/tags/
 ## @param image.registry phpMyAdmin image registry
 ## @param image.repository phpMyAdmin image repository
 ## @param image.tag phpMyAdmin image tag (immutable tags are recommended)
 ## @param image.pullPolicy Image pull policy
 ## @param image.pullSecrets Specify docker-registry secret names as an array
-## @param image.debug Enable phpmyadmin image debug mode
 ##
 image:
   registry: docker.io
-  repository: bitnamilegacy/phpmyadmin
-  tag: 5.2.2-debian-12-r23
+  repository: phpmyadmin
+  tag: 5.2.3-apache
   ## Specify a imagePullPolicy
   ##
   pullPolicy: IfNotPresent
@@ -64,9 +64,6 @@ image:
   ##   - myRegistryKeySecretName
   ##
   pullSecrets: []
-  ## Enable debug mode
-  ##
-  debug: false
 ## @param command Override default container command (useful when using custom images)
 ##
 command: []
@@ -95,19 +92,15 @@ extraEnvVarsSecret: ""
 ## @param hostAliases [array] Deployment pod host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##
-hostAliases:
-  ## Necessary for apache-exporter to work
-  ##
-  - ip: "127.0.0.1"
-    hostnames:
-      - "status.localhost"
-## phpMyAdmin container ports to open
+hostAliases: []
+## phpMyAdmin container port. The official image is Debian-based, so Apache
+## must listen on an unprivileged port to run as www-data (uid 33); the port
+## is set via the mounted apache config, NOT the APACHE_PORT env (the
+## entrypoint cannot rewrite /etc/apache2 as non-root).
 ## @param containerPorts.http HTTP port to expose at container level
-## @param containerPorts.https HTTPS port to expose at container level
 ##
 containerPorts:
   http: 8080
-  https: 8443
 ## @param updateStrategy.type Strategy to use to update Pods
 ##
 updateStrategy:
@@ -118,23 +111,26 @@ updateStrategy:
 ## phpMyAdmin pods' Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable phpMyAdmin pods' Security Context
-## @param podSecurityContext.fsGroup User ID for the container
+## @param podSecurityContext.fsGroup Group ID for shared volumes (matches www-data GID 33 in the official image)
 ##
 podSecurityContext:
   enabled: true
-  fsGroup: 1001
+  fsGroup: 33
   fsGroupChangePolicy: "OnRootMismatch"
+  runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault
 ## phpMyAdmin containers' Security Context (only main container)
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## @param containerSecurityContext.enabled Enable phpMyAdmin containers' Security Context
-## @param containerSecurityContext.runAsUser Group ID for the volumes of the pod
+## @param containerSecurityContext.runAsUser User ID for the phpmyadmin container (www-data uid 33 in the official image)
+## @param containerSecurityContext.runAsGroup Group ID for the phpmyadmin container
 ## @param containerSecurityContext.runAsNonRoot Set phpmyadmin container's Security Context runAsNonRoot
 ##
 containerSecurityContext:
   enabled: true
-  runAsUser: 1001
+  runAsUser: 33
+  runAsGroup: 33
   runAsNonRoot: true
   allowPrivilegeEscalation: false
   capabilities:
@@ -142,24 +138,16 @@ containerSecurityContext:
     - ALL
 ## phpMyAdmin containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources
-## We usually recommend not to specify default resources and to leave this as a conscious
-## choice for the user. This also increases chances charts run on environments with little
-## resources, such as Minikube. If you do want to specify resources, uncomment the following
-## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-## @param resources.limits The resources limits for the PhpMyAdmin container
-## @param resources.requests The requested resources for the PhpMyAdmin container
+## @param resources.limits The resources limits for the PhpMyAdmin (php-fpm) container
+## @param resources.requests The requested resources for the PhpMyAdmin (php-fpm) container
 ##
 resources:
-  ## Example:
-  ## limits:
-  ##    cpu: 100m
-  ##    memory: 128Mi
-  limits: {}
-  ## Examples:
-  ## requests:
-  ##    cpu: 100m
-  ##    memory: 128Mi
-  requests: {}
+  limits:
+    cpu: "1"
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 ## phpMyAdmin containers' startup probe. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 ## @param startupProbe.enabled Enable startupProbe
@@ -536,10 +524,10 @@ db:
     ## @param db.ssl.caCertificate CA file when using SSL
     ##
     caCertificate: |-
-    ## @param db.ssl.ciphers List of allowable ciphers for connections when using SSL
-    ##
-    ciphers: []
     ## @param db.ssl.verify Enable SSL certificate validation
+    ## SSL files are mounted at /db_certs and referenced via PMA_SSL_* env vars.
+    ## SSL ciphers are not configurable via environment in the official image;
+    ## set them through PMA_USER_CONFIG_BASE64 / extraEnvVars if needed.
     ##
     verify: true
 ## @param mariadb MariaDB chart configuration
@@ -547,152 +535,15 @@ db:
 ##
 mariadb: {}
 
-## @section Metrics parameters
-
-## Prometheus Exporter / Metrics
-##
-metrics:
-  ## @param metrics.enabled Start a side-car prometheus exporter
-  ##
-  enabled: false
-  ## @param metrics.image.registry Apache exporter image registry
-  ## @param metrics.image.repository Apache exporter image repository
-  ## @param metrics.image.tag Apache exporter image tag (immutable tags are recommended)
-  ## @param metrics.image.pullPolicy Image pull policy
-  ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
-  ##
-  image:
-    registry: docker.io
-    repository: bitnami/apache-exporter
-    tag: 0.11.0-debian-11-r28
-    pullPolicy: IfNotPresent
-    ## Optionally specify an array of imagePullSecrets.
-    ## Secrets must be manually created in the namespace.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-    ## Example:
-    ## pullSecrets:
-    ##   - myRegistryKeySecretName
-    ##
-    pullSecrets: []
-  ## @param metrics.resources Metrics exporter resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources: {}
-  ## Prometheus Exporter service configuration
-  ##
-  service:
-    ## @param metrics.service.type Prometheus metrics service type
-    ##
-    type: ClusterIP
-    ## @param metrics.service.port Prometheus metrics service port
-    ##
-    port: 9117
-    ## @param metrics.service.annotations [object] Annotations for Prometheus metrics service
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "{{ .Values.metrics.service.port }}"
-    ## @param metrics.service.clusterIP phpmyadmin service Cluster IP
-    ## e.g.:
-    ## clusterIP: None
-    ##
-    clusterIP: ""
-    ## @param metrics.service.loadBalancerIP Load Balancer IP if the Prometheus metrics server type is `LoadBalancer`
-    ## Use serviceLoadBalancerIP to request a specific static IP, otherwise leave blank
-    ##
-    loadBalancerIP: ""
-    ## @param metrics.service.loadBalancerSourceRanges phpmyadmin service Load Balancer sources
-    ## ref: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
-    ## e.g:
-    ## loadBalancerSourceRanges:
-    ##   - 10.10.10.0/24
-    ##
-    loadBalancerSourceRanges: []
-    ## @param metrics.service.externalTrafficPolicy phpmyadmin service external traffic policy
-    ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
-    ##
-    externalTrafficPolicy: Cluster
-    ## @param metrics.service.sessionAffinity Session Affinity for Kubernetes service, can be "None" or "ClientIP"
-    ## If "ClientIP", consecutive client requests will be directed to the same Pod
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
-    ##
-    sessionAffinity: None
-    ## @param metrics.service.sessionAffinityConfig Additional settings for the sessionAffinity
-    ## sessionAffinityConfig:
-    ##   clientIP:
-    ##     timeoutSeconds: 300
-    ##
-    sessionAffinityConfig: {}
-
-  ## Prometheus Service Monitor
-  ## ref: https://github.com/coreos/prometheus-operator
-  ##      https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
-  ##
-  serviceMonitor:
-    ## @param metrics.serviceMonitor.enabled Create ServiceMonitor Resource for scraping metrics using PrometheusOperator
-    ##
-    enabled: false
-    ## @param metrics.serviceMonitor.namespace Specify the namespace in which the serviceMonitor resource will be created
-    ##
-    namespace: ""
-    ## @param metrics.serviceMonitor.jobLabel The name of the label on the target service to use as the job name in prometheus.
-    ##
-    jobLabel: ""
-    ## @param metrics.serviceMonitor.interval Specify the interval at which metrics should be scraped
-    ##
-    interval: 30s
-    ## @param metrics.serviceMonitor.scrapeTimeout Specify the timeout after which the scrape is ended
-    ## e.g:
-    ## scrapeTimeout: 30s
-    ##
-    scrapeTimeout: ""
-    ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-    ##
-    relabelings: []
-    ## @param metrics.serviceMonitor.metricRelabelings Specify Metric Relabelings to add to the scrape endpoint
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-    ##
-    metricRelabelings: []
-    ## @param metrics.serviceMonitor.labels Extra labels for the ServiceMonitor
-    ##
-    labels: {}
-    ## @param metrics.serviceMonitor.honorLabels Specify honorLabels parameter to add the scrape endpoint
-    ##
-    honorLabels: false
-    ## @param metrics.serviceMonitor.selector ServiceMonitor selector labels
-    ## ref: https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#prometheus-configuration
-    ##
-    ## selector:
-    ##   prometheus: my-prometheus
-    ##
-    selector: {}
-
 ## @section NetworkPolicy parameters
 
 ## Add networkpolicies
 ##
 networkPolicy:
   ## @param networkPolicy.enabled Enable network policies
-  ## If ingress.enabled or metrics.enabled are true, configure networkPolicy.ingress and networkPolicy.metrics selectors respectively to allow communication
+  ## If ingress.enabled is true, configure networkPolicy.ingress selectors to allow communication from the ingress controller
   ##
   enabled: false
-  ## @param networkPolicy.metrics.enabled Enable network policy for metrics (prometheus)
-  ## @param networkPolicy.metrics.namespaceSelector Monitoring namespace selector labels. These labels will be used to identify the prometheus' namespace.
-  ## @param networkPolicy.metrics.podSelector Monitoring pod selector labels. These labels will be used to identify the Prometheus pods.
-  ##
-  metrics:
-    enabled: false
-    ## e.g:
-    ## podSelector:
-    ##   label: monitoring
-    ##
-    podSelector: {}
-    ## e.g:
-    ## namespaceSelector:
-    ##   label: monitoring
-    ##
-    namespaceSelector: {}
   ## @param networkPolicy.ingress.enabled Enable network policy for Ingress Proxies
   ## @param networkPolicy.ingress.namespaceSelector Ingress Proxy namespace selector labels. These labels will be used to identify the Ingress Proxy's namespace.
   ## @param networkPolicy.ingress.podSelector Ingress Proxy pods selector labels. These labels will be used to identify the Ingress Proxy pods.

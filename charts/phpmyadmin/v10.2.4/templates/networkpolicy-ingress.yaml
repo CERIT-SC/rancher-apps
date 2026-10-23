@@ -1,4 +1,4 @@
-{{- if and .Values.networkPolicy.enabled (or .Values.networkPolicy.ingress.enabled .Values.networkPolicy.metrics.enabled .Values.networkPolicy.ingressRules.accessOnlyFrom.enabled) }}
+{{- if and .Values.networkPolicy.enabled (or .Values.networkPolicy.ingress.enabled .Values.networkPolicy.ingressRules.accessOnlyFrom.enabled) }}
 apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
 kind: NetworkPolicy
 metadata:
@@ -27,19 +27,6 @@ spec:
         - podSelector:
             matchLabels:
               {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.ingress.podSelector "context" $) | nindent 14 }}
-        {{- end }}
-    {{- end }}
-    {{- if and .Values.metrics.enabled .Values.networkPolicy.metrics.enabled (or .Values.networkPolicy.metrics.namespaceSelector .Values.networkPolicy.metrics.podSelector) }}
-    - from:
-        {{- if .Values.networkPolicy.metrics.namespaceSelector }}
-        - namespaceSelector:
-            matchLabels:
-              {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.metrics.namespaceSelector "context" $) | nindent 14 }}
-        {{- end }}
-        {{- if .Values.networkPolicy.metrics.podSelector }}
-        - podSelector:
-            matchLabels:
-              {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.metrics.podSelector "context" $) | nindent 14 }}
         {{- end }}
     {{- end }}
     {{- if and .Values.networkPolicy.ingressRules.accessOnlyFrom.enabled (or .Values.networkPolicy.ingressRules.accessOnlyFrom.namespaceSelector .Values.networkPolicy.ingressRules.accessOnlyFrom.podSelector) }}

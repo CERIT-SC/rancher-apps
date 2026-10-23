@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-apache-conf" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  # Apache of the official phpmyadmin image would listen on :80 as root.
+  # The pod runs as www-data (uid 33, no capabilities), so the config files
+  # are mounted read-only with the unprivileged port baked in. The image
+  # entrypoint's APACHE_PORT sed/patch cannot rewrite read-only files and
+  # fails harmlessly; the mounted config wins.
+  ports.conf: |
+    Listen {{ .Values.containerPorts.http }}
+  000-default.conf: |
+    <VirtualHost *:{{ .Values.containerPorts.http }}>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>
