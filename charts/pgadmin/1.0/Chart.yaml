@@ -1,7 +1,7 @@
 apiVersion: v1
 name: pgadmin
 version: 1.0
-appVersion: 8.9
+appVersion: 9.18.0
 description: PG Admin
 icon: file://charts/pgadmin/1.0/postgres-alt.svg
 keywords:

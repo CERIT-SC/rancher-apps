@@ -19,7 +19,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: {{ .Release.Name }}
-        image: cerit.io/cloudnative-pg/pgadmin4:{{ .Chart.AppVersion }}
+        image: dpage/pgadmin4:{{ .Chart.AppVersion }}
         env:
         - name: PGADMIN_LISTEN_PORT
           value: '8080'
