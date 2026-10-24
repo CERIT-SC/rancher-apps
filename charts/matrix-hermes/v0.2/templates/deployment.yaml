@@ -52,8 +52,8 @@ spec:
               cpu: 100m
               memory: 1Gi
             limits:
-              cpu: "4"
-              memory: 32Gi
+              cpu: "2"
+              memory: 16Gi
           env:
             - name: OPENAI_API_KEY
               valueFrom:
