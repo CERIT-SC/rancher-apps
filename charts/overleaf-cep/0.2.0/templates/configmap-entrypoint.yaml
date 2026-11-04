@@ -85,10 +85,15 @@ data:
 
     # --- Initiate MongoDB replica set (idempotent) ---
     # Overleaf requires a replset for transactions. The sharelatex container has
-    # no mongosh, so use node + the mongodb driver at /overleaf/node_modules.
+    # no mongosh, so use node + the mongodb driver. The module layout differs
+    # between image builds: the standard tagged images use node_modules
+    # (/overleaf/node_modules/mongodb), the -full build uses Yarn PnP
+    # (.pnp.cjs, no node_modules). Requiring the bare name "mongodb" from a
+    # workspace directory that declares it (services/web) works for both:
+    # node_modules resolves up-tree, PnP resolves via the preload hook.
     echo "Initiating MongoDB replica set ..."
-    node -e '
-      const { MongoClient } = require("/overleaf/node_modules/mongodb");
+    (cd /overleaf/services/web && node -e '
+      const { MongoClient } = require("mongodb");
       (async () => {
         const c = new MongoClient("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=5000");
         await c.connect();
@@ -116,7 +121,7 @@ data:
         await c.close();
         process.exit(1);
       })().catch(e => { console.error("replset init failed:", e.message); process.exit(1); });
-    ' || { echo "ERROR: could not initiate replica set"; exit 1; }
+    ' ) || { echo "ERROR: could not initiate replica set"; exit 1; }
 
     # --- Wait for Redis ---
     echo "Waiting for Redis ..."
@@ -129,9 +134,17 @@ data:
     done
 
     # --- Run web migrations (idempotent) ---
+    # Two layouts across images: Yarn PnP (-full builds, no node_modules) runs
+    # migrations via the workspace script (upstream 900_run_web_migrations.sh);
+    # node_modules builds (standard tags) run the east binary directly.
     echo "Running migrations for server-ce"
-    cd /overleaf/tools/migrations
-    MONGO_SOCKET_TIMEOUT=0 /overleaf/node_modules/.bin/east migrate -t server-ce || echo "WARNING: migrations reported non-zero, continuing"
+    if [ -f /overleaf/.pnp.cjs ]; then
+      (cd /overleaf/tools/migrations && yarn run migrations migrate -t server-ce) \
+        || echo "WARNING: migrations reported non-zero, continuing"
+    else
+      (cd /overleaf/tools/migrations && MONGO_SOCKET_TIMEOUT=0 /overleaf/node_modules/.bin/east migrate -t server-ce) \
+        || echo "WARNING: migrations reported non-zero, continuing"
+    fi
 
     # --- Start all node microservices as www-data (uid 33) ---
     source /etc/overleaf/env.sh
@@ -179,7 +192,11 @@ data:
     start_svc notifications   /usr/bin/node /overleaf/services/notifications/app.ts
     start_svc project-history /usr/bin/node /overleaf/services/project-history/app.js
     start_svc real-time       /usr/bin/node /overleaf/services/real-time/app.js
-    start_svc references      /usr/bin/node /overleaf/services/references/app.js
+    # 'references' only exists in older (node_modules) CEP builds; current
+    # (PnP) builds moved it into web/modules/reference-picker.
+    if [ -f /overleaf/services/references/app.js ]; then
+      start_svc references      /usr/bin/node /overleaf/services/references/app.js
+    fi
 
     echo "Overleaf startup complete. Supervising processes."
 
