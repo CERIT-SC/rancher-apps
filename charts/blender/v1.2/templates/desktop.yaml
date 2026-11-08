@@ -27,11 +27,12 @@ kind: Ingress
 metadata:
   name: web-signalling
   annotations:
+    kubernetes.io/ingress.class: nginx-traefik
     kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-gateway"
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-traefik
   tls:
 {{- if eq .Values.defhostname true }}
     - hosts:
@@ -75,12 +76,13 @@ kind: Ingress
 metadata:
   name: web
   annotations:
+    kubernetes.io/ingress.class: nginx-traefik
     kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-gateway"
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: desktoppassword
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-traefik
   tls:
 {{- if eq .Values.defhostname true }}
     - hosts:

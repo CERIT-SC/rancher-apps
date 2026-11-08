@@ -5,11 +5,12 @@ metadata:
   name: {{ .Values.instance.prefix }}-{{ .Release.Name }}-vnc-ingress
   annotations:
     #"helm.sh/resource-policy": keep
-    kuberentes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: "nginx-traefik"
     kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-gateway"
     #    external-dns.alpha.kubernetes.io/target: k8s-public-u.cerit-sc.cz
 spec:
+  ingressClassName: nginx-traefik
   tls:
     - hosts:
         - "{{ .Values.instance.prefix }}.{{ .Release.Name }}.{{ .Release.Namespace }}.dyn.cloud.e-infra.cz"

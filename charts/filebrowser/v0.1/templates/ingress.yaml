@@ -3,12 +3,13 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}
   annotations:
+    kubernetes.io/ingress.class: nginx-traefik
     kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-gateway"
     nginx.ingress.kubernetes.io/proxy-body-size: 6000m
     nginx.org/client-max-body-size: 6000m
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-traefik
   tls:
     - hosts:
         - {{ include "dns.name" . }}
