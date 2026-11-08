@@ -138,7 +138,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-      runtimeClassName: nvidia-legacy
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true

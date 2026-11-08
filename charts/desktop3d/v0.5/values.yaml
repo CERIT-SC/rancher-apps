@@ -5,7 +5,7 @@ minram: 4096Mi
 maxram: 16384Mi
 defhostname: true
 customhostname: ""
-username: ""
+username: "user"
 password: ""
 resolution: "1920x1080"
 gpu: Whole

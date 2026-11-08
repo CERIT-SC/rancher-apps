@@ -140,9 +140,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-{{- if eq .Values.gpu "Part" }}
-      runtimeClassName: nvidia-legacy 
-{{- end }}
       securityContext:
         fsGroupChangePolicy: "OnRootMismatch"
         runAsNonRoot: true

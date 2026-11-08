@@ -3,7 +3,7 @@ mincpu: 1
 maxcpu: 4
 minram: 4096Mi
 maxram: 8192Mi
-username: ""
+username: "user"
 password: ""
 persistenthome: true
 resolution: "1920x1080"
