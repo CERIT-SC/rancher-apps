@@ -1,0 +1,136 @@
+labels:
+  io.rancher.certified: CERIT-SC
+
+rancher_min_version: 2.3.0
+
+categories:
+- GUI Apps
+- WEBRTC
+- VNC
+
+questions:
+- variable: desktop
+  description: "Select desktop container image to run."
+  label: Desktop image
+  default: ""
+  required: true
+  options:
+    - "cerit.io/desktops/ubuntu-xfce:24.04-user"
+    - "cerit.io/tkopecky/ubuntu-xfce:24.04-user-nvimagesrc-20261113"
+  group: "Image"
+  type: enum
+- variable: display
+  options:
+    - "VNC"
+    - "WEBRTC"
+  type: enum
+  label: Display Method
+  group: Display
+  description: "Use either VNC client or WebRTC."
+- variable: gpu
+  description: "Select GPU type"
+  label: GPU
+  options:
+  - Whole
+  - Part
+  group: "Display"
+  type: enum
+  show_if: "display=WEBRTC"
+- variable: encoder
+  description: "Video codec for WebRTC streaming: nvfbch264enc = H.264 (all browsers), nvfbchevcenc = H.265 (only browsers with H.265 decoding, e.g. Safari, Chrome with hardware decoding), nvfbcav1enc = AV1 (needs an NVIDIA Ada or Blackwell GPU)."
+  label: Video codec
+  default: "nvfbch264enc"
+  options:
+    - "nvfbch264enc"
+    - "nvfbchevcenc"
+    - "nvfbcav1enc"
+  group: "Display"
+  type: enum
+  show_if: "display=WEBRTC"
+- variable: resize
+  description: "Change the desktop resolution to match the browser window."
+  label: Resize to browser window
+  default: false
+  required: false
+  type: boolean
+  group: "Display"
+  show_if: "display=WEBRTC"
+- variable: username
+  type: string
+  label: Desktop Username
+  description: "Username used to log into the desktop. You can use default \"user\"."
+  group: "Security"
+  show_if: "display=WEBRTC"  
+- variable: password
+  required: true
+  description: "You must enter a password that will be used log into desktop. You need to remember this password! Avoid trivial passwords such as `password` or `123456`."
+  type: password
+  label: Desktop Password (please avoid chars "{" and "}")
+  group: "Security"
+- variable: netexternal
+  required: false
+  type: boolean
+  label: Assign external IP address
+  description: External addresses are accessible outside of Masaryk University network
+  default: false
+  group: Connection
+  show_if: "display=VNC"
+- variable: limitips
+  required: false
+  type: string
+  label: Limit connection from IPs
+  description: "Limit connection from listed IPs only. Enter comma separated CIDRs, e.g., '147.251.0.0/16,1.2.3.4/32'. It must always be a CIDR, single IP set as /32 CIDR."
+  default: ""
+  group: Connection
+  show_if: "display=VNC"
+- variable: storage.persistenthome                                              
+  description: "If selected, content of /home/user directory will be preserved on new persistent volume across desktop install/uninstall."
+  default: true                                                                 
+  required: false                                                               
+  type: boolean                                                                 
+  label: Persistent home                                                        
+  group: Storage                                                                
+  #- variable: storage.pvc.enable                                               
+  #  group: "Storage"                                                           
+  #  label: "Add Existing PVC"                                                  
+  #  type: boolean                                                              
+  #  description: "Add any existing persistent volume. Note: do not add ansys-home or similar name, Ansys will not start. Home PVC is attached according to the persistent home checkbox."
+  #- variable: storage.pvc.name                                                 
+  #  description: "Choose PVC to connect (optional). It will be connected to /home/user/pvc."
+  #  group: "Storage"                                                           
+  #  label: "Existing PVC"                                                      
+  #  type: pvc                                                                  
+  #  required: false                                                            
+  #  show_if: "storage.pvc.enable=true"                                         
+- variable: storage.externalpvc.enable                                             
+  description: "Connect external home from CERIT-SC"                            
+  type: boolean                                                                 
+  group: "Storage"                                                              
+  label: External storage                                                       
+- variable: storage.externalpvc.name                                            
+  description: "Choose PVC representing external home exactly with name 'pvc-samba-brno12-{meta_username}'. It will be connected to /storage. If such PVC does not exist, see docs.cerit.io/docs/other/storagesecrets.html"
+  group: "Storage"                                                              
+  label: "External PVC"                                                         
+  type: pvc                                                                     
+  required: false                                                               
+  show_if: "storage.externalpvc.enable=true"
+- variable: mincpu
+  description: "Minimum guaranteed CPUs"
+  type: string
+  label: Min CPU
+  group: "Resources"
+- variable: maxcpu
+  description: "Maximum allowed CPUs"
+  type: string
+  label: Max CPU
+  group: "Resources"
+- variable: minram
+  description: "Minimum guaranteed RAM"
+  type: string
+  label: Min RAM
+  group: "Resources"
+- variable: maxram
+  description: "Maximum allowed RAM"
+  type: string
+  label: Max RAM
+  group: "Resources"
