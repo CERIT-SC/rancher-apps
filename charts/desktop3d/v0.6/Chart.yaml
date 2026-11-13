@@ -1,0 +1,19 @@
+apiVersion: v1
+name: desktop
+version: 0.6
+appVersion: 0.6
+description: Remote Desktop
+icon: file://charts/desktop3d/v0.6/logo.png
+keywords:
+- Remote desktop
+- Webrtc
+- 3D Acceleration
+- applications
+- VNC
+home: https://cerit.io
+sources:
+- https://github.com/CERIT-SC/rancher-apps
+maintainers:
+- name: CERIT-SC
+  email: root@cerit-sc.cz
+engine: gotpl
