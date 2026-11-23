@@ -36,6 +36,10 @@ spec:
         env:
         - name: CONDA_DIR
           value: '/home/coder/conda'
+{{- if .Values.proxy.enabled }}
+        - name: HTTPS_PROXY
+          value: 'http://proxy.muni.cz:3128'
+{{- end }}
         securityContext:
           runAsUser: 1000
           allowPrivilegeEscalation: false
@@ -71,6 +75,10 @@ spec:
             value: '/home/coder/conda'
           - name: LD_LIBRARY_PATH
             value: '/home/coder/conda/lib'
+{{- end }}
+{{- if .Values.proxy.enabled }}
+          - name: HTTPS_PROXY
+            value: 'http://proxy.muni.cz:3128'
 {{- end }}
           volumeMounts:
           - name: data

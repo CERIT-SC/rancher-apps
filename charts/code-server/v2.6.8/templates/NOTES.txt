@@ -1,3 +1,0 @@
-** Code Server has been deployed. **
-
-Navigate browser to: https://{{ include "dns.name" . }}

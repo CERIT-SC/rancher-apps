@@ -13,3 +13,5 @@ storage:
     name: ""
 install:
   conda: true
+proxy:
+  enabled: false
