@@ -8,14 +8,64 @@ spec:
       app: {{ .Release.Name }}
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: rke2-traefik
     ports:
     - protocol: TCP
       port: 5678
+  egress:
+  - to: # DNS
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: rke2-coredns
+    - ipBlock:
+        cidr: 10.43.0.10/32
+    - ipBlock:
+        cidr: 169.254.20.10/32
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to: # HTTP ingress
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: rke2-traefik
+    ports:
+    - protocol: TCP
+      port: 8000
+    - protocol: TCP
+      port: 8443
+  - to: # database
+    - podSelector:
+        matchLabels:
+          cnpg.io/cluster: {{ .Values.db.name }}
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to: # outer internet
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.42.0.0/16
+        - 10.43.0.0/16
+    - ipBlock:
+        cidr: ::/0
+        except:
+        - 2001:718:801:42cb:8::/80
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -32,6 +82,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: rke2-traefik
     ports:
     - protocol: TCP # cert manager acme challenge
       port: 8089
@@ -51,12 +104,29 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: cloudnativepg
+    ports:
+    - protocol: TCP # instance manager
+      port: 8000
+  - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: cattle-monitoring-system
+    ports:
+    - protocol: TCP # metrics
+      port: 9187
+  - from:
     - podSelector:
         matchLabels:
           app: {{ .Release.Name }}
+    ports:
+    - protocol: TCP
+      port: 5432
+  - from:
     - podSelector:
         matchLabels:
           cnpg.io/cluster: {{ .Values.db.name }}
+    ports:
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP # instance manager
+      port: 8000
